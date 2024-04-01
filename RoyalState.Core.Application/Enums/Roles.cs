@@ -4,6 +4,8 @@
     {
         SuperAdmin,
         Admin,
-        Basic
+        Agent,
+        Client,
+        Developer
     }
 }
