@@ -4,10 +4,10 @@
     {
         public int Id { get; set; }
         public int PropertyId { get; set; }
-        public int PropertyImprovementId { get; set; }
+        public int ImprovementId { get; set; }  // Esto estaba mal se cambio de PropertyImprovementID a ImprovementID
 
         //Navigation Properties
-        public ICollection<Property>? Properties { get; set; }
-        public ICollection<Improvement>? Improvements { get; set; }
+        public Property? Property { get; set; }
+        public Improvement? Improvement { get; set; }
     }
 }

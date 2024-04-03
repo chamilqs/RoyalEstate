@@ -7,7 +7,7 @@
         public int ClientId { get; set; }
 
         //Navigation Properties
-        public ICollection<Property>? Properties { get; set; }
-        public ICollection<Client>? Clients { get; set; }
+        public Property? Property { get; set; }
+        public Client? Client { get; set; }
     }
 }
