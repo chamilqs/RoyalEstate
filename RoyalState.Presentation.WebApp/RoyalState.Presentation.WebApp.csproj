@@ -15,4 +15,9 @@
     <None Include="wwwroot\js\.DS_Store" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RoyalState.Infrastructure.Identity\RoyalState.Infrastructure.Identity.csproj" />
+    <ProjectReference Include="..\RoyalState.Infrastructure.Shared\RoyalState.Infrastructure.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

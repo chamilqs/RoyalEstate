@@ -16,8 +16,7 @@ namespace RoyalState.Infrastructure.Identity.Seeds
                 LastName = "Doe",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
-            };
-            
+            };            
 
             if(userManager.Users.All(u => u.Id != superAdminUser.Id))
             {
@@ -26,9 +25,11 @@ namespace RoyalState.Infrastructure.Identity.Seeds
                 if (user == null)
                 {
                     await userManager.CreateAsync(superAdminUser, "123P4$$w0rd!");
-                    await userManager.AddToRoleAsync(superAdminUser, Roles.Basic.ToString());
                     await userManager.AddToRoleAsync(superAdminUser, Roles.Admin.ToString());
+                    await userManager.AddToRoleAsync(superAdminUser, Roles.Agent.ToString());
+                    await userManager.AddToRoleAsync(superAdminUser, Roles.Client.ToString());
                     await userManager.AddToRoleAsync(superAdminUser, Roles.SuperAdmin.ToString());
+                    await userManager.AddToRoleAsync(superAdminUser, Roles.Developer.ToString());
                 }
             }
         }

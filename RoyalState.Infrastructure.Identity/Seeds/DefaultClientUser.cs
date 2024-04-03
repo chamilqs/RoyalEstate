@@ -4,17 +4,17 @@ using RoyalState.Infrastructure.Identity.Entities;
 
 namespace RoyalState.Infrastructure.Identity.Seeds
 {
-    public static class DefaulBasicUser
+    public static class DefaulClientUser
     {
         public static async Task SeedAsync(UserManager<ApplicationUser> userManager)
         {
             ApplicationUser defaultUser = new() 
             {
-                UserName = "basicuser",
-                Email = "basicuser@email.com",
+                UserName = "clientuser",
+                Email = "clientuser@email.com",
                 FirstName = "John",
                 LastName = "Doe",
-                EmailConfirmed = true,
+                EmailConfirmed = false,
                 PhoneNumberConfirmed = true,
             };
 
@@ -25,7 +25,7 @@ namespace RoyalState.Infrastructure.Identity.Seeds
                 if (user == null)
                 {
                     await userManager.CreateAsync(defaultUser, "123P4$$w0rd!");
-                    await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, Roles.Client.ToString());
                 }
             }
         }

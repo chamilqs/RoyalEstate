@@ -1,9 +1,19 @@
+using RoyalState.Infrastructure.Shared;
+using RoyalState.Infrastructure.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Add services from the shared infrastructure (to send emails)
+builder.Services.AddSharedInfrastructure(builder.Configuration);
+
+
 var app = builder.Build();
+
+// Create default roles and users
+await app.Services.AddIdentitySeeds();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

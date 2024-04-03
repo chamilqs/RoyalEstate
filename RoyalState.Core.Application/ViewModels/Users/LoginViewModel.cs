@@ -5,14 +5,13 @@ namespace RoyalState.Core.Application.ViewModels.Users
     public class LoginViewModel
     {
 
-        [Required(ErrorMessage = "Debe colocar el correo del usuario")]
+        [Required(ErrorMessage = "You mus enter an email.")]
         [DataType(DataType.Text)]
-        public string Email { get; set; }
+        public string Credential { get; set; }
 
-        [Required(ErrorMessage = "Debe colocar una contraseña")]
+        [Required(ErrorMessage = "You must enter a password.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
         public bool HasError { get; set; }
         public string? Error { get; set; }
     }

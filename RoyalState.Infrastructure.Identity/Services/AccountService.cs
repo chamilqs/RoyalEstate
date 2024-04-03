@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
+using RoyalState.Core.Application.DTOs.Email;
 
 namespace RoyalState.Infrastructure.Identity.Services
 {
@@ -19,12 +20,14 @@ namespace RoyalState.Infrastructure.Identity.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JWTSettings _jwtSettings ;
+        private readonly IEmailService _emailService;
 
-        public AccountService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<JWTSettings> jwtSettings)
+        public AccountService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<JWTSettings> jwtSettings, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtSettings = jwtSettings.Value;
+            _emailService = emailService;
         }
 
         #region Login
@@ -32,25 +35,30 @@ namespace RoyalState.Infrastructure.Identity.Services
         {
             AuthenticationResponse response = new();
 
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.FindByEmailAsync(request.Credential);
             if (user == null)
             {
-                response.HasError = true;
-                response.Error = $"No accounts registered with {request.Email}";
-                return response;
+                user = await _userManager.FindByNameAsync(request.Credential);
+                if (user == null)
+                {
+                    response.HasError = true;
+                    response.Error = $"No accounts registered with email or username: {request.Credential}";
+                    return response;
+                }
+
             }
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
             if (!result.Succeeded)
             {
                 response.HasError = true;
-                response.Error = $"Invalid credentials for {request.Email}";
+                response.Error = $"Invalid credentials, please try again.";
                 return response;
             }
             if (!user.EmailConfirmed)
             {
                 response.HasError = true;
-                response.Error = $"Account not confirmed for {request.Email}";
+                response.Error = $"Account not confirmed for {user.Email}";
                 return response;
             }
 
@@ -78,7 +86,7 @@ namespace RoyalState.Infrastructure.Identity.Services
         #endregion
 
         #region Register
-        public async Task<RegisterResponse> RegisterBasicUserAsync(RegisterRequest request, string origin)
+        public async Task<RegisterResponse> RegisterUserAsync(RegisterRequest request, string origin)
         {
             RegisterResponse response = new()
             {
@@ -105,6 +113,8 @@ namespace RoyalState.Infrastructure.Identity.Services
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
+                PhoneNumber = request.Phone,
+                ImageUrl = request.ImageUrl,
                 Email = request.Email,
                 UserName = request.UserName,
             };
@@ -112,7 +122,34 @@ namespace RoyalState.Infrastructure.Identity.Services
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, Roles.Basic.ToString());
+                if (request.UserType == (int)Roles.Client)
+                {
+                    await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
+                    // Here we also can send an email to the user to confirm the account
+                    var verificationUri = await SendVerificationEmailUri(user, origin);
+                    await _emailService.SendAsync(new EmailRequest()
+                    {
+                        To = user.Email,
+                        Subject = "Confirm your registration at RoyalState.",
+                        Body = $"Please confirm your account by visiting this URL {verificationUri}"
+
+                    });
+
+                }
+                else if (request.UserType == (int)Roles.Agent)
+                {
+                    await _userManager.AddToRoleAsync(user, Roles.Agent.ToString());
+
+                } else if (request.UserType == (int)Roles.Admin)
+                {
+                    await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
+
+                } else if (request.UserType == (int)Roles.Developer)
+                {
+                    await _userManager.AddToRoleAsync(user, Roles.Developer.ToString());
+
+                }
+                
             }
             else
             {
@@ -123,6 +160,7 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             return response;
         }
+
         #endregion
 
         #region Helpers
@@ -131,23 +169,25 @@ namespace RoyalState.Infrastructure.Identity.Services
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return "No accounts registered with this user.";
+                return $"No accounts registered with this user.";
             }
 
             token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
-                return $"Account confirmed {user.Email}. You can now use the app.";
+                return $"Account confirmed for {user.Email}. You can now use the app.";
             }
             else
             {
-                return $"An error occured while confirming {user.Email}";
+                return $"An error occurred while trying to confirm the email: {user.Email}.";
             }
         }
         #endregion
 
         #region Private Methods
+
+        #region JWT Methods
         private async Task<JwtSecurityToken> GenerateJWToken(ApplicationUser user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
@@ -201,6 +241,34 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             return BitConverter.ToString(randomBytes).Replace("-", "");
         }
+        #endregion
+
+        #region Email Methods
+
+        private async Task<string> SendVerificationEmailUri(ApplicationUser user, string origin)
+        {
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var route = "User/ConfirmEmail";
+            var Uri = new Uri(string.Concat($"{origin}/", route));
+            var verificationUri = QueryHelpers.AddQueryString(Uri.ToString(), "userId", user.Id);
+            verificationUri = QueryHelpers.AddQueryString(verificationUri, "token", code);
+
+            return verificationUri;
+        }
+
+        private async Task<string> SendForgotPasswordUri(ApplicationUser user, string origin)
+        {
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var route = "User/ResetPassword";
+            var Uri = new Uri(string.Concat($"{origin}/", route));
+            var verificationUri = QueryHelpers.AddQueryString(Uri.ToString(), "token", code);
+
+            return verificationUri;
+        }
+        #endregion
+        
         #endregion
     }
 }
