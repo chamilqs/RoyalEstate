@@ -1,14 +1,14 @@
 ﻿using RoyalState.Core.Application.DTOs.Account;
-using RoyalState.Core.Application.ViewModels.User;
+using RoyalState.Core.Application.Interfaces.Services;
+using RoyalState.Core.Application.ViewModels.Client;
 using RoyalState.Core.Application.ViewModels.Users;
+using RoyalState.Core.Domain.Entities;
 
 namespace RoyalState.Core.Application.Interfaces.Services
 {
-    public interface IUserService
+    public interface IClientService : IGenericService<SaveClientViewModel, ClientViewModel, Client>
     {
-        Task<AuthenticationResponse> LoginAsync(LoginViewModel vm);
         Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin);
-        Task<UserViewModel> GetByEmailAsync(string email);
-        Task SignOutAsync();
+
     }
 }
