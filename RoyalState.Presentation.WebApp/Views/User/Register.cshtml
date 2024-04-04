@@ -1,4 +1,24 @@
-﻿<div class="container"> @* style="background-color:#F8BF80; *@
+<style>
+.form-control:not(select) {
+    padding: 1.5rem 0.5rem;
+}
+
+select.form-control {
+    height: 52px;
+    padding-left: 0.5rem;
+}
+
+.form-control::placeholder {
+    color: #ccc;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.form-control:focus {
+    box-shadow: none;
+}
+</style>
+
+<div class="container"> @* style="background-color:#F8BF80; *@
     <div class="row py-5 mt-4 align-items-center">
         <!-- Image so it doesnt look empty at the left -->
         <div class="col-md-5 pr-lg-5 mb-5 mb-md-0">
