@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace RoyalState.Core.Application.ViewModels.Users
 {
@@ -8,7 +9,7 @@ namespace RoyalState.Core.Application.ViewModels.Users
 
         [Required(ErrorMessage = "You must enter a name.")]
         [DataType(DataType.Text)]
-        public string Name { get; set; }
+        public string FirstName { get; set; }
 
         [Required(ErrorMessage = "You must enter a lastname.")]
         [DataType(DataType.Text)]
@@ -16,7 +17,7 @@ namespace RoyalState.Core.Application.ViewModels.Users
 
         [Required(ErrorMessage = "You mus enter a Username.")]
         [DataType(DataType.Text)]
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         [Required(ErrorMessage = "You must enter an email.")]
         [DataType(DataType.EmailAddress)]
@@ -38,6 +39,12 @@ namespace RoyalState.Core.Application.ViewModels.Users
 
         [DataType(DataType.Url)]
         public string? ImageUrl { get; set; }
+
+        [DataType(DataType.Upload)]
+        public IFormFile? File { get; set; }
+
+        [DataType(DataType.Text)]
+        public string? Phone { get; set; }
 
         public bool HasError { get; set; }
         public string? Error { get; set; }
