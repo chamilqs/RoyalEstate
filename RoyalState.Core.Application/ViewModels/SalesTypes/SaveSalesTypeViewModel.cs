@@ -1,9 +1,8 @@
-﻿namespace RoyalState.Core.Application.ViewModels.SalesTypes
+﻿using RoyalState.Core.Application.ViewModels.Types;
+
+namespace RoyalState.Core.Application.ViewModels.SalesTypes
 {
-    public class SaveSalesTypeViewModel
+    public class SaveSalesTypeViewModel : SaveTypeViewModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
     }
 }
