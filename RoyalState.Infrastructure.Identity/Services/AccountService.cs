@@ -114,7 +114,6 @@ namespace RoyalState.Infrastructure.Identity.Services
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 PhoneNumber = request.Phone,
-                ImageUrl = request.ImageUrl,
                 Email = request.Email,
                 UserName = request.UserName,
             };
@@ -122,39 +121,48 @@ namespace RoyalState.Infrastructure.Identity.Services
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
-                if (request.UserType == (int)Roles.Client)
+                switch (request.Role)
                 {
-                    await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
-                    // Here we also can send an email to the user to confirm the account
-                    var verificationUri = await SendVerificationEmailUri(user, origin);
-                    await _emailService.SendAsync(new EmailRequest()
-                    {
-                        To = user.Email,
-                        Subject = "Confirm your registration at RoyalState.",
-                        Body = $"Please confirm your account by visiting this URL {verificationUri}"
+                    case (int)Roles.Client:
 
-                    });
+                        await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
+                        // Here we send an email to the user to confirm the account
+                        var verificationUri = await SendVerificationEmailUri(user, origin);
+                        await _emailService.SendAsync(new EmailRequest()
+                        {
+                            To = user.Email,
+                            Subject = "Confirm your registration at RoyalState.",
+                            Body = $"Please confirm your account by visiting this URL {verificationUri}"
+                        });
+                        break;
 
+                    case (int)Roles.Agent:
+
+                        await _userManager.AddToRoleAsync(user, Roles.Agent.ToString());
+
+                        break;
+
+                    case (int)Roles.Admin:
+
+                        await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
+
+                        break;
+
+                    case (int)Roles.Developer:
+
+                        await _userManager.AddToRoleAsync(user, Roles.Developer.ToString());
+                        break;
+
+                    default:
+                        response.HasError = true;
+                        response.Error = $"An error has occurred trying to register the user.";
+                        return response;
                 }
-                else if (request.UserType == (int)Roles.Agent)
-                {
-                    await _userManager.AddToRoleAsync(user, Roles.Agent.ToString());
-
-                } else if (request.UserType == (int)Roles.Admin)
-                {
-                    await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
-
-                } else if (request.UserType == (int)Roles.Developer)
-                {
-                    await _userManager.AddToRoleAsync(user, Roles.Developer.ToString());
-
-                }
-                
             }
             else
             {
                 response.HasError = true;
-                response.Error = $"An error has ocurred trying to register the user.";
+                response.Error = $"An error has occurred trying to register the user.";
                 return response;
             }
 
@@ -182,6 +190,29 @@ namespace RoyalState.Infrastructure.Identity.Services
             {
                 return $"An error occurred while trying to confirm the email: {user.Email}.";
             }
+        }
+
+        public async Task<UserDTO> FindByEmailAsync(string email)
+        {
+            UserDTO userDTO = new();
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                userDTO.Id = user.Id;
+                userDTO.Username = user.UserName;
+                userDTO.Name = user.FirstName;
+                userDTO.LastName = user.LastName;
+                userDTO.Email = user.Email;
+                userDTO.EmailConfirmed = user.EmailConfirmed;
+
+                var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+                userDTO.Role = rolesList.ToList()[0];
+
+                return userDTO;
+            }
+
+            return null;
         }
         #endregion
 
