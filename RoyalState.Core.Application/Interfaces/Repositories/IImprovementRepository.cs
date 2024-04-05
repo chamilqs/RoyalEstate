@@ -2,7 +2,7 @@
 
 namespace RoyalState.Core.Application.Interfaces.Repositories
 {
-    public interface ISalesTypeRepository : IGenericRepository<SaleType>
+    public interface IImprovementRepository : IGenericRepository<Improvement>
     {
 
     }
