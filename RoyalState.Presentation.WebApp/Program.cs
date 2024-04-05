@@ -1,14 +1,23 @@
 using RoyalState.Infrastructure.Shared;
 using RoyalState.Infrastructure.Identity;
+using RoyalState.Infrastructure.Persistence;
+using RoyalState.Core.Application;
+using RoyalState.Presentation.WebApp.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Add services from the shared infrastructure (to send emails)
 builder.Services.AddSharedInfrastructure(builder.Configuration);
-
+builder.Services.AddSession();
+builder.Services.AddPersistenceInfrastructure(builder.Configuration);
+builder.Services.AddIdentityInfrastructure(builder.Configuration);
+builder.Services.AddApplicationLayer();
+builder.Services.AddSharedInfrastructure(builder.Configuration);
+builder.Services.AddScoped<LoginAuthorize>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddTransient<ValidateUserSession, ValidateUserSession>();
 
 var app = builder.Build();
 
@@ -23,11 +32,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

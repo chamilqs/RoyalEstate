@@ -1,3 +1,10 @@
+@using RoyalState.Core.Application.Enums
+@using RoyalState.Core.Application.ViewModels.Users;
+@model SaveUserViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
 <style>
 .form-control:not(select) {
     padding: 1.5rem 0.5rem;
@@ -26,9 +33,15 @@ select.form-control {
             <h1>Create an Account</h1>
         </div>
 
-        <!-- Registeration Form for now does nothing -->
         <div class="col-md-7 col-lg-6 ml-auto">
-            <form action="#">
+            @if (!String.IsNullOrWhiteSpace(ViewBag.Error))
+            {
+                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                    <p class="mb-0">@ViewBag.Error</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            <form method="post" asp-controller="User" asp-action="Register" enctype="multipart/form-data">
                 <div class="row">
 
                     <!-- First Name -->
@@ -38,7 +51,7 @@ select.form-control {
                                 <i class="fa fa-user text-muted"></i>
                             </span>
                         </div>
-                        <input id="firstName" type="text" name="firstname" placeholder="First Name" class="form-control bg-white border-left-0 border-md">
+                        <input asp-for="FirstName" placeholder="First Name" class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Last Name -->
@@ -48,7 +61,7 @@ select.form-control {
                                 <i class="fa fa-user text-muted"></i>
                             </span>
                         </div>
-                        <input id="lastName" type="text" name="lastname" placeholder="Last Name" class="form-control bg-white border-left-0 border-md">
+                        <input asp-for="LastName" placeholder="Last Name" class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Email Address -->
@@ -58,7 +71,7 @@ select.form-control {
                                 <i class="fa fa-envelope text-muted"></i>
                             </span>
                         </div>
-                        <input id="email" type="email" name="email" placeholder="Email Address" class="form-control bg-white border-left-0 border-md">
+                        <input asp-for="Email" placeholder="Email Address" class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Phone Number -->
@@ -68,10 +81,15 @@ select.form-control {
                                 <i class="fa fa-phone-square text-muted"></i>
                             </span>
                         </div>
-                        <select id="countryCode" name="countryCode" style="max-width: 80px" class="custom-select form-control bg-white border-left-0 border-md h-100 font-weight-bold text-muted">
-                            <option value="">+1</option>
-                        </select>
-                        <input id="phoneNumber" type="tel" name="phone" placeholder="Phone Number" class="form-control bg-white border-md border-left-0 pl-3">
+                        <input asp-for="Phone" placeholder="Phone Number" class="form-control bg-white border-md border-left-0 pl-3">
+                    </div>
+
+                    <!-- Profile Picture -->
+                    <div class="input-group col-lg-12 mb-4">
+                        <div class="custom-file">
+                            <input asp-for="File" id="fileUpload" class="form-control" style="border:none;">
+                            <label class="custom-file-label form-control bg-white border-md" for="fileUpload">Choose file</label>
+                        </div>
                     </div>
 
                     <!-- Role -->
@@ -81,10 +99,10 @@ select.form-control {
                                 <i class="fa fa-black-tie text-muted"></i>
                             </span>
                         </div>
-                        <select id="job" name="jobtitle" class="form-control custom-select bg-white border-left-0 border-md">
+                        <select asp-for="Role" id="job" name="jobtitle" class="form-control custom-select bg-white border-left-0 border-md">
                             <option value="">Choose your role</option>
-                            <option value="">Agent</option>
-                            <option value="">Client</option>
+                            <option value="@((int)Roles.Agent)">@(Roles.Agent.ToString())</option>
+                            <option value="@((int)Roles.Client)">@(Roles.Client.ToString())</option>
                         </select>
                     </div>
 
@@ -95,7 +113,7 @@ select.form-control {
                                 <i class="fa fa-lock text-muted"></i>
                             </span>
                         </div>
-                        <input id="password" type="password" name="password" placeholder="Password" class="form-control bg-white border-left-0 border-md">
+                        <input asp-for="Password" placeholder="Password" class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Password Confirmation -->
@@ -105,7 +123,7 @@ select.form-control {
                                 <i class="fa fa-lock text-muted"></i>
                             </span>
                         </div>
-                        <input id="passwordConfirmation" type="text" name="passwordConfirmation" placeholder="Confirm Password" class="form-control bg-white border-left-0 border-md">
+                        <input asp-for="ConfirmPassword" placeholder="Confirm Password" class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Submit Button -->
@@ -144,6 +162,4 @@ $(function () {
     });
 });
 
-</script>
-
-                     
+</script>                    

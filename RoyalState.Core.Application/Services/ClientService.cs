@@ -7,9 +7,8 @@ using RoyalState.Core.Application.ViewModels.Client;
 using RoyalState.Core.Application.ViewModels.Users;
 using RoyalState.Core.Domain.Entities;
 using Microsoft.AspNetCore.Http;
-using RoyalState.Core.Application.Services;
 
-namespace BankingApp.Core.Application.Services
+namespace RoyalState.Core.Application.Services
 {
     public class ClientService : GenericService<SaveClientViewModel, ClientViewModel, Client>, IClientService
     {

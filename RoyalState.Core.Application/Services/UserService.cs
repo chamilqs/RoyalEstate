@@ -49,5 +49,15 @@ namespace RoyalState.Core.Application.Services
             return vm;
         }
         #endregion
+
+        #region Email Confirmation
+        public async Task<string> ConfirmEmailAsync(string userId, string token)
+        {
+            return await _accountService.ConfirmAccountAsync(userId, token);
+        }
+
+        #endregion
+
+
     }
 }

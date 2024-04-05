@@ -6,10 +6,9 @@ using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.Users;
 using RoyalState.Core.Domain.Entities;
 using Microsoft.AspNetCore.Http;
-using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.Agent;
 
-namespace BankingApp.Core.Application.Services
+namespace RoyalState.Core.Application.Services
 {
     public class AgentService : GenericService<SaveAgentViewModel, AgentViewModel, Agent>, IAgentService
     {

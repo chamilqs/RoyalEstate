@@ -1,0 +1,44 @@
+﻿@using RoyalState.Core.Application.ViewModels.Agent;
+@model IEnumerable<AgentViewModel>
+@{
+    ViewData["Title"] = "Agents";
+}
+
+@* Our Agents *@
+<div class="site-section bg-light mt-4">
+    <div class="container" data-aos="fade">
+        <div class="row mb-5 justify-content-center">
+            <div class="col-md-7">
+                <div class="site-section-title text-center">
+                    <h2>Our Agents</h2>
+                    <p>Discover our team of highly skilled and passionate real estate professionals, committed to guiding you through every step of your property journey. Whether you're buying, selling, or investing, our agents are here to provide expert advice and personalized service tailored to your unique needs.</p>
+                </div>
+            </div>
+        </div>
+        @if (Model == null || Model.Count() == 0)
+        {
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <div class="alert alert-info text-center" role="alert">
+                        There are no agents available at the moment.
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var agent in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
+                    <div class="team-member">
+                        <img src="@agent.ImageUrl" alt="Image" class="img-fluid rounded mb-4">
+                        <div class="text">
+                            <h2 class="mb-2 font-weight-light text-black h4">@agent.FirstName @agent.LastName</h2>
+                            <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
