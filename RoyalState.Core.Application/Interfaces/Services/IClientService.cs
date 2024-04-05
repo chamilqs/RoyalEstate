@@ -1,5 +1,4 @@
 ﻿using RoyalState.Core.Application.DTOs.Account;
-using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.Client;
 using RoyalState.Core.Application.ViewModels.Users;
 using RoyalState.Core.Domain.Entities;

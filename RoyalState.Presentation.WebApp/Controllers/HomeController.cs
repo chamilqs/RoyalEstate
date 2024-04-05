@@ -1,32 +1,33 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RoyalState.Presentation.WebApp.Models;
-using System.Diagnostics;
+using RoyalState.Core.Application.Helpers;
+using RoyalState.Core.Application.DTOs.Account;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly AuthenticationResponse authViewModel;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IHttpContextAccessor httpContextAccessor)
         {
-            _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+            authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
         }
 
         public IActionResult Index()
         {
+             //Send viewbags with data about property types etc if authviewmodel is not null 
+            if (authViewModel != null)
+            {
+                // ViewBag.PropertyTypes = authViewModel;
+            }
+            else
+            {
+                Console.WriteLine("authViewModel is null");
+            }
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

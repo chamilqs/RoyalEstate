@@ -1,13 +1,26 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@using RoyalState.Core.Application.DTOs.Account
+@using RoyalState.Core.Application.Helpers;
+@using RoyalState.Core.Application.ViewModels.User
+
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAgent = User != null ? User.Roles.Any(r => r == "Agent") : false;
+    var isClient = User != null ? User.Roles.Any(r => r == "Client") : false;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - RoyalState.Presentation.WebApp</title>
+    <title>@ViewData["Title"] - RoyalState</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RoyalState.Presentation.WebApp.styles.css" asp-append-version="true" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
     <link rel="stylesheet" href="~/fonts/icomoon/style.css">
 
@@ -23,8 +36,28 @@
     <link rel="stylesheet" href="~/css/csslibraries/fl-bigmug-line.css">
     <link rel="stylesheet" href="~/css/csslibraries/aos.css">
     <link rel="stylesheet" href="~/css/csslibraries/style.css">
+    <style>
+        .form-control:not(select) {
+            padding: 1.5rem 0.5rem;
+        }
 
+        select.form-control {
+            height: 52px;
+            padding-left: 0.5rem;
+        }
+
+        .form-control::placeholder {
+            color: #ccc;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+        }
+    </style>
 </head>
+
 <body>
     <div class="site-loader"></div>
 
@@ -37,12 +70,12 @@
                 </div>
             </div>
             <div class="site-mobile-menu-body"></div>
-        </div> 
+        </div>
         <div class="site-navbar mt-4">
             <div class="container py-1">
                 <div class="row align-items-center">
                     <div class="col-8 col-md-8 col-lg-4">
-                        <h1 class="mb-0"><a href="index.html" class="text-white h2 mb-0"><strong>RoyalState<span class="text-danger">.</span></strong></a></h1>
+                        <h1 class="mb-0"><a asp-controller="Home" asp-action="Index" class="text-white h2 mb-0"><strong>RoyalState<span class="text-danger">.</span></strong></a></h1>
                     </div>
                     <div class="col-4 col-md-4 col-lg-8">
                         <nav class="site-navigation text-right text-md-right" role="navigation">
@@ -50,11 +83,13 @@
                             <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
 
                             <ul class="site-menu js-clone-nav d-none d-lg-block">
-                                <li>
-                                    <a href="index.html">Home</a>
+                                <li class="active">
+                                    <a asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
-                                <li><a href="buy.html">Buy</a></li>
-                                <li><a href="rent.html">Rent</a></li>
+                                <li>
+                                    <a asp-controller="Agent" asp-action="AllAgents">Agents</a>
+                                </li>
+@*                                 <li><a href="rent.html">Rent</a></li>
                                 <li class="has-children">
                                     <a href="properties.html">Properties</a>
                                     <ul class="dropdown arrow-top">
@@ -71,9 +106,9 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li><a href="blog.html">Blog</a></li>
-                                <li class="active"><a href="about.html">About</a></li>
-                                <li><a asp-controller="" asp-action="">Log In</a></li>
+                                <li><a href="blog.html">Blog</a></li>*@
+                                <li><a asp-controller="User" asp-action="Register">Join us!</a></li>
+                                <li><a asp-controller="User" asp-action="Index">Sign In</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -84,8 +119,72 @@
         </div>
     </div>
 
-    <div class="site-blocks-cover inner-page-cover overlay" style="background-image: url(images/bg_3.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
+    <div class="site-blocks-cover inner-page-cover overlay" style="background-image: url(https://res.cloudinary.com/ddvjg2joj/image/upload/v1712265019/kksiljujto6g1ratkes6.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
+    </div>
 
+    <div class="modal fade" id="loginModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row py-5 align-items-center">
+                            <!-- Log In Form -->
+                            <div class="col-md-12 col-lg-12">
+                                <h1 class="text-center mb-4">Sign In to RoyalState</h1>
+                                <form action="#">
+                                    <div class="row">
+                                        <!-- Email Address or Username -->
+                                        <div class="input-group col-lg-12 mb-4">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-white px-4 border-md border-right-0">
+                                                    <i class="fa fa-user text-muted"></i>
+                                                </span>
+                                            </div>
+                                            <input id="credentialLogIn" type="text" name="credential" placeholder="Email Address or Username" class="form-control bg-white border-left-0 border-md">
+                                        </div>
+
+                                        <!-- Password -->
+                                        <div class="input-group col-lg-12 mb-4">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-white px-4 border-md border-right-0">
+                                                    <i class="fa fa-lock text-muted"></i>
+                                                </span>
+                                            </div>
+                                            <input id="passwordLogIn" type="password" name="password" placeholder="Password" class="form-control bg-white border-left-0 border-md">
+                                        </div>
+
+                                        <!-- Submit Button -->
+                                        <div class="form-group col-lg-12 mx-auto mb-0">
+                                            <button type="submit" class="btn btn-primary btn-block py-2">
+                                                <span class="font-weight-bold">Sign In</span>
+                                            </button>
+                                        </div>
+
+                                        <!-- Divider Text -->
+                                        <div class="form-group col-lg-12 mx-auto d-flex align-items-center my-4">
+                                            <div class="border-bottom w-100 ml-5"></div>
+                                            <span class="px-2 small text-muted font-weight-bold text-muted">OR</span>
+                                            <div class="border-bottom w-100 mr-5"></div>
+                                        </div>
+
+                                        <!-- Not Registered redirects to User - Register where the user can create an account -->
+                                        <div class="text-center w-100">
+                                            <p class="text-muted font-weight-bold">Don't have an account?<a asp-controller="User" asp-action="Register" class="text-primary ml-2" style="cursor: pointer;">Register</a></p>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="container">
@@ -169,9 +268,19 @@
     <script src="~/js/aos.js"></script>
     <script src="~/js/main.js"></script>
 
-
-
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    });
+</script>
+
+
+
+@* <li><a data-toggle="modal" data-target="#loginModal" style="cursor: pointer;">Sign In</a></li> *@
