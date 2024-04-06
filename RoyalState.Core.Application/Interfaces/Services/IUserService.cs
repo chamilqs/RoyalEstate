@@ -6,6 +6,7 @@ namespace RoyalState.Core.Application.Interfaces.Services
 {
     public interface IUserService
     {
+        Task<string> ConfirmEmailAsync(string userId, string token);
         Task<AuthenticationResponse> LoginAsync(LoginViewModel vm);
         Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin);
         Task<UserViewModel> GetByEmailAsync(string email);
