@@ -27,6 +27,9 @@ namespace RoyalState.Infrastructure.Persistence
 
             #region "Repositories"
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddTransient<ISaleTypeRepository, SaleTypeRepository>();
+            services.AddTransient<IPropertyTypeRepository, PropertyTypeRepository>();
+            services.AddTransient<IImprovementRepository, ImprovementRepository>();
             #endregion
         }
     }

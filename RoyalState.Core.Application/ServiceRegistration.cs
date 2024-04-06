@@ -16,6 +16,9 @@ namespace RoyalState.Core.Application
 
             #region "Service"
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ISaleTypeService, SaleTypeService>();
+            services.AddTransient<IPropertyTypeService, PropertyTypeService>();
+            services.AddTransient<IImprovementService, ImprovementService>();
             #endregion
         }
     }
