@@ -1,6 +1,6 @@
-﻿namespace RoyalState.Core.Application.ViewModels.SalesTypes
+﻿namespace RoyalState.Core.Application.ViewModels.Improvements
 {
-    public class SaveSalesTypeViewModel
+    public class SaveImprovementViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

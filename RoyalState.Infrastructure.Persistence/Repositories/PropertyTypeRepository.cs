@@ -4,11 +4,11 @@ using RoyalState.Infrastructure.Persistence.Contexts;
 
 namespace RoyalState.Infrastructure.Persistence.Repositories
 {
-    public class SalesTypeRepository : GenericRepository<SaleType>, ISalesTypeRepository
+    public class PropertyTypeRepository : GenericRepository<PropertyType>, IPropertyTypeRepository
     {
         private readonly ApplicationContext _dbContext;
 
-        public SalesTypeRepository(ApplicationContext dbContext) : base (dbContext)
+        public PropertyTypeRepository(ApplicationContext dbContext) : base (dbContext)
         {
             _dbContext = dbContext;
         }

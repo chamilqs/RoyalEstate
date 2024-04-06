@@ -1,6 +1,6 @@
-﻿namespace RoyalState.Core.Application.ViewModels.SalesTypes
+﻿namespace RoyalState.Core.Application.ViewModels.Types
 {
-    public class SalesTypeViewModel
+    public class TypeViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
