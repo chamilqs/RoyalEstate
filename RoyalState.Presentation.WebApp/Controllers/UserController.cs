@@ -25,7 +25,7 @@ namespace WebAdmin.BankingApp.Controllers
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
         }
 
-        #region Login
+        #region Login & Logout
         [ServiceFilter(typeof(LoginAuthorize))]
         public async Task<IActionResult> Index(bool hasError = false, string? message = null)
         {
@@ -40,11 +40,6 @@ namespace WebAdmin.BankingApp.Controllers
             return View(login);
         }
 
-        public async Task<IActionResult> RedirectIndex(string? ReturnUrl)
-        {
-            return RedirectToRoute(new { controller = "User", action = "Index", hasError = true, message = "You don't have access to this section!" });
-        }
-
         [ServiceFilter(typeof(LoginAuthorize))]
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel vm)
@@ -55,7 +50,7 @@ namespace WebAdmin.BankingApp.Controllers
             }
 
             AuthenticationResponse userVm = await _userService.LoginAsync(vm);
-            if (userVm != null && userVm.HasError != true)
+            if (userVm != null && !userVm.HasError)
             {
                 HttpContext.Session.Set("user", userVm);
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
@@ -67,14 +62,15 @@ namespace WebAdmin.BankingApp.Controllers
                 return View(vm);
             }
         }
-        #endregion
 
+        // LogOut
         public async Task<IActionResult> LogOut()
         {
             await _userService.SignOutAsync();
             HttpContext.Session.Remove("user");
             return RedirectToRoute(new { controller = "Home", action = "Index" });
         }
+        #endregion
 
         #region Register
         [ServiceFilter(typeof(LoginAuthorize))]
@@ -114,11 +110,6 @@ namespace WebAdmin.BankingApp.Controllers
         }
 
         #endregion
-
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
 
         #region Private Methods
         private string UploadFile(IFormFile file, string email, bool isEditMode = false, string imagePath = "")
@@ -166,7 +157,17 @@ namespace WebAdmin.BankingApp.Controllers
 
         #endregion
 
+        #region Authorization
+        public async Task<IActionResult> RedirectIndex(string? ReturnUrl)
+        {
+            return RedirectToRoute(new { controller = "User", action = "Index", hasError = true, message = "You don't have access to this section!" });
+        }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+        #endregion
     }
 }
 

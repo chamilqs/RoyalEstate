@@ -16,7 +16,7 @@
         public int AgentId { get; set; }
         public string AgentFirstName { get; set; }
         public string AgentLastName { get; set; }
-        public string AgentName => $"{AgentFirstName} {AgentLastName}";
+        public string AgentFullName => $"{AgentFirstName} {AgentLastName}";
         public string AgentPhone { get; set; }
         public string AgentEmail { get; set; }
         public string AgentImage { get; set; }
