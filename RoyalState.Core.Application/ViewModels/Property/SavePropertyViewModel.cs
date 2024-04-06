@@ -4,7 +4,7 @@ namespace RoyalState.Core.Application.ViewModels.Property
 {
     public class SavePropertyViewModel
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string? Code { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Please select a Property Type.")]

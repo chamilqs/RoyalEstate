@@ -21,6 +21,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
             if (authViewModel != null)
             {
                 // ViewBag.PropertyTypes = authViewModel;
+                Console.WriteLine("authViewModel is not null");
             }
             else
             {

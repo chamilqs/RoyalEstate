@@ -4,29 +4,26 @@ using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.ViewModels.Property;
+using RoyalState.Core.Application.ViewModels.PropertyImage;
 using RoyalState.Core.Domain.Entities;
 
 namespace RoyalState.Core.Application.Services
 {
-    public class PropertyService : GenericService<SavePropertyViewModel, PropertyViewModel, Property>, IPropertyService
+    public class PropertyImageService : GenericService<SavePropertyImageViewModel, PropertyImageViewModel, PropertyImage>, IPropertyImageService
     {
-        private readonly IPropertyRepository _propertyRepository;
+        private readonly IPropertyImageRepository _propertyImageRepository;
+        private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
-        public PropertyService(IPropertyRepository propertyRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper) : base(propertyRepository, mapper)
+        public PropertyImageService(IPropertyImageRepository propertyImageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IUserService userService) : base(propertyImageRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
-            _propertyRepository = propertyRepository;
+            _propertyImageRepository = propertyImageRepository;
             _mapper = mapper;
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-        }
-
-        public Task<PropertyViewModel> GetAllViewModelWIthFilters(FilterPropertyViewModel filterProperty)
-        {
-            throw new NotImplementedException();
+            _userService = userService;
         }
     }
 }
