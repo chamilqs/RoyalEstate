@@ -10,7 +10,7 @@
         <h1 class="h2 mb-3">@ViewData["Title"]</h1>
 
         <div>
-            <a asp-controller="Admin" asp-action="Create" class="btn btn-success">Add new user</a>
+            <a asp-controller="SaleType" asp-action="Create" class="btn btn-success">Add new user</a>
         </div>
     </div>
 
@@ -36,69 +36,14 @@
                         <tr>
                             <td>@saleType.Name</td>
                             <td>@saleType.Description</td>
-                            <td>@saleType.Properties</td>
+                            <td>@saleType.PropertiesQuantity</td>
                             <td class="text-center">
-                                @if (saleType.IsActive)
-                                {
-                                    <div class="badge text-bg-success">Active</div>
-                                }
-                                else
-                                {
-                                    <div class="badge text-bg-danger">Unactive</div>
-                                }
-                            </td>
-                            <td class="text-center">
-                                @if (saleType.Id != user.Id)
-                                {
-                                    <a asp-controller="Admin" asp-action="Edit" class="btn btn-warning" asp-route-username="@saleType.Username" title="Edit">
-                                        <i class="ti ti-pencil"></i>
-                                    </a>
-
-                                    if (saleType.Role == Roles.Client.ToString())
-                                    {
-                                        <a asp-controller="Admin" asp-action="IndexProducts" class="btn btn-success" asp-route-userId="@saleType.Id" title="Products">
-                                            <i class="ti ti-coin"></i>
-                                        </a>
-                                    }
-
-                                    <a class="btn btn-@(saleType.IsActive ? "danger" : "secondary" )" href="#" data-bs-toggle="modal" data-bs-target="#modal-update-user-status-@saleType.Username" title="@(saleType.IsActive ? " Unactive" : "Active")">
-                                        <i class="ti ti-user-@(saleType.IsActive ? "x" : "plus")"></i>
-                                    </a>
-
-                                    <!-- Modal Update-User-Status -->
-                                    <div class="modal fade" id="modal-update-user-status-@saleType.Username" tabindex="-1" aria-labelledby="modal-update-user-status-@saleType.Username-label" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">@(saleType.IsActive ? "Unactive" : "Active") User: @saleType.Username</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-
-                                                <form method="post" asp-controller="Admin" asp-action="UpdateUserStatus">
-                                                    <div class="modal-body">
-
-                                                        <input type="hidden" name="username" value="@saleType.Username" />
-
-                                                        <div class="mb-3 text-start">
-                                                            <p class="text-center">Are you sure you want to <span class="fw-bolder">@(saleType.IsActive ? "unactive" : "active")</span> this user?</p>
-                                                            <p><span class="fw-bolder">Id: </span>@saleType.IdentificationNumber</p>
-                                                            <p><span class="fw-bolder">Name: </span>@saleType.Name</p>
-                                                            <p><span class="fw-bolder">LastName: </span>@saleType.LastName</p>
-                                                            <p><span class="fw-bolder">Username: </span>@saleType.Username</p>
-                                                            <p><span class="fw-bolder">Role: </span>@saleType.Role</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
-                                                        <button type="submit" class="btn btn-secondary">Yes</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                }
+                                <a asp-controller="SaleType" asp-action="Edit" class="btn btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-controller="SaleType" asp-action="Delete" class="btn btn-warning">
+                                    <i class="bi bi-trash"></i>
+                                </a>
                             </td>
                         </tr>
                     }
