@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using RoyalState.Core.Application.DTOs.Email;
+using Microsoft.EntityFrameworkCore;
 
 namespace RoyalState.Infrastructure.Identity.Services
 {
@@ -191,8 +192,40 @@ namespace RoyalState.Infrastructure.Identity.Services
 
         #endregion
 
-        #region Helpers
-        
+        #region Finders
+
+        public async Task<List<UserDTO>> FindByNameAsync(string name)
+        {
+            List<UserDTO> userDTOs = new List<UserDTO>();
+            var users = await _userManager.Users.Where(u => (u.FirstName.Contains(name) || (u.FirstName + " " + u.LastName).Contains(name))).ToListAsync();
+
+            foreach (var user in users)
+            {
+                UserDTO userDTO = new UserDTO
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Phone = user.PhoneNumber,
+                    EmailConfirmed = user.EmailConfirmed
+                };
+
+                var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+                if (rolesList.Any(r => r != Roles.Agent.ToString()))
+                {
+                    continue;
+                }
+
+                userDTO.Role = rolesList.ToList()[0];
+
+                userDTOs.Add(userDTO);
+            }
+
+            return userDTOs;
+        }
+
         public async Task<UserDTO> FindByEmailAsync(string email)
         {
             UserDTO userDTO = new();
@@ -201,10 +234,11 @@ namespace RoyalState.Infrastructure.Identity.Services
             if (user != null)
             {
                 userDTO.Id = user.Id;
-                userDTO.Username = user.UserName;
-                userDTO.Name = user.FirstName;
+                userDTO.UserName = user.UserName;
+                userDTO.FirstName = user.FirstName;
                 userDTO.LastName = user.LastName;
                 userDTO.Email = user.Email;
+                userDTO.Phone = user.PhoneNumber;
                 userDTO.EmailConfirmed = user.EmailConfirmed;
 
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
@@ -215,6 +249,31 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             return null;
         }
+
+        public async Task<UserDTO> FindByIdAsync(string Id)
+        {
+            UserDTO userDTO = new();
+
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user != null)
+            {
+                userDTO.Id = user.Id;
+                userDTO.UserName = user.UserName;
+                userDTO.FirstName = user.FirstName;
+                userDTO.LastName = user.LastName;
+                userDTO.Email = user.Email;
+                userDTO.Phone = user.PhoneNumber;
+                userDTO.EmailConfirmed = user.EmailConfirmed;
+
+                var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+                userDTO.Role = rolesList.ToList()[0];
+
+                return userDTO;
+            }
+
+            return null;
+        }
+
         #endregion
 
         #region Private Methods
@@ -299,8 +358,9 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             return verificationUri;
         }
+
         #endregion
-        
+
         #endregion
     }
 }

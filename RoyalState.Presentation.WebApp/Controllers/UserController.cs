@@ -7,22 +7,29 @@ using RoyalState.Infrastructure.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using RoyalState.Presentation.WebApp.Middlewares;
+using Azure;
+using RoyalState.Core.Application.Enums;
+using RoyalState.Core.Application.Services;
 
 namespace WebAdmin.BankingApp.Controllers
 {
     public class UserController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAgentService _agentService;
+        private readonly IClientService _clientService;
         private readonly IUserService _userService;
         private readonly AuthenticationResponse authViewModel;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
+        public UserController(IUserService userService, IAgentService agentService, IClientService clientService, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            _agentService = agentService;
+            _clientService = clientService;
         }
 
         #region Login & Logout
@@ -85,21 +92,45 @@ namespace WebAdmin.BankingApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ModelState.AddModelError("Error", "Please fill all the required fields");                
                 return View(vm);
             }
 
-            vm.ImageUrl = UploadFile(vm.File, vm.Email);
+            vm.ImageUrl = await UploadFileAsync(vm.File, vm.Email);
             var origin = Request.Headers["origin"];
 
-            RegisterResponse response = await _userService.RegisterAsync(vm, origin);
+            RegisterResponse response = vm.Role switch
+            {
+                (int)Roles.Agent => await _agentService.RegisterAsync(vm, origin),
+                (int)Roles.Client => await _clientService.RegisterAsync(vm, origin),
+                _ => new RegisterResponse()
+            };
+
             if (response.HasError)
             {
                 vm.HasError = response.HasError;
                 vm.Error = response.Error;
+                ViewBag.Error = response.Error;
                 return View(vm);
             }
 
-            return RedirectToRoute(new { controller = "Home", action = "Index" });
+            ViewBag.Email = vm.Email;
+            if(vm.Role == (int)Roles.Client)
+            {
+                return RedirectToAction("SuccessRegistration", new { email = vm.Email, isClient = true });
+            }else if(vm.Role == (int)Roles.Agent)
+            {
+                return RedirectToAction("SuccessRegistration", new { email = vm.Email, isClient = false });
+            }
+
+            return RedirectToRoute(new { controller = "User", action = "Index" });
+
+        }
+
+        public IActionResult SuccessRegistration(string email, bool isClient)
+        {
+            ViewBag.Email = email;
+            return View(isClient);
         }
 
         [ServiceFilter(typeof(LoginAuthorize))]
@@ -112,15 +143,13 @@ namespace WebAdmin.BankingApp.Controllers
         #endregion
 
         #region Private Methods
-        private string UploadFile(IFormFile file, string email, bool isEditMode = false, string imagePath = "")
+        private async Task<string> UploadFileAsync(IFormFile file, string email, bool isEditMode = false, string imagePath = "")
         {
-            if (isEditMode)
+            if (isEditMode && file == null)
             {
-                if (file == null)
-                {
-                    return imagePath;
-                }
+                return imagePath;
             }
+
             string basePath = $"/Images/Users/{email}";
             string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{basePath}");
 
@@ -130,14 +159,12 @@ namespace WebAdmin.BankingApp.Controllers
             }
 
             Guid guid = Guid.NewGuid();
-            FileInfo fileInfo = new(file.FileName);
-            string fileName = guid + fileInfo.Extension;
-
+            string fileName = $"{guid}{Path.GetExtension(file.FileName)}";
             string fileNameWithPath = Path.Combine(path, fileName);
 
             using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
             {
-                file.CopyTo(stream);
+                await file.CopyToAsync(stream);
             }
 
             if (isEditMode)
@@ -151,9 +178,9 @@ namespace WebAdmin.BankingApp.Controllers
                     System.IO.File.Delete(completeImageOldPath);
                 }
             }
+
             return $"{basePath}/{fileName}";
         }
-
 
         #endregion
 
