@@ -7,6 +7,7 @@ using RoyalState.Core.Application.ViewModels.Users;
 using RoyalState.Core.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using RoyalState.Core.Application.ViewModels.Agent;
+using RoyalState.Core.Application.ViewModels.User;
 
 namespace RoyalState.Core.Application.Services
 {
@@ -26,16 +27,6 @@ namespace RoyalState.Core.Application.Services
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _userService = userService;
         }
-
-        #region GetByUserIdViewModel
-        public async Task<AgentViewModel> GetByUserIdViewModel(string userId)
-        {
-            var clientList = await base.GetAllViewModel();
-            AgentViewModel client = clientList.FirstOrDefault(client => client.UserId == userId);
-
-            return client;
-        }
-        #endregion
 
         #region Register
         public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin)
@@ -60,6 +51,85 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region Get Methods
 
+        #region GetAll Overriden
+        public override async Task<List<AgentViewModel>> GetAllViewModel()
+        {
+            var agents = await base.GetAllViewModel();
+            var agentsViewModels = new List<AgentViewModel>();
+
+            foreach (var agent in agents)
+            {
+                var user = await _userService.GetByIdAsync(agent.UserId);
+                var agentViewModel = new AgentViewModel
+                {
+                    Id = agent.Id,
+                    UserId = agent.UserId,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    Phone = user.Phone,
+                    ImageUrl = agent.ImageUrl,                    
+                };
+
+                agentsViewModels.Add(agentViewModel);
+
+            }
+
+            return agentsViewModels;
+
+        }
+        #endregion
+
+        #region GetByNameViewModel
+        public async Task<List<AgentViewModel>> GetByNameViewModel(string name)
+        {
+            List<UserViewModel> users = await _userService.GetByNameAsync(name);
+
+            if (users == null)
+            {
+                return null;
+            }
+
+            var agentsViewModels = new List<AgentViewModel>();
+
+            foreach (var user in users)
+            {
+                var agent = await GetByUserIdViewModel(user.Id);
+
+                AgentViewModel vm = new()
+                {
+                    Id = agent.Id,
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Phone = user.Phone,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    ImageUrl = agent.ImageUrl
+                };
+
+                agentsViewModels.Add(vm);
+            }
+
+            return agentsViewModels;
+        }
+        #endregion
+
+        #region GetByUserIdViewModel
+        public async Task<AgentViewModel> GetByUserIdViewModel(string userId)
+        {
+            var agentList = await base.GetAllViewModel();
+            AgentViewModel agent = agentList.FirstOrDefault(agent => agent.UserId == userId);
+
+            return agent;
+        }
+        #endregion
+
+        #endregion
     }
 }
+

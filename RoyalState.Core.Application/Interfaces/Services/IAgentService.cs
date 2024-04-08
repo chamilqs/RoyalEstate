@@ -9,6 +9,7 @@ namespace RoyalState.Core.Application.Interfaces.Services
     {
         Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin);
         Task<AgentViewModel> GetByUserIdViewModel(string userId);
+        Task<List<AgentViewModel>> GetByNameViewModel(string name);
 
     }
 }
