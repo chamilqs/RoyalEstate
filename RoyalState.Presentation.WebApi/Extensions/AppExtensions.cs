@@ -1,4 +1,6 @@
-﻿namespace RoyalState.WebApi.Extensions
+﻿using RoyalState.Presentation.WebApi.Middlewares;
+
+namespace RoyalState.WebApi.Extensions
 {
     public static class AppExtensions
     {
@@ -9,6 +11,10 @@
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "RoyalState API");
             });
+        }
+        public static void UseErrorHandlingMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<ErrorHandlerMiddleware>();
         }
     }
 }
