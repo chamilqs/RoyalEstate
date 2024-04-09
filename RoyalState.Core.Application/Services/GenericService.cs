@@ -51,6 +51,15 @@ namespace RoyalState.Core.Application.Services
             return viewModel;
         }
 
+        public virtual async Task<ViewModel> GetByIdViewModel(int id)
+        {
+            Entity entity = await _repository.GetByIdAsync(id);
+
+            ViewModel viewModel = _mapper.Map<ViewModel>(entity);
+
+            return viewModel;
+        }
+
         public virtual async Task<List<ViewModel>> GetAllViewModel()
         {
             List<Entity> entityList = await _repository.GetAllAsync();
