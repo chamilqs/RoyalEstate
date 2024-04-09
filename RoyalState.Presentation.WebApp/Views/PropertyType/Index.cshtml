@@ -1,8 +1,8 @@
-﻿@using RoyalState.Core.Application.ViewModels.SaleTypes;
-@model List<SaleTypeViewModel>;
+﻿@using RoyalState.Core.Application.ViewModels.PropertyTypes;
+@model List<PropertyTypeViewModel>;
 
 @{
-    ViewData["Title"] = "Manage SaleType";
+    ViewData["Title"] = "Manage PropertyType";
     Layout = "~/Views/Shared/_LayoutSmall.cshtml";
 }
 
@@ -11,7 +11,7 @@
         <h1 class="h2 mb-3">@ViewData["Title"]</h1>
 
         <div>
-            <a asp-controller="SaleType" asp-action="Create" class="btn btn-success">Add new sale type</a>
+            <a asp-controller="PropertyType" asp-action="Create" class="btn btn-success">Add new sale type</a>
         </div>
     </div>
 
@@ -32,17 +32,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (SaleTypeViewModel saleType in Model)
+                    @foreach (PropertyTypeViewModel saleType in Model)
                     {
                         <tr>
                             <td>@saleType.Name</td>
                             <td>@saleType.Description</td>
                             <td>@saleType.PropertiesQuantity</td>
                             <td class="text-center">
-                                <a asp-controller="SaleType" asp-action="Edit" asp-route-id="@saleType.Id" class="btn btn-warning">
+                                <a asp-controller="PropertyType" asp-action="Edit" asp-route-id="@saleType.Id" class="btn btn-warning">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a asp-controller="SaleType" asp-action="Delete" asp-route-id="@saleType.Id" class="btn btn-danger">
+                                <a asp-controller="PropertyType" asp-action="Delete" asp-route-id="@saleType.Id" class="btn btn-danger">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </td>
