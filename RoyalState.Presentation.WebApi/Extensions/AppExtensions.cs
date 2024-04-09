@@ -1,4 +1,5 @@
 ﻿using RoyalState.Presentation.WebApi.Middlewares;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace RoyalState.WebApi.Extensions
 {
@@ -10,6 +11,7 @@ namespace RoyalState.WebApi.Extensions
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "RoyalState API");
+                options.DefaultModelRendering(ModelRendering.Model);
             });
         }
         public static void UseErrorHandlingMiddleware(this IApplicationBuilder app)

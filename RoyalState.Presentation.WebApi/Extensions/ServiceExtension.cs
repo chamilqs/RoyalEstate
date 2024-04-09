@@ -24,7 +24,7 @@ namespace RoyalState.WebApi.Extensions
                         Url = new Uri("https://www.itla.edu.do")
                     }
                 });
-
+                options.EnableAnnotations();
                 options.DescribeAllParametersInCamelCase();
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -49,7 +49,7 @@ namespace RoyalState.WebApi.Extensions
                             Name = "Bearer",
                             In = ParameterLocation.Header,
                         }, new List<string>()
-                    }, 
+                    },
                 });
             });
         }
