@@ -192,6 +192,49 @@ namespace RoyalState.Infrastructure.Identity.Services
 
         #endregion
 
+        #region Update
+        public async Task<UpdateUserResponse> UpdateUserAsync(UpdateUserRequest request)
+        {
+            UpdateUserResponse response = new()
+            {
+                HasError = false
+            };
+
+            var user = await _userManager.FindByIdAsync(request.Id);
+
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.UserName = request.UserName;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                if (request.Password != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    result = await _userManager.ResetPasswordAsync(user, token, request.Password);
+
+                    if (!result.Succeeded)
+                    {
+                        response.HasError = true;
+                        response.Error = $"An error ocurred while trying to update the password.";
+                        return response;
+                    }
+                }
+            }
+            else
+            {
+                response.HasError = true;
+                response.Error = $"An error ocurred while trying to update the user.";
+                return response;
+            }
+
+            return response;
+        }
+
+        #endregion
+
         #region Finders
 
         public async Task<List<UserDTO>> FindByNameAsync(string name)

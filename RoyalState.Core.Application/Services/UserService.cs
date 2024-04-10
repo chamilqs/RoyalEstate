@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RoyalState.Core.Application.DTOs.Account;
+using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.User;
 using RoyalState.Core.Application.ViewModels.Users;
@@ -79,6 +80,35 @@ namespace RoyalState.Core.Application.Services
             List<UserViewModel> vm = _mapper.Map<List<UserViewModel>>(userDTO);
 
             return vm;
+        }
+
+        public async Task<SaveUserViewModel> GetUserSaveViewModel(string userId)
+        {
+            UserDTO userDTO = await _accountService.FindByIdAsync(userId);
+
+            SaveUserViewModel userVm = new SaveUserViewModel()
+            {
+                Id = userDTO.Id,
+                FirstName = userDTO.FirstName,
+                LastName = userDTO.LastName,
+                UserName = userDTO.UserName,
+                Email = userDTO.Email,
+                Phone = userDTO.Phone,                
+                Role = userDTO.Role == Roles.Admin.ToString() ? (int)Roles.Admin : (int)Roles.Client,
+            };
+
+            return userVm;
+
+        }
+
+        #endregion
+
+        #region Update
+        public async Task<UpdateUserResponse> UpdateUserAsync(SaveUserViewModel vm)
+        {
+            UpdateUserRequest updateRequest = _mapper.Map<UpdateUserRequest>(vm);
+
+            return await _accountService.UpdateUserAsync(updateRequest);
         }
         #endregion
     }
