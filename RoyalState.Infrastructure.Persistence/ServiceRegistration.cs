@@ -19,7 +19,7 @@ namespace RoyalState.Infrastructure.Persistence
             }
             else
             {
-                var connectionString = config.GetConnectionString("Default");
+                var connectionString = config.GetConnectionString("DefaultConnection");
                 services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString, migration => migration.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
             }
 
@@ -34,7 +34,7 @@ namespace RoyalState.Infrastructure.Persistence
             services.AddTransient<ISaleTypeRepository, SaleTypeRepository>();
             services.AddTransient<IPropertyTypeRepository, PropertyTypeRepository>();
             services.AddTransient<IImprovementRepository, ImprovementRepository>();
-
+            services.AddTransient<IAdminRepository, AdminRepository>();
             #endregion
         }
     }

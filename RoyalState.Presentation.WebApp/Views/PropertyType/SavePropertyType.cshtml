@@ -1,8 +1,8 @@
-﻿@using RoyalState.Core.Application.ViewModels.SaleTypes;
-@model SaveSaleTypeViewModel;
+﻿@using RoyalState.Core.Application.ViewModels.PropertyTypes;
+@model SavePropertyTypeViewModel;
 
 @{
-    ViewData["Title"] = "Save SaleType";
+    ViewData["Title"] = "Save PropertyType";
     bool editMode = Model.Id == 0 ? false : true;
     Layout = "~/Views/Shared/_LayoutSmall.cshtml";
 }
@@ -14,7 +14,7 @@
             <div class="card">
                 <div class="card-body">
 
-                    <form method="post" asp-controller="SaleType" asp-action="@(editMode ? "Edit" : "Create")">
+                    <form method="post" asp-controller="PropertyType" asp-action="@(editMode ? "Edit" : "Create")">
 
                         <div class="mb-3 fw-normal text-center">
                             <h1 class="h3">@ViewData["Title"]</h1>
@@ -40,7 +40,7 @@
 
                         <div class="row mb-3">
                             <div class="col-6">
-                                <a class="btn btn-dark col-12 " asp-controller="SaleType" asp-action="Index">Back</a>
+                                <a class="btn btn-dark col-12 " asp-controller="PropertyType" asp-action="Index">Back</a>
                             </div>
                             <div class="col-6">
                                 <button type="submit" class="btn btn-success col-12">Save</button>

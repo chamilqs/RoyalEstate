@@ -61,7 +61,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         #region Delete
         public async Task<IActionResult> Delete(int id)
         {
-            return View(await _saleTypeService.GetByIdSaveViewModel(id));
+            return View(await _saleTypeService.GetByIdViewModel(id));
         }
 
         [HttpPost]

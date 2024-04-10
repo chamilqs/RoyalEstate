@@ -9,6 +9,7 @@
         Task Update(SaveViewModel viewModel, int id);
         Task Delete(int id);
         Task<SaveViewModel> GetByIdSaveViewModel(int id);
+        Task<ViewModel> GetByIdViewModel(int id);
         Task<List<ViewModel>> GetAllViewModel();
     }
 }

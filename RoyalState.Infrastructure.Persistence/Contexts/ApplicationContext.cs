@@ -204,36 +204,42 @@ namespace RoyalState.Infrastructure.Persistence.Contexts
             #region Improvement
 
             modelBuilder.Entity<Improvement>()
-           .Property(improvement => improvement.Name)
-           .IsRequired();
+               .Property(improvement => improvement.Name)
+               .IsRequired()
+               .HasMaxLength(100);
 
             modelBuilder.Entity<Improvement>()
-           .Property(improvement => improvement.Description)
-           .IsRequired();
+               .Property(improvement => improvement.Description)
+               .IsRequired()
+               .HasMaxLength(250);
 
             #endregion
 
             #region PropertyType
 
             modelBuilder.Entity<PropertyType>()
-          .Property(pt => pt.Name)
-          .IsRequired();
+              .Property(pt => pt.Name)
+              .IsRequired()
+              .HasMaxLength(100);
 
             modelBuilder.Entity<PropertyType>()
-           .Property(pt => pt.Description)
-           .IsRequired();
+               .Property(pt => pt.Description)
+               .IsRequired()
+              .HasMaxLength(250);
 
             #endregion
 
             #region SaleType
 
             modelBuilder.Entity<SaleType>()
-         .Property(st => st.Name)
-         .IsRequired();
+             .Property(st => st.Name)
+             .IsRequired()
+             .HasMaxLength(100);
 
             modelBuilder.Entity<SaleType>()
-           .Property(st => st.Description)
-           .IsRequired();
+               .Property(st => st.Description)
+               .IsRequired()
+               .HasMaxLength(250);
 
             #endregion
 

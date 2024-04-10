@@ -1,8 +1,8 @@
-﻿@using RoyalState.Core.Application.ViewModels.SaleTypes;
-@model SaleTypeViewModel;
+﻿@using RoyalState.Core.Application.ViewModels.PropertyTypes;
+@model PropertyTypeViewModel;
 
 @{
-    ViewData["Title"] = "Delete SaleType";
+    ViewData["Title"] = "Delete PropertyType";
     Layout = "~/Views/Shared/_LayoutSmall.cshtml";
 }
 
@@ -10,7 +10,7 @@
     <div class="col-6 offset-3">
         <div class="card">
             <div class="card-header bg-white">
-                <h4>Are you sure you want to delete this type of sale and the associated properties?</h4>
+                <h4>Are you sure you want to delete this property type and all properties with this type?</h4>
             </div>
             <div class="card-body">
                 <div class="p-2">
@@ -20,13 +20,13 @@
                 </div>
             </div>
             <div class="card-footer bg-white">
-                <form method="post" asp-controller="SaleType" asp-action="Delete">
+                <form method="post" asp-controller="PropertyType" asp-action="Delete">
                     
                     <input type="hidden" asp-for="Id" />
 
                     <div class="row">
                         <div class="col-6">
-                            <a asp-controller="SaleType" asp-action="Index" class="btn btn-secondary form-control">Cancelar</a>
+                            <a asp-controller="PropertyType" asp-action="Index" class="btn btn-secondary form-control">Cancelar</a>
                         </div>
                         <div class="col-6">
                             <button type="submit" class="btn btn-outline-danger">Delete</button>

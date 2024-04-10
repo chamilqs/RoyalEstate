@@ -23,6 +23,7 @@ namespace RoyalState.Core.Application
             services.AddTransient<ISaleTypeService, SaleTypeService>();
             services.AddTransient<IPropertyTypeService, PropertyTypeService>();
             services.AddTransient<IImprovementService, ImprovementService>();
+            services.AddTransient<IAdminService, AdminService>();
             #endregion
         }
     }
