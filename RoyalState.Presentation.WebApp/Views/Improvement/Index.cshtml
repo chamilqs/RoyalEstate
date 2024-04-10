@@ -11,14 +11,14 @@
         <h1 class="h2 mb-3">@ViewData["Title"]</h1>
 
         <div>
-            <a asp-controller="Improvement" asp-action="Create" class="btn btn-success">Add new sale type</a>
+            <a asp-controller="Improvement" asp-action="Create" class="btn btn-success">Add new improvement</a>
         </div>
     </div>
 
     <div class="">
         @if (Model.Count == 0 || Model == null)
         {
-            <h3 class="text-center">There are not any sale type</h3>
+            <h3 class="text-center">There are not any improvement</h3>
         }
         else
         {
@@ -32,17 +32,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (ImprovementViewModel saleType in Model)
+                    @foreach (ImprovementViewModel improvement in Model)
                     {
                         <tr>
-                            <td>@saleType.Name</td>
-                            <td>@saleType.Description</td>
-                            <td>@saleType.PropertiesQuantity</td>
+                            <td>@improvement.Name</td>
+                            <td>@improvement.Description</td>
                             <td class="text-center">
-                                <a asp-controller="Improvement" asp-action="Edit" asp-route-id="@saleType.Id" class="btn btn-warning">
+                                <a asp-controller="Improvement" asp-action="Edit" asp-route-id="@improvement.Id" class="btn btn-warning">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a asp-controller="Improvement" asp-action="Delete" asp-route-id="@saleType.Id" class="btn btn-danger">
+                                <a asp-controller="Improvement" asp-action="Delete" asp-route-id="@improvement.Id" class="btn btn-danger">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </td>
