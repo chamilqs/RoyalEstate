@@ -9,6 +9,8 @@ namespace RoyalState.Core.Application.Interfaces.Services
         Task<string> ConfirmEmailAsync(string userId, string token);
         Task<AuthenticationResponse> LoginAsync(LoginViewModel vm);
         Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin);
+        Task<UpdateUserResponse> UpdateUserAsync(SaveUserViewModel vm);
+        Task<SaveUserViewModel> GetUserSaveViewModel(string userId);
         Task<UserViewModel> GetByEmailAsync(string email);
         Task<List<UserViewModel>> GetByNameAsync(string name);
         Task<UserViewModel> GetByIdAsync(string id);

@@ -8,8 +8,10 @@ namespace RoyalState.Core.Application.Interfaces.Services
     public interface IAgentService : IGenericService<SaveAgentViewModel, AgentViewModel, Agent>
     {
         Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin);
+        Task<UpdateUserResponse> UpdateAsync(SaveUserViewModel vm);
         Task<AgentViewModel> GetByUserIdViewModel(string userId);
         Task<List<AgentViewModel>> GetByNameViewModel(string name);
+        Task<SaveUserViewModel> GetProfileDetails();
 
     }
 }
