@@ -8,6 +8,7 @@ using RoyalState.Core.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using RoyalState.Core.Application.ViewModels.Agent;
 using RoyalState.Core.Application.ViewModels.User;
+using RoyalState.Core.Application.ViewModels.Client;
 
 namespace RoyalState.Core.Application.Services
 {
@@ -27,6 +28,39 @@ namespace RoyalState.Core.Application.Services
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _userService = userService;
         }
+
+        #region Update
+        public async Task<UpdateUserResponse> UpdateAsync(SaveUserViewModel vm)
+        {
+            UpdateUserResponse response = await _userService.UpdateUserAsync(vm);
+
+            if (!response.HasError)
+            {
+                var agent = await GetByUserIdViewModel(vm.Id);
+                if (vm.ImageUrl == null)
+                {
+                    vm.ImageUrl = agent.ImageUrl;
+                }
+
+                SaveAgentViewModel avm = new()
+                {
+                    UserId = agent.UserId,
+                    ImageUrl = vm.ImageUrl,
+                };
+
+                await base.Update(avm, agent.Id);
+
+            }
+            else
+            {
+                response.HasError = true;
+                response.Error = response.Error;
+                return response;
+            }
+
+            return response;
+        } 
+        #endregion
 
         #region Register
         public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin)
@@ -126,6 +160,19 @@ namespace RoyalState.Core.Application.Services
             AgentViewModel agent = agentList.FirstOrDefault(agent => agent.UserId == userId);
 
             return agent;
+        }
+        public async Task<SaveUserViewModel> GetProfileDetails()
+        {
+            var agent = await GetByUserIdViewModel(user.Id);
+
+            SaveUserViewModel vm = await _userService.GetUserSaveViewModel(user.Id);
+
+            if (agent != null)
+            {
+                vm.ImageUrl = agent.ImageUrl;
+            }
+
+            return vm;
         }
         #endregion
 

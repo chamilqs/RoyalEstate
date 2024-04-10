@@ -110,7 +110,7 @@
                                 <li><a href="blog.html">Blog</a></li>*@
                                 @if(User != null){
                                     if(isAgent){
-                                        <li><a asp-controller="Agent" asp-action="Profile">Profile</a></li>
+                                        <li><a asp-controller="Agent" asp-action="EditProfile">Profile</a></li>
                                         <li><a asp-controller="Agent" asp-action="Dashboard">Dashboard</a></li>
                                     }
                                     else if(isClient){

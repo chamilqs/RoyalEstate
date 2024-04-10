@@ -771,12 +771,12 @@ a {
         }
 
     .site-blocks-cover, .site-blocks-cover .row {
-        min-height: 150px;
+        min-height: 70px;
         height: calc(15vh);
     }
 
         .site-blocks-cover.inner-page-cover, .site-blocks-cover.inner-page-cover .row {
-            min-height: 150px;
+            min-height: 70px;
             height: calc(20vh);
         }
 
