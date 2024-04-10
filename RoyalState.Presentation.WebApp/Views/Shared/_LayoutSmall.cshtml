@@ -88,29 +88,27 @@
                                 <li class="active">
                                     <a asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
-                                <li>
-                                    <a asp-controller="Agent" asp-action="AllAgents">Agents</a>
-                                </li>
-                                @*<li><a href="rent.html">Rent</a></li>
-                                <li class="has-children">
-                                    <a href="properties.html">Properties</a>
-                                    <ul class="dropdown arrow-top">
-                                        <li><a href="#">Condo</a></li>
-                                        <li><a href="#">Property Land</a></li>
-                                        <li><a href="#">Commercial Building</a></li>
-                                        <li class="has-children">
-                                            <a href="#">Sub Menu</a>
-                                            <ul class="dropdown">
-                                                <li><a href="#">Menu One</a></li>
-                                                <li><a href="#">Menu Two</a></li>
-                                                <li><a href="#">Menu Three</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a href="blog.html">Blog</a></li>*@
-                                <li><a asp-controller="User" asp-action="Register">Join us!</a></li>
-                                <li><a asp-controller="User" asp-action="Index">Sign In</a></li>
+                                @if (isAdmin)
+                                {
+                                    <li><a asp-controller="Admin" asp-action="AgentList">Agent List</a></li>
+                                    <li class="has-children">
+                                        <a href="#">Maintenance</a>
+                                        <ul class="dropdown arrow-top">
+                                            <li><a asp-controller="Admin" asp-action="Index">Admins</a></li>
+                                            <li><a asp-controller="Developer" asp-action="Index">Developers</a></li>
+                                            <li><a asp-controller="Improvement" asp-action="Index">Improvements</a></li>
+                                            <li class="has-children">
+                                                <a href="#">Types</a>
+                                                <ul class="dropdown">
+                                                    <li><a asp-controller="SaleType" asp-action="Index">Sale Type</a></li>
+                                                    <li><a asp-controller="PropertyType" asp-action="Index">Property Type</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a asp-controller="User" asp-action="Logout">Logout</a></li>
+                                }
+                                
                             </ul>
                         </nav>
                     </div>
