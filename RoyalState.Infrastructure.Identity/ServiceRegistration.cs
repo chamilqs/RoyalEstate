@@ -19,26 +19,13 @@ namespace RoyalState.Infrastructure.Identity
     //Design pattern --> Decorator - Extensions methods
     public static class ServiceRegistration
     {
-        public static void AddIdentityInfrastructure(this IServiceCollection services, IConfiguration config)
+        public static void AddIdentityInfrastructureForApi(this IServiceCollection services, IConfiguration configuration)
         {
-            #region "Context Configurations"
-
-            if (config.GetValue<bool>("UseInMemoryDatabase"))
-            {
-                services.AddDbContext<IdentityContext>(opt => opt.UseInMemoryDatabase("IdentityDb"));
-            }
-            else
-            {
-                var connectionString = config.GetConnectionString("IdentityConnection");
-                services.AddDbContext<IdentityContext>(options => options.UseSqlServer(connectionString, migration => migration.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName)));
-            }
-
-            #endregion
+            ContextConfiguration(services, configuration);
 
             #region Identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<IdentityContext>()
-                .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -46,7 +33,7 @@ namespace RoyalState.Infrastructure.Identity
                 options.AccessDeniedPath = "/User/AccessDenied";
             });
 
-            services.Configure<JWTSettings>(config.GetSection("JWTSettings"));
+            services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
 
             services.AddAuthentication(options =>
             {
@@ -55,7 +42,7 @@ namespace RoyalState.Infrastructure.Identity
             }).AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
+                options.SaveToken = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -63,41 +50,89 @@ namespace RoyalState.Infrastructure.Identity
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = config["JWTSettings:Issuer"],
-                    ValidAudience = config["JWTSettings:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWTSettings:Key"]))
+                    ValidIssuer = configuration["JWTSettings:Issuer"],
+                    ValidAudience = configuration["JWTSettings:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:Key"]))
                 };
                 options.Events = new JwtBearerEvents()
                 {
-                    OnAuthenticationFailed = c =>
+                    OnAuthenticationFailed = context =>
                     {
-                        c.NoResult();
-                        c.Response.StatusCode = 500;
-                        c.Response.ContentType = "text/plain";
-                        return c.Response.WriteAsync(c.Exception.ToString());
+                        context.NoResult();
+                        context.Response.StatusCode = 500;
+                        context.Response.ContentType = "text/plain";
+                        return context.Response.WriteAsync(context.Exception.ToString());
                     },
-                    OnChallenge = c =>
+                    OnChallenge = context =>
                     {
-                        c.HandleResponse();
-                        c.Response.StatusCode = 401;
-                        c.Response.ContentType = "application/json";
-                        var result = JsonConvert.SerializeObject(new JwtResponse { HasError = true, Error = "You are not Autorized" });
-                        return c.Response.WriteAsync(result);
+                        context.HandleResponse();
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+                        var result = JsonConvert.SerializeObject(new Response<string>("You are not Authorized"));
+                        return context.Response.WriteAsync(result);
                     },
-                    OnForbidden = c =>
+                    OnForbidden = context =>
                     {
-                        c.Response.StatusCode = 403;
-                        c.Response.ContentType = "application/json";
-                        var result = JsonConvert.SerializeObject(new JwtResponse { HasError = true, Error = "You are not Autorized to access this resource" });
-                        return c.Response.WriteAsync(result);
+                        context.Response.StatusCode = 403;
+                        context.Response.ContentType = "application/json";
+                        var result = JsonConvert.SerializeObject(new Response<string>("You are not authorized to access this resource"));
+                        return context.Response.WriteAsync(result);
                     }
                 };
+
             });
             #endregion
 
+            ServiceConfiguration(services);
+        }
+
+        public static void AddIdentityInfrastructureForWeb(this IServiceCollection services, IConfiguration configuration)
+        {
+            ContextConfiguration(services, configuration);
+
+            #region Identity
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/User";
+                options.AccessDeniedPath = "/User/AccessDenied";
+            });
+
+            services.AddAuthentication();
+            #endregion
+
+            ServiceConfiguration(services);
+        }
+
+        #region "Private methods"
+
+        private static void ContextConfiguration(IServiceCollection services, IConfiguration configuration)
+        {
+            #region Contexts
+            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            {
+                services.AddDbContext<IdentityContext>(options => options.UseInMemoryDatabase("IdentityDb"));
+            }
+            else
+            {
+                services.AddDbContext<IdentityContext>(options =>
+                {
+                    options.EnableSensitiveDataLogging();
+                    options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"),
+                    m => m.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName));
+                });
+            }
+            #endregion
+        }
+
+        private static void ServiceConfiguration(IServiceCollection services)
+        {
             #region Services
             services.AddTransient<IAccountService, AccountService>();
             #endregion
         }
+        #endregion
     }
 }

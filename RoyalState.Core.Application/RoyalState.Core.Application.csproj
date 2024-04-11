@@ -11,10 +11,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Features\Agents\Commands\ChangeAgentStatus\" />
-		<Folder Include="Features\Agents\Queries\GetAllAgents\" />
-		<Folder Include="Features\Agents\Queries\GetAgentById\" />
-		<Folder Include="Features\Agents\Queries\GetAgentPropertyById\" />
 		<Folder Include="Features\Improvements\Commands\CreateImprovement\" />
 		<Folder Include="Features\Improvements\Commands\DeleteImprovementById\" />
 		<Folder Include="Features\Improvements\Commands\UpdateImprovement\" />
