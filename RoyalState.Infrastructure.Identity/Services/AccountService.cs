@@ -236,6 +236,35 @@ namespace RoyalState.Infrastructure.Identity.Services
 
         #endregion
 
+        #region Active & Unactive 
+        public async Task<GenericResponse> UpdateUserStatusAsync(string userId)
+        {
+            GenericResponse response = new()
+            {
+                HasError = false
+            };
+
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Error = $"User: {username} not found.";
+                return response;
+            }
+
+            user.EmailConfirmed = !user.EmailConfirmed;
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                response.HasError = true;
+                response.Error = $"An error has ocurred trying to update the status of the user: {username}.";
+                return response;
+            }
+
+            return response;
+        }
+        #endregion
+
         #region Finders
 
         public async Task<List<UserDTO>> FindByNameAsync(string name)
