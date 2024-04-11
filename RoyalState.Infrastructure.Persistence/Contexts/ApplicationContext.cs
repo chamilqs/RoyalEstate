@@ -206,12 +206,12 @@ namespace RoyalState.Infrastructure.Persistence.Contexts
             modelBuilder.Entity<Improvement>()
                .Property(improvement => improvement.Name)
                .IsRequired()
-               .HasMaxLength(100);
+               .HasMaxLength(50);
 
             modelBuilder.Entity<Improvement>()
                .Property(improvement => improvement.Description)
                .IsRequired()
-               .HasMaxLength(250);
+               .HasMaxLength(150);
 
             #endregion
 
@@ -220,12 +220,12 @@ namespace RoyalState.Infrastructure.Persistence.Contexts
             modelBuilder.Entity<PropertyType>()
               .Property(pt => pt.Name)
               .IsRequired()
-              .HasMaxLength(100);
+              .HasMaxLength(50);
 
             modelBuilder.Entity<PropertyType>()
                .Property(pt => pt.Description)
                .IsRequired()
-              .HasMaxLength(250);
+              .HasMaxLength(150);
 
             #endregion
 
@@ -234,12 +234,12 @@ namespace RoyalState.Infrastructure.Persistence.Contexts
             modelBuilder.Entity<SaleType>()
              .Property(st => st.Name)
              .IsRequired()
-             .HasMaxLength(100);
+             .HasMaxLength(50);
 
             modelBuilder.Entity<SaleType>()
                .Property(st => st.Description)
                .IsRequired()
-               .HasMaxLength(250);
+               .HasMaxLength(150);
 
             #endregion
 
