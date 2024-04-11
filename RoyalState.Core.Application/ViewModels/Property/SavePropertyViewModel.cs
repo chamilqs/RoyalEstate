@@ -33,12 +33,8 @@ namespace RoyalState.Core.Application.ViewModels.Property
         public string Description { get; set; }
 
         public int? AgentId { get; set; }
-
-        [MinLength(1, ErrorMessage = "You need to provide at least one image for the property.")]
-        public List<string> PropertyImages { get; set; }
-
-        [MinLength(1, ErrorMessage = "You need to provide at least one improvement for the property.")]
-        public List<string> Improvements { get; set; }
+        public List<string>? PropertyImages { get; set; }
+        public List<int>? Improvements { get; set; }
     }
 
 }

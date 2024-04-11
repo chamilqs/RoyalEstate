@@ -18,7 +18,6 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
         public IActionResult Index()
         {
-             //Send viewbags with data about property types etc if authviewmodel is not null 
             if (authViewModel != null)
             {
                 // ViewBag.PropertyTypes = authViewModel;

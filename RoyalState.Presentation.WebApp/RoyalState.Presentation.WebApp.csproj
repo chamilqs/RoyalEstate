@@ -34,6 +34,10 @@
     <ProjectReference Include="..\RoyalState.Infrastructure.Shared\RoyalState.Infrastructure.Shared.csproj" />
   </ItemGroup>
 
+<ItemGroup>
+  <HotReloadEnvironmentHashingData Include="AssemblyInfo.cs" />
+</ItemGroup>
+
   <ItemGroup>
     <Content Update="Views\SaleType\Delete.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

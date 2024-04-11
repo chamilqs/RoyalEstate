@@ -2,6 +2,8 @@
 {
     public class PropertyViewModel
     {
+
+        #region Property details
         public int Id { get; set; }
         public string Code { get; set; }
         public int PropertyTypeId { get; set; }
@@ -12,6 +14,7 @@
         public int Bathrooms { get; set; }
         public string Description { get; set; }
 
+        #region Agent details
         // Agent details
         public int AgentId { get; set; }
         public string AgentFirstName { get; set; }
@@ -20,12 +23,12 @@
         public string AgentPhone { get; set; }
         public string AgentEmail { get; set; }
         public string AgentImage { get; set; }
+        #endregion
 
+        #endregion
 
         public List<string>? PropertyImages { get; set; }
         public List<string>? Improvements { get; set; }
-
-        // public ICollection<PropertyImageViewModel> PropertyImages { get; set; }
 
     }
 }

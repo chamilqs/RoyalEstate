@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.ViewModels.Users;
-using RoyalState.Core.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using RoyalState.Core.Application.ViewModels.Agent;
 using RoyalState.Core.Application.ViewModels.User;
-using RoyalState.Core.Application.ViewModels.Client;
+using RoyalState.Core.Application.ViewModels.Users;
+using RoyalState.Core.Domain.Entities;
 
 namespace RoyalState.Core.Application.Services
 {
@@ -64,7 +63,7 @@ namespace RoyalState.Core.Application.Services
             }
 
             return response;
-        } 
+        }
         #endregion
 
         #region Register
@@ -123,6 +122,16 @@ namespace RoyalState.Core.Application.Services
 
             return agentsViewModels;
 
+        }
+        #endregion
+
+        #region GetByIdViewModel Overriden
+        public async override Task<AgentViewModel> GetByIdViewModel(int id)
+        {
+            var agents = await base.GetAllViewModel();
+            var agent = agents.FirstOrDefault(agent => agent.Id == id);
+
+            return agent;
         }
         #endregion
 
