@@ -26,5 +26,22 @@ namespace RoyalState.Presentation.WebApp.Controllers
         {
             return View();
         }
+
+
+
+        #region Active & Unactive User
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserStatus(string userId, string controller)
+        {
+            var response = await _adminService.UpdateUserStatus(userId);
+
+            if (response.HasError)
+            {
+                return RedirectToRoute(new { controller = controller, action = "Index", hasError = response.HasError, message = response.Error });
+            }
+
+            return RedirectToRoute(new { controller = controller, action = "Index", });
+        }
+        #endregion
     }
 }
