@@ -73,7 +73,7 @@
             </div>
             <div class="site-mobile-menu-body"></div>
         </div>
-        <div class="site-navbar mt-2">
+        <div class="site-navbar mt-4">
             <div class="container py-1">
                 <div class="row align-items-center">
                     <div class="col-8 col-md-8 col-lg-4">
@@ -88,25 +88,45 @@
                                 <li class="active">
                                     <a asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
-                                @if (isAdmin)
+                                <li>
+                                    <a asp-controller="Agent" asp-action="AllAgents">Agents</a>
+                                </li>
+                                @if (User != null)
                                 {
-                                    <li><a asp-controller="Admin" asp-action="AgentList">Agent List</a></li>
-                                    <li class="has-children">
-                                        <a href="#">Maintenance</a>
-                                        <ul class="dropdown arrow-top">
-                                            <li><a asp-controller="Admin" asp-action="Index">Admins</a></li>
-                                            <li><a asp-controller="Developer" asp-action="Index">Developers</a></li>
-                                            <li><a asp-controller="Improvement" asp-action="Index">Improvements</a></li>
-                                            <li class="has-children">
-                                                <a href="#">Types</a>
-                                                <ul class="dropdown">
-                                                    <li><a asp-controller="SaleType" asp-action="Index">Sale Type</a></li>
-                                                    <li><a asp-controller="PropertyType" asp-action="Index">Property Type</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    if (isAgent)
+                                    {
+                                        <li><a asp-controller="Agent" asp-action="EditProfile">Profile</a></li>
+                                        <li><a asp-controller="Agent" asp-action="Dashboard">Dashboard</a></li>
+                                    }
+                                    else if (isClient)
+                                    {
+                                        <li><a asp-controller="Client" asp-action="Index">My Properties</a></li>
+                                    }
+                                    else if (isAdmin)
+                                    {
+                                        <li><a asp-controller="Admin" asp-action="AgentList">Agent List</a></li>
+                                        <li class="has-children">
+                                            <a href="#">Maintenance</a>
+                                            <ul class="dropdown arrow-top">
+                                                <li><a asp-controller="Admin" asp-action="Index">Admins</a></li>
+                                                <li><a asp-controller="Developer" asp-action="Index">Developers</a></li>
+                                                <li><a asp-controller="Improvement" asp-action="Index">Improvements</a></li>
+                                                <li class="has-children">
+                                                    <a href="#">Types</a>
+                                                    <ul class="dropdown">
+                                                        <li><a asp-controller="SaleType" asp-action="Index">Sale Type</a></li>
+                                                        <li><a asp-controller="PropertyType" asp-action="Index">Property Type</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    }
                                     <li><a asp-controller="User" asp-action="Logout">Logout</a></li>
+                                }
+                                else
+                                {
+                                    <li><a asp-controller="User" asp-action="Register">Join us!</a></li>
+                                    <li><a asp-controller="User" asp-action="Index">Sign In</a></li>
                                 }
                             </ul>
                         </nav>
@@ -122,70 +142,11 @@
     </div>
 
     <div class="container">
-        <main role="main" class="py-3">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-  
-    <!--<footer class="site-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="mb-5">
-                        <h3 class="footer-heading mb-4">About RoyalState</h3>
-                        <p>Our mission at RoyalState is to provide exceptional real estate services to our clients. We strive to exceed expectations by delivering personalized solutions and creating long-lasting relationships. With our expertise and dedication, we aim to help individuals and families find their dream homes and make informed investment decisions. Trust RoyalState for all your real estate needs.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-5 mb-lg-0">
-                    <div class="row mb-5">
-                        <div class="col-md-12">
-                            <h3 class="footer-heading mb-4">Navigations</h3>
-                        </div>
-                        <div class="col-md-6 col-lg-6">
-                            <ul class="list-unstyled">
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">Buy</a></li>
-                                <li><a href="#">Rent</a></li>
-                                <li><a href="#">Properties</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6 col-lg-6">
-                            <ul class="list-unstyled">
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Contact Us</a></li>
-                                <li><a href="#">Terms</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-
-                </div>
-
-                <div class="col-lg-4 mb-5 mb-lg-0">
-                    <h3 class="footer-heading mb-4">Follow Us</h3>
-
-                    <div>
-                        <a href="#" class="pl-0 pr-3"><span class="icon-facebook"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
-                    </div>
-                </div>
-
-            </div>
-            <div class="row pt-5 mt-5 text-center">
-                <div class="col-md-12">
-                    <p>
-                        Copyright &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear());</script> All rights reserved | This site is made with <i class="icon-heart text-danger" aria-hidden="true"></i> by <a href="https://itla.edu.do" target="_blank">Team Onix, Cristoff, Sami</a>
-                    </p>
-                </div>
-
-            </div>
-        </div>
-    </footer>-->
-  
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -208,13 +169,6 @@
 </body>
 </html>
 
-<script>
-    $(document).ready(function () {
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-    });
-</script>
 
 
 
