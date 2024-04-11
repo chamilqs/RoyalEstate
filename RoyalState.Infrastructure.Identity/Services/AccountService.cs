@@ -247,11 +247,11 @@ namespace RoyalState.Infrastructure.Identity.Services
                 HasError = false
             };
 
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 response.HasError = true;
-                response.Error = $"User: {username} not found.";
+                response.Error = $"User: {userId} not found.";
                 return response;
             }
 
@@ -260,7 +260,7 @@ namespace RoyalState.Infrastructure.Identity.Services
             if (!result.Succeeded)
             {
                 response.HasError = true;
-                response.Error = $"An error has ocurred trying to update the status of the user: {username}.";
+                response.Error = $"An error has ocurred trying to update the status of the user: {userId}.";
                 return response;
             }
 

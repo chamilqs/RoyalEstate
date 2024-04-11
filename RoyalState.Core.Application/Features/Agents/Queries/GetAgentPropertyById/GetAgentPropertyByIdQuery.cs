@@ -89,3 +89,4 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyBy
 
         }
     }
+}
