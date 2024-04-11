@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Interfaces.Services;
+using RoyalState.Core.Application.Wrappers;
 using RoyalState.Core.Domain.Settings;
 using RoyalState.Infrastructure.Identity.Contexts;
 using RoyalState.Infrastructure.Identity.Entities;
