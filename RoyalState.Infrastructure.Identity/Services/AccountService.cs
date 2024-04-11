@@ -206,6 +206,7 @@ namespace RoyalState.Infrastructure.Identity.Services
             user.LastName = request.LastName;
             user.Email = request.Email;
             user.UserName = request.UserName;
+            user.PhoneNumber = request.Phone;
 
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)

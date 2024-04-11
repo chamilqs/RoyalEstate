@@ -42,13 +42,18 @@ namespace RoyalState.Core.Application.Services
                     vm.ImageUrl = agent.ImageUrl;
                 }
 
-                SaveAgentViewModel avm = new()
+                Agent avm = new()
                 {
+                    Id = agent.Id,
                     UserId = agent.UserId,
                     ImageUrl = vm.ImageUrl,
+                    CreatedBy = user.UserName,
+                    CreatedDate = DateTime.UtcNow,
+                    LastModifiedBy = user.UserName,
+                    LastModifiedDate = DateTime.UtcNow
                 };
 
-                await base.Update(avm, agent.Id);
+                await _agentRepository.UpdateAsync(avm, agent.Id);
 
             }
             else
@@ -96,19 +101,23 @@ namespace RoyalState.Core.Application.Services
             foreach (var agent in agents)
             {
                 var user = await _userService.GetByIdAsync(agent.UserId);
-                var agentViewModel = new AgentViewModel
-                {
-                    Id = agent.Id,
-                    UserId = agent.UserId,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    EmailConfirmed = user.EmailConfirmed,
-                    Phone = user.Phone,
-                    ImageUrl = agent.ImageUrl,                    
-                };
 
-                agentsViewModels.Add(agentViewModel);
+                if (user.EmailConfirmed)
+                {
+                    var agentViewModel = new AgentViewModel
+                    {
+                        Id = agent.Id,
+                        UserId = agent.UserId,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        EmailConfirmed = user.EmailConfirmed,
+                        Phone = user.Phone,
+                        ImageUrl = agent.ImageUrl,
+                    };
+
+                    agentsViewModels.Add(agentViewModel);
+                }
 
             }
 

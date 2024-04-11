@@ -32,8 +32,7 @@ namespace RoyalState.Core.Application.ViewModels.Property
         [Required(ErrorMessage = "You can't leave the description empty.")]
         public string Description { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "Please select an agent.")]
-        public int AgentId { get; set; }
+        public int? AgentId { get; set; }
 
         [MinLength(1, ErrorMessage = "You need to provide at least one image for the property.")]
         public List<string> PropertyImages { get; set; }
