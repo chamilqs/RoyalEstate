@@ -35,6 +35,7 @@ namespace RoyalState.Infrastructure.Persistence
             services.AddTransient<IPropertyTypeRepository, PropertyTypeRepository>();
             services.AddTransient<IImprovementRepository, ImprovementRepository>();
             services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddTransient<IPropertyImprovementRepository, PropertyImprovementRepository>();
             #endregion
         }
     }

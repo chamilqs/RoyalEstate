@@ -25,5 +25,22 @@ namespace RoyalState.Core.Application.Services
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _userService = userService;
         }
+
+        #region GetImagesByPropertyId
+        public async Task<List<string>> GetImagesByPropertyId(int propertyId)
+        {
+            var propertyImageList = await GetAllViewModel();
+            propertyImageList.Where(p => p.PropertyId == propertyId);
+
+            List<string> propertyImages = new();
+            foreach (var image in propertyImageList)
+            {
+                propertyImages.Add(image.ImageUrl);
+            }
+
+            return propertyImages;
+        }
+        #endregion
+
     }
 }
