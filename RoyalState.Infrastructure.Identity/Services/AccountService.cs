@@ -13,6 +13,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using RoyalState.Core.Application.DTOs.Email;
 using Microsoft.EntityFrameworkCore;
+using Azure.Core;
+using RoyalState.Core.Application.Wrappers;
+using MediatR;
 
 namespace RoyalState.Infrastructure.Identity.Services
 {
@@ -20,7 +23,7 @@ namespace RoyalState.Infrastructure.Identity.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly JWTSettings _jwtSettings ;
+        private readonly JWTSettings _jwtSettings;
         private readonly IEmailService _emailService;
 
         public AccountService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<JWTSettings> jwtSettings, IEmailService emailService)
@@ -171,24 +174,24 @@ namespace RoyalState.Infrastructure.Identity.Services
         }
 
         public async Task<string> ConfirmAccountAsync(string userId, string token)
-                {
-                    var user = await _userManager.FindByIdAsync(userId);
-                    if (user == null)
-                    {
-                        return $"No accounts registered with this user.";
-                    }
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return $"No accounts registered with this user.";
+            }
 
-                    token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
-                    var result = await _userManager.ConfirmEmailAsync(user, token);
-                    if (result.Succeeded)
-                    {
-                        return $"Account confirmed for {user.Email}. You can now use the app.";
-                    }
-                    else
-                    {
-                        return $"An error occurred while trying to confirm the email: {user.Email}.";
-                    }
-                }
+            token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return $"Account confirmed for {user.Email}. You can now use the app.";
+            }
+            else
+            {
+                return $"An error occurred while trying to confirm the email: {user.Email}.";
+            }
+        }
 
         #endregion
 
