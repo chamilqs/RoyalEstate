@@ -7,7 +7,9 @@
         public int Id { get; set; }
         public string Code { get; set; }
         public int PropertyTypeId { get; set; }
+        public string PropertyTypeName { get; set; }
         public int SaleTypeId { get; set; }
+        public string SaleTypeName { get; set; }
         public double Price { get; set; }
         public double Meters { get; set; }
         public int Bedrooms { get; set; }

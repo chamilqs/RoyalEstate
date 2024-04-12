@@ -16,13 +16,15 @@ namespace RoyalState.Core.Application.Services
         private readonly IPropertyRepository _propertyRepository;
         private readonly IImprovementService _improvementService;
         private readonly IPropertyImageService _propertyImageService;
+        private readonly IPropertyTypeService _propertyTypeService;
+        private readonly ISaleTypeService _saleTypeService;
         private readonly IPropertyImprovementService _propertyImprovementService;
         private readonly IAgentService _agentService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
-        public PropertyService(IPropertyRepository propertyRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IImprovementService improvementService, IPropertyImageService propertyImageService, IPropertyImprovementService propertyImprovementService, IAgentService agentService) : base(propertyRepository, mapper)
+        public PropertyService(IPropertyRepository propertyRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IImprovementService improvementService, IPropertyImageService propertyImageService, IPropertyImprovementService propertyImprovementService, IAgentService agentService, IPropertyTypeService propertyTypeService, ISaleTypeService saleTypeService) : base(propertyRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _propertyRepository = propertyRepository;
@@ -32,6 +34,8 @@ namespace RoyalState.Core.Application.Services
             _propertyImageService = propertyImageService;
             _propertyImprovementService = propertyImprovementService;
             _agentService = agentService;
+            _propertyTypeService = propertyTypeService;
+            _saleTypeService = saleTypeService;
         }
 
         #region Add Overriden
@@ -84,13 +88,17 @@ namespace RoyalState.Core.Application.Services
                 var propertyImages = await _propertyImageService.GetImagesByPropertyId(property.Id);
                 var propertyImprovements = await _propertyImprovementService.GetImprovementsByPropertyId(property.Id);
                 var agent = await _agentService.GetByIdViewModel(property.AgentId);
+                var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
+                var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
 
                 PropertyViewModel propertyViewModel = new PropertyViewModel
                 {
                     Id = property.Id,
                     Code = property.Code,
                     PropertyTypeId = property.PropertyTypeId,
+                    PropertyTypeName = propertyType.Name,
                     SaleTypeId = property.SaleTypeId,
+                    SaleTypeName = saleType.Name,
                     Price = property.Price,
                     Meters = property.Meters,
                     Description = property.Description,
