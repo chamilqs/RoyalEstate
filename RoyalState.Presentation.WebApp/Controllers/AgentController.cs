@@ -76,11 +76,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         #endregion
 
         #region Dashboard
-        public async Task<IActionResult> Dashboard()
+        public async Task<IActionResult> Maintenance()
         {
             var properties = await _propertyService.GetAllViewModel();
-
-
             return View(properties);
         }
 
@@ -127,8 +125,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
             }
 
             await _propertyService.Add(vm);
-
-            return RedirectToAction("Dashboard");
+            return RedirectToAction("Maintenance");
         }
 
         private async Task SetViewBagData()

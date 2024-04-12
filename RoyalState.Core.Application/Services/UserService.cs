@@ -22,7 +22,7 @@ namespace RoyalState.Core.Application.Services
         public async Task<AuthenticationResponse> LoginAsync(LoginViewModel vm)
         {
             AuthenticationRequest loginRequest = _mapper.Map<AuthenticationRequest>(vm);
-            AuthenticationResponse userResponse = await _accountService.AuthenticateAsync(loginRequest);
+            AuthenticationResponse userResponse = await _accountService.AuthenticateWebAppAsync(loginRequest);
 
             return userResponse;
         }

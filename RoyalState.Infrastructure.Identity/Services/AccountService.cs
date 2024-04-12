@@ -35,7 +35,9 @@ namespace RoyalState.Infrastructure.Identity.Services
         }
 
         #region Login
-        public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
+
+        #region AuthenticateApi
+        public async Task<AuthenticationResponse> AuthenticateWebApiAsync(AuthenticationRequest request)
         {
             AuthenticationResponse response = new();
 
@@ -82,11 +84,61 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             return response;
         }
+        #endregion
 
+        #region AuthenticateWebApp
+        public async Task<AuthenticationResponse> AuthenticateWebAppAsync(AuthenticationRequest request)
+        {
+            AuthenticationResponse response = new();
+
+            var user = await _userManager.FindByEmailAsync(request.Credential);
+            if (user == null)
+            {
+                user = await _userManager.FindByNameAsync(request.Credential);
+                if (user == null)
+                {
+                    response.HasError = true;
+                    response.Error = $"No accounts registered with email or username: {request.Credential}";
+                    return response;
+                }
+
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                response.HasError = true;
+                response.Error = $"Invalid credentials, please try again.";
+                return response;
+            }
+            if (!user.EmailConfirmed)
+            {
+                response.HasError = true;
+                response.Error = $"Account not confirmed for {user.Email}";
+                return response;
+            }
+
+            response.Id = user.Id;
+            response.Email = user.Email;
+            response.UserName = user.UserName;
+
+            var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+
+            response.Roles = rolesList.ToList();
+            response.IsVerified = user.EmailConfirmed;
+
+
+            return response;
+        }
+        #endregion
+
+        #region SingOut
         public async Task SingOutAsync()
         {
             await _signInManager.SignOutAsync();
         }
+        #endregion
+
         #endregion
 
         #region Register

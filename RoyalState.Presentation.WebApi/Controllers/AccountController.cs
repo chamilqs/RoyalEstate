@@ -29,7 +29,7 @@ namespace RoyalState.WebApi.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> AuthenticateAsync(AuthenticationRequest request)
         {
-            return Ok(await _accountService.AuthenticateAsync(request));
+            return Ok(await _accountService.AuthenticateWebApiAsync(request));
         }
 
         [HttpPost("developerRegister")]

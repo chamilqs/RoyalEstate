@@ -107,6 +107,7 @@ namespace RoyalState.Core.Application.Services
                     {
                         Id = agent.Id,
                         UserId = agent.UserId,
+                        UserName = user.UserName,
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                         Email = user.Email,
@@ -128,7 +129,7 @@ namespace RoyalState.Core.Application.Services
         #region GetByIdViewModel Overriden
         public async override Task<AgentViewModel> GetByIdViewModel(int id)
         {
-            var agents = await base.GetAllViewModel();
+            var agents = await GetAllViewModel();
             var agent = agents.FirstOrDefault(agent => agent.Id == id);
 
             return agent;

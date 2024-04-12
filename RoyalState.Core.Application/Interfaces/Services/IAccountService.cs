@@ -4,7 +4,8 @@ namespace RoyalState.Core.Application.Interfaces.Services
     public interface IAccountService
     {
         Task<string> ConfirmAccountAsync(string userId, string token);
-        Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request);
+        Task<AuthenticationResponse> AuthenticateWebApiAsync(AuthenticationRequest request);
+        Task<AuthenticationResponse> AuthenticateWebAppAsync(AuthenticationRequest request);
         Task<RegisterResponse> RegisterUserAsync(RegisterRequest request, string origin);
         Task<UpdateUserResponse> UpdateUserAsync(UpdateUserRequest request);
         Task<GenericResponse> UpdateUserStatusAsync(string userId);
