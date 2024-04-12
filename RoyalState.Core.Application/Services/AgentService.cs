@@ -5,6 +5,7 @@ using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.Agent;
+using RoyalState.Core.Application.ViewModels.Property;
 using RoyalState.Core.Application.ViewModels.User;
 using RoyalState.Core.Application.ViewModels.Users;
 using RoyalState.Core.Domain.Entities;
@@ -14,18 +15,20 @@ namespace RoyalState.Core.Application.Services
     public class AgentService : GenericService<SaveAgentViewModel, AgentViewModel, Agent>, IAgentService
     {
         private readonly IAgentRepository _agentRepository;
+        private readonly IPropertyService _propertyService;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
-        public AgentService(IAgentRepository agentRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IUserService userService) : base(agentRepository, mapper)
+        public AgentService(IAgentRepository agentRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IUserService userService, IPropertyService propertyService) : base(agentRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _agentRepository = agentRepository;
             _mapper = mapper;
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _userService = userService;
+            _propertyService = propertyService;
         }
 
         #region Update
@@ -92,6 +95,10 @@ namespace RoyalState.Core.Application.Services
         #region Get Methods
 
         #region GetAll Overriden
+        /// <summary>
+        /// Retrieves a list of all agent view models.
+        /// </summary>
+        /// <returns>The list of agent view models.</returns>
         public override async Task<List<AgentViewModel>> GetAllViewModel()
         {
             var agents = await base.GetAllViewModel();
@@ -127,6 +134,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetByIdViewModel Overriden
+        /// <summary>
+        /// Retrieves an agent view model by ID.
+        /// </summary>
+        /// <param name="id">The ID of the agent.</param>
+        /// <returns>The agent view model.</returns>
         public async override Task<AgentViewModel> GetByIdViewModel(int id)
         {
             var agents = await GetAllViewModel();
@@ -137,6 +149,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetByNameViewModel
+        /// <summary>
+        /// Retrieves a list of agent view models by name.
+        /// </summary>
+        /// <param name="name">The name to search for.</param>
+        /// <returns>The list of agent view models.</returns>
         public async Task<List<AgentViewModel>> GetByNameViewModel(string name)
         {
             List<UserViewModel> users = await _userService.GetByNameAsync(name);
@@ -173,13 +190,25 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetByUserIdViewModel
+        /// <summary>
+        /// Retrieves an agent view model by user ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>The agent view model.</returns>
         public async Task<AgentViewModel> GetByUserIdViewModel(string userId)
         {
-            var agentList = await base.GetAllViewModel();
+            var agentList = await GetAllViewModel();
             AgentViewModel agent = agentList.FirstOrDefault(agent => agent.UserId == userId);
 
             return agent;
         }
+        #endregion
+
+        #region GetProfileDetails
+        /// <summary>
+        /// Retrieves the profile details of the current agent.
+        /// </summary>
+        /// <returns>The profile details of the agent.</returns>
         public async Task<SaveUserViewModel> GetProfileDetails()
         {
             var agent = await GetByUserIdViewModel(user.Id);
@@ -192,6 +221,23 @@ namespace RoyalState.Core.Application.Services
             }
 
             return vm;
+        }
+        #endregion
+
+        #region GetAgentProperties
+        /// <summary>
+        /// Retrieves the list of property view models associated with the specified agent ID.
+        /// </summary>
+        /// <param name="id">The ID of the agent.</param>
+        /// <returns>The list of property view models.</returns>
+        public async Task<List<PropertyViewModel>> GetAgentProperties(int id)
+        {
+            var propertiesList = await _propertyService.GetAllViewModel();
+            var agent = await GetByIdViewModel(id);
+
+            propertiesList = propertiesList.Where(p => p.AgentId == agent.Id).ToList();
+
+            return propertiesList;
         }
         #endregion
 
