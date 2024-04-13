@@ -7,8 +7,6 @@ namespace RoyalState.Core.Application.ViewModels.ClientProperties
     {
         public int Id { get; set; }
         public int PropertyId { get; set; }
-        public PropertyViewModel Property { get; set; }
         public int ClientId { get; set; }
-        public ClientViewModel Client { get; set; }
     }
 }

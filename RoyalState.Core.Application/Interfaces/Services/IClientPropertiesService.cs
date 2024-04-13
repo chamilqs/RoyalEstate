@@ -5,5 +5,6 @@ namespace RoyalState.Core.Application.Interfaces.Services
 {
     public interface IClientPropertiesService : IGenericService<SaveClientPropertiesViewModel, ClientPropertiesViewModel, ClientProperties>
     {
+        Task<ClientPropertiesViewModel> GetByPropertyIdViewModel(int propertyId);
     }
 }
