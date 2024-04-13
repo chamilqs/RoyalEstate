@@ -3,7 +3,6 @@ using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.Agent;
-using RoyalState.Core.Application.ViewModels.Property;
 using RoyalState.Core.Application.ViewModels.Users;
 
 namespace RoyalState.Presentation.WebApp.Controllers
@@ -11,24 +10,26 @@ namespace RoyalState.Presentation.WebApp.Controllers
     public class AgentController : Controller
     {
         private readonly IAgentService _agentService;
-        private readonly IFileService _fileService;
-        private readonly IImprovementService _improvmentService;
         private readonly IPropertyService _propertyService;
-        private readonly IPropertyTypeService _propertyTypeService;
-        private readonly ISaleTypeService _saleTypeService;
+        private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse authViewModel;
 
-        public AgentController(IAgentService agentService, IHttpContextAccessor httpContextAccessor, IImprovementService improvmentService, ISaleTypeService saleTypeService, IPropertyTypeService propertyTypeService, IPropertyService propertyService, IFileService fileService)
+        public AgentController(IAgentService agentService, IHttpContextAccessor httpContextAccessor, IFileService fileService, IPropertyService propertyService)
         {
             _agentService = agentService;
             _httpContextAccessor = httpContextAccessor;
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            _improvmentService = improvmentService;
-            _saleTypeService = saleTypeService;
-            _propertyTypeService = propertyTypeService;
-            _propertyService = propertyService;
             _fileService = fileService;
+            _propertyService = propertyService;
+        }
+
+        public async Task <IActionResult> Index()
+        {
+            var agent = await _agentService.GetByUserIdViewModel(authViewModel.Id);
+            var properties = await _propertyService.GetAgentProperties(agent.Id);
+            return View(properties);
+
         }
 
         #region Get Agents
@@ -39,13 +40,12 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
         #endregion
 
-        #region Edit
+        #region Edit Profile
         public async Task<IActionResult> EditProfile()
         {
             SaveUserViewModel vm = await _agentService.GetProfileDetails();
             return View(vm);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> EditProfile(SaveUserViewModel vm)
@@ -73,69 +73,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             return RedirectToAction("EditProfile");
         }
-        #endregion
-
-        #region Dashboard
-        public async Task<IActionResult> Maintenance()
-        {
-            var properties = await _propertyService.GetAllViewModel();
-            return View(properties);
-        }
-
-        public async Task<IActionResult> NewProperty()
-        {
-
-            await SetViewBagData();
-            return View(new SavePropertyViewModel());
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> NewPropertyPost(SavePropertyViewModel vm, IFormFileCollection files)
-        {
-            string error = null;
-
-            if (!ModelState.IsValid)
-            {
-                error = "Please check for missing or incorrect fields";
-            }
-            else if (vm.Improvements == null || !vm.Improvements.Any())
-            {
-                error = "You need to provide at least one improvement for the property.";
-            }
-            else if (!files.Any())
-            {
-                error = "You need to provide at least one image for the property.";
-            }
-
-            if (error != null)
-            {
-                await SetViewBagData();
-                ViewBag.Error = error;
-                return View("NewProperty", vm);
-            }
-
-            var agent = await _agentService.GetByUserIdViewModel(authViewModel.Id);
-            vm.AgentId = agent.Id;
-
-            vm.PropertyImages = new List<string>();
-            foreach (var file in files)
-            {
-                var filename = await _fileService.UploadFileAsync(file, authViewModel.Email);
-                vm.PropertyImages.Add(filename);
-            }
-
-            await _propertyService.Add(vm);
-            return RedirectToAction("Maintenance");
-        }
-
-        private async Task SetViewBagData()
-        {
-            ViewBag.SaleTypes = await _saleTypeService.GetAllViewModel();
-            ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
-            ViewBag.Improvements = await _improvmentService.GetAllViewModel();
-        }
-
-        #endregion
+        #endregion        
 
         #region Search
         public async Task<IActionResult> SearchAgent(string agentName)

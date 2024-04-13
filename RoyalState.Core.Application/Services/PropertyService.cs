@@ -16,13 +16,15 @@ namespace RoyalState.Core.Application.Services
         private readonly IPropertyRepository _propertyRepository;
         private readonly IImprovementService _improvementService;
         private readonly IPropertyImageService _propertyImageService;
+        private readonly IPropertyTypeService _propertyTypeService;
+        private readonly ISaleTypeService _saleTypeService;
         private readonly IPropertyImprovementService _propertyImprovementService;
         private readonly IAgentService _agentService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
-        public PropertyService(IPropertyRepository propertyRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IImprovementService improvementService, IPropertyImageService propertyImageService, IPropertyImprovementService propertyImprovementService, IAgentService agentService) : base(propertyRepository, mapper)
+        public PropertyService(IPropertyRepository propertyRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IImprovementService improvementService, IPropertyImageService propertyImageService, IPropertyImprovementService propertyImprovementService, IAgentService agentService, IPropertyTypeService propertyTypeService, ISaleTypeService saleTypeService) : base(propertyRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _propertyRepository = propertyRepository;
@@ -32,6 +34,8 @@ namespace RoyalState.Core.Application.Services
             _propertyImageService = propertyImageService;
             _propertyImprovementService = propertyImprovementService;
             _agentService = agentService;
+            _propertyTypeService = propertyTypeService;
+            _saleTypeService = saleTypeService;
         }
 
         #region Add Overriden
@@ -73,24 +77,29 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region Get Methods
-        // configure it to get all properties with their images and improvements
+
+        #region GetAllViewModel Overriden
         public async override Task<List<PropertyViewModel>> GetAllViewModel()
         {
             var properties = await base.GetAllViewModel();
             var propertiesViewModel = new List<PropertyViewModel>();
 
             foreach (var property in properties)
-            {                
+            {
                 var propertyImages = await _propertyImageService.GetImagesByPropertyId(property.Id);
                 var propertyImprovements = await _propertyImprovementService.GetImprovementsByPropertyId(property.Id);
                 var agent = await _agentService.GetByIdViewModel(property.AgentId);
+                var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
+                var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
 
                 PropertyViewModel propertyViewModel = new PropertyViewModel
                 {
                     Id = property.Id,
                     Code = property.Code,
                     PropertyTypeId = property.PropertyTypeId,
+                    PropertyTypeName = propertyType.Name,
                     SaleTypeId = property.SaleTypeId,
+                    SaleTypeName = saleType.Name,
                     Price = property.Price,
                     Meters = property.Meters,
                     Description = property.Description,
@@ -114,7 +123,18 @@ namespace RoyalState.Core.Application.Services
 
             return propertiesViewModel;
         }
+        #endregion
 
+        #region GetByIdViewModel Overriden
+        public async override Task<PropertyViewModel> GetByIdViewModel(int id)
+        {
+            var properties = await GetAllViewModel();
+            return properties.Where(p => p.Id == id).FirstOrDefault();
+
+        }
+        #endregion
+
+        #region GetPropertyByCode 
         public async Task<PropertyViewModel> GetPropertyByCode(string code)
         {
             var propertiesList = await GetAllViewModel();
@@ -122,11 +142,31 @@ namespace RoyalState.Core.Application.Services
             return propertiesList.FirstOrDefault(sa => sa.Code == code);
 
         }
+        #endregion
 
+        #region GetAgentProperties
+        /// <summary>
+        /// Retrieves the list of property view models associated with the specified agent ID.
+        /// </summary>
+        /// <param name="id">The ID of the agent.</param>
+        /// <returns>The list of property view models.</returns>
+        public async Task<List<PropertyViewModel>> GetAgentProperties(int id)
+        {
+            var propertiesList = await GetAllViewModel();
+            var agent = await _agentService.GetByIdViewModel(id);
+
+            propertiesList = propertiesList.Where(p => p.AgentId == agent.Id).ToList();
+
+            return propertiesList;
+        }
+        #endregion
+
+        #region GetAllViewModelWIthFilters
         public Task<PropertyViewModel> GetAllViewModelWIthFilters(FilterPropertyViewModel filterProperty)
         {
             throw new NotImplementedException();
         }
+        #endregion
 
         #endregion
 

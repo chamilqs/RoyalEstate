@@ -92,6 +92,10 @@ namespace RoyalState.Core.Application.Services
         #region Get Methods
 
         #region GetAll Overriden
+        /// <summary>
+        /// Retrieves a list of all agent view models.
+        /// </summary>
+        /// <returns>The list of agent view models.</returns>
         public override async Task<List<AgentViewModel>> GetAllViewModel()
         {
             var agents = await base.GetAllViewModel();
@@ -127,6 +131,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetByIdViewModel Overriden
+        /// <summary>
+        /// Retrieves an agent view model by ID.
+        /// </summary>
+        /// <param name="id">The ID of the agent.</param>
+        /// <returns>The agent view model.</returns>
         public async override Task<AgentViewModel> GetByIdViewModel(int id)
         {
             var agents = await GetAllViewModel();
@@ -137,6 +146,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetByNameViewModel
+        /// <summary>
+        /// Retrieves a list of agent view models by name.
+        /// </summary>
+        /// <param name="name">The name to search for.</param>
+        /// <returns>The list of agent view models.</returns>
         public async Task<List<AgentViewModel>> GetByNameViewModel(string name)
         {
             List<UserViewModel> users = await _userService.GetByNameAsync(name);
@@ -173,13 +187,25 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetByUserIdViewModel
+        /// <summary>
+        /// Retrieves an agent view model by user ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>The agent view model.</returns>
         public async Task<AgentViewModel> GetByUserIdViewModel(string userId)
         {
-            var agentList = await base.GetAllViewModel();
+            var agentList = await GetAllViewModel();
             AgentViewModel agent = agentList.FirstOrDefault(agent => agent.UserId == userId);
 
             return agent;
         }
+        #endregion
+
+        #region GetProfileDetails
+        /// <summary>
+        /// Retrieves the profile details of the current agent.
+        /// </summary>
+        /// <returns>The profile details of the agent.</returns>
         public async Task<SaveUserViewModel> GetProfileDetails()
         {
             var agent = await GetByUserIdViewModel(user.Id);

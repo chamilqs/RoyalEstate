@@ -28,7 +28,7 @@ namespace RoyalState.Core.Application.ViewModels.Property
         public int Bathrooms { get; set; }
 
         [DataType(DataType.Text)]
-        [StringLength(500, MinimumLength = 10, ErrorMessage = "The description must be between 10 and 500 characters.")]
+        [StringLength(2000, MinimumLength = 10, ErrorMessage = "The description must have at least 10 characters.")]
         [Required(ErrorMessage = "You can't leave the description empty.")]
         public string Description { get; set; }
 

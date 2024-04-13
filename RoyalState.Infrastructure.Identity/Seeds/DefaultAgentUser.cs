@@ -14,7 +14,7 @@ namespace RoyalState.Infrastructure.Identity.Seeds
                 Email = "agentuser@email.com",
                 FirstName = "Jules",
                 LastName = "Doe",
-                EmailConfirmed = false,
+                EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
             };
 
