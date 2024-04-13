@@ -5,7 +5,6 @@ using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.Agent;
-using RoyalState.Core.Application.ViewModels.Property;
 using RoyalState.Core.Application.ViewModels.User;
 using RoyalState.Core.Application.ViewModels.Users;
 using RoyalState.Core.Domain.Entities;
@@ -15,20 +14,18 @@ namespace RoyalState.Core.Application.Services
     public class AgentService : GenericService<SaveAgentViewModel, AgentViewModel, Agent>, IAgentService
     {
         private readonly IAgentRepository _agentRepository;
-        private readonly IPropertyService _propertyService;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
-        public AgentService(IAgentRepository agentRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IUserService userService, IPropertyService propertyService) : base(agentRepository, mapper)
+        public AgentService(IAgentRepository agentRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IUserService userService) : base(agentRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _agentRepository = agentRepository;
             _mapper = mapper;
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _userService = userService;
-            _propertyService = propertyService;
         }
 
         #region Update
@@ -221,23 +218,6 @@ namespace RoyalState.Core.Application.Services
             }
 
             return vm;
-        }
-        #endregion
-
-        #region GetAgentProperties
-        /// <summary>
-        /// Retrieves the list of property view models associated with the specified agent ID.
-        /// </summary>
-        /// <param name="id">The ID of the agent.</param>
-        /// <returns>The list of property view models.</returns>
-        public async Task<List<PropertyViewModel>> GetAgentProperties(int id)
-        {
-            var propertiesList = await _propertyService.GetAllViewModel();
-            var agent = await GetByIdViewModel(id);
-
-            propertiesList = propertiesList.Where(p => p.AgentId == agent.Id).ToList();
-
-            return propertiesList;
         }
         #endregion
 

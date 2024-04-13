@@ -60,6 +60,12 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
-        
+        #region MarkPropertyAsFavorite
+
+
+
+        #endregion
+
+
     }
 }

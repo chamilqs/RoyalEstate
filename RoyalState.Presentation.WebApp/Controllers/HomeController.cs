@@ -20,17 +20,18 @@ namespace RoyalState.Presentation.WebApp.Controllers
         {
             if (authViewModel != null)
             {
-                // ViewBag.PropertyTypes = authViewModel;
-                Console.WriteLine("authViewModel is not null");
-
                 if (authViewModel.Roles.Any(role => role == Roles.Admin.ToString()))
                 {
                     return RedirectToAction("Index", Roles.Admin.ToString());
                 }
-            }
-            else
-            {
-                Console.WriteLine("authViewModel is null");
+                else if (authViewModel.Roles.Any(role => role == Roles.Agent.ToString()))
+                {
+                    return RedirectToAction("Index", Roles.Agent.ToString());
+                }
+                else if (authViewModel.Roles.Any(role => role == Roles.Client.ToString()))
+                {
+                    return RedirectToAction("Index", Roles.Client.ToString());
+                }
             }
 
             return View();

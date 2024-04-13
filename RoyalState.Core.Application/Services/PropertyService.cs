@@ -77,14 +77,15 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region Get Methods
-        // configure it to get all properties with their images and improvements
+
+        #region GetAllViewModel Overriden
         public async override Task<List<PropertyViewModel>> GetAllViewModel()
         {
             var properties = await base.GetAllViewModel();
             var propertiesViewModel = new List<PropertyViewModel>();
 
             foreach (var property in properties)
-            {                
+            {
                 var propertyImages = await _propertyImageService.GetImagesByPropertyId(property.Id);
                 var propertyImprovements = await _propertyImprovementService.GetImprovementsByPropertyId(property.Id);
                 var agent = await _agentService.GetByIdViewModel(property.AgentId);
@@ -122,7 +123,18 @@ namespace RoyalState.Core.Application.Services
 
             return propertiesViewModel;
         }
+        #endregion
 
+        #region GetByIdViewModel Overriden
+        public async override Task<PropertyViewModel> GetByIdViewModel(int id)
+        {
+            var properties = await GetAllViewModel();
+            return properties.Where(p => p.Id == id).FirstOrDefault();
+
+        }
+        #endregion
+
+        #region GetPropertyByCode 
         public async Task<PropertyViewModel> GetPropertyByCode(string code)
         {
             var propertiesList = await GetAllViewModel();
@@ -130,11 +142,31 @@ namespace RoyalState.Core.Application.Services
             return propertiesList.FirstOrDefault(sa => sa.Code == code);
 
         }
+        #endregion
 
+        #region GetAgentProperties
+        /// <summary>
+        /// Retrieves the list of property view models associated with the specified agent ID.
+        /// </summary>
+        /// <param name="id">The ID of the agent.</param>
+        /// <returns>The list of property view models.</returns>
+        public async Task<List<PropertyViewModel>> GetAgentProperties(int id)
+        {
+            var propertiesList = await GetAllViewModel();
+            var agent = await _agentService.GetByIdViewModel(id);
+
+            propertiesList = propertiesList.Where(p => p.AgentId == agent.Id).ToList();
+
+            return propertiesList;
+        }
+        #endregion
+
+        #region GetAllViewModelWIthFilters
         public Task<PropertyViewModel> GetAllViewModelWIthFilters(FilterPropertyViewModel filterProperty)
         {
             throw new NotImplementedException();
         }
+        #endregion
 
         #endregion
 
