@@ -19,14 +19,16 @@ namespace RoyalState.Core.Application.Services
             _improvementService = improvementService;
         }
 
+        #region Get Methods
 
-        public async Task<List<string>> GetImprovementsByPropertyId(int propertyId)
+        #region GetImprovementsNamesByPropertyId
+        public async Task<List<string>> GetImprovementsNamesByPropertyId(int propertyId)
         {
             var propertyImprovementsList = await GetAllViewModel();
-            propertyImprovementsList.Where(p => p.PropertyId == propertyId).ToList();
+            var thisProperty = propertyImprovementsList.Where(p => p.PropertyId == propertyId).ToList();
             
             List<string> improvements = new();
-            foreach (var propertyImprovement in propertyImprovementsList)
+            foreach (var propertyImprovement in thisProperty)
             {
                 var improvementViewModel = await _improvementService.GetByIdViewModel(propertyImprovement.ImprovementId);
                 improvements.Add(improvementViewModel.Name);
@@ -34,5 +36,30 @@ namespace RoyalState.Core.Application.Services
 
             return improvements;
         }
+        #endregion
+
+        #region GetImprovementsByPropertyId
+
+        public async Task<List<PropertyImprovementViewModel>> GetImprovementsByPropertyId(int propertyId)
+        {
+            var propertyImprovementsList = await GetAllViewModel();
+            return propertyImprovementsList.Where(p => p.PropertyId == propertyId).ToList();
+        }
+        #endregion
+
+        #endregion
+
+        #region DeleteImprovementsByPropertyId
+        public async Task DeleteImprovementsByPropertyId(int propertyId)
+        {
+            var propertyImprovements = await GetImprovementsByPropertyId(propertyId);
+            foreach (var improvement in propertyImprovements)
+            {
+                await Delete(improvement.Id);
+            }
+
+        }
+        #endregion
+
     }
 }
