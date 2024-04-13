@@ -76,6 +76,77 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region Update Overriden
+        public override async Task<SavePropertyViewModel> Update(SavePropertyViewModel vm, int id)
+        {
+            var property = await GetByIdViewModel(id);
+
+            if (property == null)
+            {
+                return null;
+            }
+
+            Property propertyUpdate = new Property
+            {
+                Id = id,
+                Code = vm.Code,
+                PropertyTypeId = vm.PropertyTypeId,
+                SaleTypeId = vm.SaleTypeId,
+                Price = vm.Price,
+                Meters = vm.Meters,
+                Description = vm.Description,
+                Bedrooms = vm.Bedrooms,
+                Bathrooms = vm.Bathrooms,
+                AgentId = (int)vm.AgentId,
+                CreatedBy = user.UserName,
+                CreatedDate = DateTime.UtcNow,
+                LastModifiedBy = user.UserName,
+                LastModifiedDate = DateTime.UtcNow
+            };
+
+            await _propertyRepository.UpdateAsync(propertyUpdate, id);
+
+            // Delete all improvements and images associated with the property
+            await _propertyImprovementService.DeleteImprovementsByPropertyId(id);
+            await _propertyImageService.DeleteImagesByPropertyId(id);
+
+            foreach (var improvementId in vm.Improvements)
+            {
+                var improvement = await _improvementService.GetByIdViewModel(improvementId);
+                SavePropertyImprovementViewModel propertyImprovement = new SavePropertyImprovementViewModel
+                {
+                    PropertyId = vm.Id,
+                    ImprovementId = improvement.Id
+                };
+
+                await _propertyImprovementService.Add(propertyImprovement);
+
+            }
+
+            foreach (var image in vm.PropertyImages)
+            {
+                var propertyImage = new SavePropertyImageViewModel
+                {
+                    PropertyId = id,
+                    ImageUrl = image
+                };
+
+                await _propertyImageService.Add(propertyImage);
+            }
+
+            return vm;
+        }
+        #endregion
+
+        #region Delete Overriden
+        public override async Task Delete(int id)
+        {
+            await _propertyImprovementService.DeleteImprovementsByPropertyId(id);
+            await _propertyImageService.DeleteImagesByPropertyId(id);
+            await base.Delete(id);
+        }
+        #endregion
+
         #region Get Methods
 
         #region GetAllViewModel Overriden
@@ -86,8 +157,8 @@ namespace RoyalState.Core.Application.Services
 
             foreach (var property in properties)
             {
-                var propertyImages = await _propertyImageService.GetImagesByPropertyId(property.Id);
-                var propertyImprovements = await _propertyImprovementService.GetImprovementsByPropertyId(property.Id);
+                var propertyImages = await _propertyImageService.GetImagesUrlByPropertyId(property.Id);
+                var propertyImprovements = await _propertyImprovementService.GetImprovementsNamesByPropertyId(property.Id);
                 var agent = await _agentService.GetByIdViewModel(property.AgentId);
                 var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
                 var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
@@ -138,8 +209,9 @@ namespace RoyalState.Core.Application.Services
         public async Task<PropertyViewModel> GetPropertyByCode(string code)
         {
             var propertiesList = await GetAllViewModel();
+            var thisProperty = propertiesList.FirstOrDefault(sa => sa.Code == code);
 
-            return propertiesList.FirstOrDefault(sa => sa.Code == code);
+            return thisProperty;
 
         }
         #endregion
@@ -203,7 +275,6 @@ namespace RoyalState.Core.Application.Services
         }
 
         #endregion
-
 
     }
 }

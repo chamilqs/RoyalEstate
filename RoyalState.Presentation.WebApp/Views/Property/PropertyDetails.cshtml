@@ -5,71 +5,6 @@
     Layout = "~/Views/Shared/_LayoutSmall.cshtml";
 }
 
-@* <div class="site-section site-section-sm bg-light mt-3">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="property-entry h-100">
-                    <a href="property-details.html" class="property-thumbnail">
-                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                @for (int i = 0; i < Model.PropertyImages.Count; i++)
-                                {
-                                    <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
-                                }
-                            </ol>
-                            <div class="carousel-inner">
-                                @for (int i = 0; i < Model.PropertyImages.Count; i++)
-                                {
-                                    <div class="carousel-item @(i == 0 ? "active" : "")">
-                                        <img class="d-block w-100" src="@Model.PropertyImages[i]" alt="Property Image @(i + 1)">
-                                    </div>
-                                }
-                            </div>
-                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </div>
-                    </a>
-                    <div class="p-4 property-body">
-                        <h2 class="property-title fs-5"><a href="property-details.html"><strong>Property Type: </strong>@Model.PropertyTypeName</a></h2>
-                        <span class="property-location d-block"><strong>Code: </strong>@Model.Code</span>
-                        <span class="property-location d-block mb-3"><strong>Sale Type: </strong>@Model.SaleTypeName</span>
-                        <strong class="property-price text-primary mb-3 d-block text-success">$@Model.Price</strong>
-                        <div class="specs d-flex mb-4">
-                            <span class="d-block d-flex align-items-center me-3">
-                                <span class="icon-bed me-2"></span>
-                                <span class="caption">@Model.Bedrooms beds</span>
-                            </span>
-                            <span class="d-block d-flex align-items-center me-3">
-                                <span class="icon-bath me-2"></span>
-                                <span class="caption">@Model.Bathrooms baths</span>
-                            </span>
-                            <span class="d-block d-flex align-items-center">
-                                <span class="icon-home me-2"></span>
-                                <span class="caption">@Model.Meters MT<sup>2</sup></span>
-                            </span>
-                        </div>
-                        <div>
-                            @foreach (var item in Model.Improvements)
-                            {
-                                <span class="d-block d-flex align-items-center me-3">
-                                    <span class="icon-check me-2"></span>
-                                    <span class="caption">@item</span>
-                                </span>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> *@
 
 <div class="site-wrap">
 
@@ -126,7 +61,7 @@
                             </div>
                         </div>
                         <h2 class="h4 text-black">Description of the property</h2>
-                        <p>@Model.Description</p>
+                        <p class="text-justify">@Model.Description</p>
 
                         <div class="row no-gutters mt-5">
                             <div class="col-12">
@@ -143,46 +78,27 @@
                 </div>
 
                 <div class="col-lg-4">
-
-                    <div class="bg-white widget border rounded">
-
-                        <div class="circle-image">
+                    <div class="bg-white widget border rounded p-4">
+                        <div class="circle-image mb-3">
                             <img src="@Model.AgentImage" alt="Image" class="card-img-top rounded-circle">
                         </div>
                         <div class="card-body text-center">
                             <h5 class="card-title mb-1 text-black">@Model.AgentFirstName @Model.AgentLastName</h5>
                             <p class="card-text text-muted">Agent in charge of this property</p>
                         </div>
-
-
-                        @*                         <h3 class="h4 text-black widget-title mb-3">Contact Agent</h3>
-                        <form action="" class="form-contact-agent">
-                        <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" class="form-control">
+                        <p class="fs-5 text-black text-center mb-3">Contact information</p>
+                        <div class="card-text">
+                            <p class="fs-6 mb-1">
+                                <i class="bi bi-telephone-fill text-primary me-2"></i>
+                                <a href="tel:@Model.AgentPhone">@Model.AgentPhone</a>
+                            </p>
+                            <p class="fs-6">
+                                <i class="bi bi-envelope-fill text-primary me-2"></i>
+                                <a href="mailto:@Model.AgentEmail">@Model.AgentEmail</a>
+                            </p>
                         </div>
-                        <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" class="form-control">
-                        </div>
-                        <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="text" id="phone" class="form-control">
-                        </div>
-                        <div class="form-group">
-                        <input type="submit" id="phone" class="btn btn-primary" value="Send Message">
-                        </div>
-                        </form> *@
                     </div>
-
-                    @*                     <div class="bg-white widget border rounded">
-                    <h3 class="h4 text-black widget-title mb-3">Paragraph</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit qui explicabo, libero nam, saepe eligendi. Molestias maiores illum error rerum. Exercitationem ullam saepe, minus, reiciendis ducimus quis. Illo, quisquam, veritatis.</p>
-                    </div> *@
-
                 </div>
-
             </div>
         </div>
     </div>
-</div>

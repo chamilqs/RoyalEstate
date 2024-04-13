@@ -1,6 +1,6 @@
-﻿using RoyalState.Core.Application.Helpers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
+using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.Property;
 
@@ -8,6 +8,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
 {
     public class PropertyController : Controller
     {
+        #region Fields
         private readonly IFileService _fileService;
         private readonly IAgentService _agentService;
         private readonly IImprovementService _improvmentService;
@@ -16,7 +17,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         private readonly ISaleTypeService _saleTypeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse authViewModel;
+        #endregion
 
+        #region Constructor
         public PropertyController(IFileService fileService, IAgentService agentService, IHttpContextAccessor httpContextAccessor, IImprovementService improvmentService, ISaleTypeService saleTypeService, IPropertyTypeService propertyTypeService, IPropertyService propertyService)
         {
             _fileService = fileService;
@@ -28,11 +31,15 @@ namespace RoyalState.Presentation.WebApp.Controllers
             _propertyTypeService = propertyTypeService;
             _propertyService = propertyService;
         }
+        #endregion
+
+        #region Functionalities & Views
 
         #region Maintenance
         public async Task<IActionResult> Maintenance()
         {
-            var properties = await _propertyService.GetAllViewModel();
+            var agent = await _agentService.GetByUserIdViewModel(authViewModel.Id);
+            var properties = await _propertyService.GetAgentProperties(agent.Id);
             return View(properties);
         }
         #endregion
@@ -112,7 +119,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 AgentId = property.AgentId,
                 Improvements = propertyImprovements,
                 PropertyImages = property.PropertyImages
-            };  
+            };
 
             await SetViewBagData();
             return View(vm);
@@ -141,7 +148,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             if (files.Any())
             {
-                vm.PropertyImages = new List<string>();
+                if (vm.PropertyImages == null) { vm.PropertyImages = new List<string>(); };
                 foreach (var file in files)
                 {
                     var filename = await _fileService.UploadFileAsync(file, authViewModel.Email);
@@ -149,7 +156,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 }
             }
 
-            await _propertyService.Update(vm,vm.Id);
+            vm.PropertyImages?.RemoveAll(image => image == null);
+
+            await _propertyService.Update(vm, vm.Id);
             return RedirectToAction("Maintenance");
         }
         #endregion
@@ -158,14 +167,40 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public async Task<IActionResult> DeleteProperty(int id)
         {
             var property = await _propertyService.GetByIdViewModel(id);
-            return View(property);
+
+            List<int> propertyImprovements = new List<int>();
+            foreach (var improvement in property.Improvements)
+            {
+                var getImprovement = await _improvmentService.GetByNameViewModel(improvement);
+                propertyImprovements.Add(getImprovement.Id);
+
+            }
+
+            SavePropertyViewModel vm = new SavePropertyViewModel
+            {
+                Id = property.Id,
+                Code = property.Code,
+                Bathrooms = property.Bathrooms,
+                Bedrooms = property.Bedrooms,
+                Description = property.Description,
+                Price = property.Price,
+                Meters = property.Meters,
+                SaleTypeId = property.SaleTypeId,
+                PropertyTypeId = property.PropertyTypeId,
+                AgentId = property.AgentId,
+                Improvements = propertyImprovements,
+                PropertyImages = property.PropertyImages
+            };
+
+            await SetViewBagData();
+            return View(vm);
         }
 
         [HttpPost]
         public async Task<IActionResult> DeletePropertyPost(int id)
         {
             await _propertyService.Delete(id);
-            return View("Maintenance");
+            return RedirectToAction("Maintenance");
         }
         #endregion
 
@@ -175,6 +210,8 @@ namespace RoyalState.Presentation.WebApp.Controllers
             var property = await _propertyService.GetByIdViewModel(id);
             return View(property);
         }
+        #endregion        
+
         #endregion
 
         #region Private Methods
@@ -185,6 +222,5 @@ namespace RoyalState.Presentation.WebApp.Controllers
             ViewBag.Improvements = await _improvmentService.GetAllViewModel();
         }
         #endregion
-
     }
 }
