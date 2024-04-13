@@ -1,0 +1,30 @@
+﻿@using RoyalState.Core.Application.ViewModels.Property;
+@model SavePropertyViewModel
+
+@{
+    ViewData["Title"] = "Delete favorite";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-6 offset-3">
+        <div class="card mt-4">
+            <div class="card-header bg-danger text-light">
+                <h4>Are you sure you want to delete this property as your favorite?</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-controller="Client" asp-action="DeleteFavoritePost">
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn btn-danger fw-bold">Delete</button>
+                    <a asp-controller="Client" asp-action="MyFavorites" class="btn btn-primary fw-bold">Cancel</a>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
