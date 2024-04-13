@@ -16,5 +16,12 @@ namespace RoyalState.Core.Application.Services
             _mapper = mapper;
             _improvementRepository = improvementRepository;
         }
+
+        public async Task<ImprovementViewModel> GetByNameViewModel(string name)
+        {
+            var improvements = await GetAllViewModel();
+            return improvements.Where(n => n.Name.Contains(name)).FirstOrDefault();
+
+        }
     }
 }
