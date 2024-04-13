@@ -26,19 +26,46 @@ namespace RoyalState.Core.Application.Services
             _userService = userService;
         }
 
-        #region GetImagesByPropertyId
-        public async Task<List<string>> GetImagesByPropertyId(int propertyId)
+        #region Get Methods
+
+        #region GetImagesUrlByPropertyId
+        public async Task<List<string>> GetImagesUrlByPropertyId(int propertyId)
         {
             var propertyImageList = await GetAllViewModel();
-            propertyImageList.Where(p => p.PropertyId == propertyId);
+            var thisProperty = propertyImageList.Where(p => p.PropertyId == propertyId);
 
             List<string> propertyImages = new();
-            foreach (var image in propertyImageList)
+            foreach (var image in thisProperty)
             {
                 propertyImages.Add(image.ImageUrl);
             }
 
             return propertyImages;
+        }
+        #endregion
+
+        #region GetPropertyImagesByPropertyId
+        public async Task<List<PropertyImageViewModel>> GetPropertyImagesByPropertyId(int propertyId)
+        {
+            var propertyImagesList = await GetAllViewModel();
+            var thisProperty = propertyImagesList.Where(p => p.PropertyId == propertyId).ToList();
+
+            return thisProperty;
+
+        }
+        #endregion
+
+        #endregion
+
+        #region DeleteImagesByPropertyId
+        public async Task DeleteImagesByPropertyId(int propertyId)
+        {
+            var propertyImages = await GetPropertyImagesByPropertyId(propertyId);
+            foreach (var image in propertyImages)
+            {
+                await Delete(image.Id);
+            }
+
         }
         #endregion
 

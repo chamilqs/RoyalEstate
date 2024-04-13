@@ -5,7 +5,9 @@ namespace RoyalState.Core.Application.Interfaces.Services
 {
     public interface IPropertyImageService : IGenericService<SavePropertyImageViewModel, PropertyImageViewModel, PropertyImage>
     {
-        Task<List<string>> GetImagesByPropertyId(int propertyId);
+        Task<List<string>> GetImagesUrlByPropertyId(int propertyId);
+        Task DeleteImagesByPropertyId(int propertyId);
+        Task<List<PropertyImageViewModel>> GetPropertyImagesByPropertyId(int propertyId);
 
     }
 }
