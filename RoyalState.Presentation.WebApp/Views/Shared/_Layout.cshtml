@@ -94,7 +94,7 @@
                                 @if(User != null){
                                     if(isAgent){
                                         <li><a asp-controller="Agent" asp-action="EditProfile">Profile</a></li>
-                                        <li><a asp-controller="Agent" asp-action="Maintenance">Property Maintenance</a></li>
+                                        <li><a asp-controller="Property" asp-action="Maintenance">Property Maintenance</a></li>
                                     }
                                     else if(isClient){
                                         <li><a asp-controller="Client" asp-action="Index">My Properties</a></li>
