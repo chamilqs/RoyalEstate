@@ -6,6 +6,8 @@
     bool? searchResult = ViewBag.isEmpty;
 }
 
+@*Big nav with filters*@
+<!-- Compare this snippet from RoyalState.Presentation.WebApp/Views/Client/MyFavorites.cshtml: 
 <div class="row">
     <form class="form-search col-md-12" style="margin-top: -100px;">
         <div class="row  align-items-end">
@@ -40,7 +42,7 @@
         </div>
     </form>
 </div>
-
+-->
 
 <div>
     <nav class="navbar navbar-light mb-4 mt-4" style="margin-left:-30px;">
@@ -79,7 +81,7 @@ else
     <div class="site-section site-section-sm bg-light mt-3">
         <div class="container">
 
-            <div class="row mb-5">
+            <div class="row mb-5" style="margin-top:-50px;">
                 @foreach (var property in Model)
                 {
                     <div class="col-md-6 col-lg-4 mb-4">
