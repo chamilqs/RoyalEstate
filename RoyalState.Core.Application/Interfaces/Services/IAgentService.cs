@@ -1,6 +1,5 @@
 ﻿using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.ViewModels.Agent;
-using RoyalState.Core.Application.ViewModels.Property;
 using RoyalState.Core.Application.ViewModels.Users;
 using RoyalState.Core.Domain.Entities;
 
@@ -12,7 +11,6 @@ namespace RoyalState.Core.Application.Interfaces.Services
         Task<UpdateUserResponse> UpdateAsync(SaveUserViewModel vm);
         Task<AgentViewModel> GetByUserIdViewModel(string userId);
         Task<List<AgentViewModel>> GetByNameViewModel(string name);
-        Task<List<PropertyViewModel>> GetAgentProperties(int id);
         Task<SaveUserViewModel> GetProfileDetails();
 
     }
