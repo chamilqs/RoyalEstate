@@ -24,6 +24,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
             _propertyService = propertyService;
         }
 
+        #region Agent Index
         public async Task <IActionResult> Index()
         {
             var agent = await _agentService.GetByUserIdViewModel(authViewModel.Id);
@@ -31,6 +32,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
             return View(properties);
 
         }
+        #endregion
 
         #region Get Agents
         public async Task<IActionResult> AllAgents()
