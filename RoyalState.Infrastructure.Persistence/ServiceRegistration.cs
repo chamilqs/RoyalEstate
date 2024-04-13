@@ -29,6 +29,7 @@ namespace RoyalState.Infrastructure.Persistence
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IAgentRepository, AgentRepository>();
             services.AddTransient<IClientRepository, ClientRepository>();
+            services.AddTransient<IClientPropertiesRepository, ClientPropertiesRepository>();
             services.AddTransient<IPropertyRepository, PropertyRepository>();
             services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
             services.AddTransient<ISaleTypeRepository, SaleTypeRepository>();
