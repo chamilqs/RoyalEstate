@@ -60,7 +60,36 @@
                                 <strong class="d-block">@Model.Code</strong>
                             </div>
                         </div>
-                        <h2 class="h4 text-black">Description of the property</h2>
+
+                        <div class="border-bottom py-3">
+                            <h2 class="h4 text-black mb-4">Improvements</h2>
+                            @if (Model.Improvements.Any())
+                            {
+                                @foreach (var item in Model.Improvements)
+                                {
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-auto">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </div>
+                                        <div class="col">
+                                            <p class="mb-0">@item</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p class="text-muted mb-0">No improvements listed for this property.</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+
+
+                        <h2 class="h4 text-black mt-3">Description of the property</h2>
                         <p class="text-justify">@Model.Description</p>
 
                         <div class="row no-gutters mt-5">

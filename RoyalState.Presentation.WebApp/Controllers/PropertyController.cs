@@ -166,31 +166,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         #region DeleteProperty
         public async Task<IActionResult> DeleteProperty(int id)
         {
-            var property = await _propertyService.GetByIdViewModel(id);
-
-            List<int> propertyImprovements = new List<int>();
-            foreach (var improvement in property.Improvements)
-            {
-                var getImprovement = await _improvmentService.GetByNameViewModel(improvement);
-                propertyImprovements.Add(getImprovement.Id);
-
-            }
-
-            SavePropertyViewModel vm = new SavePropertyViewModel
-            {
-                Id = property.Id,
-                Code = property.Code,
-                Bathrooms = property.Bathrooms,
-                Bedrooms = property.Bedrooms,
-                Description = property.Description,
-                Price = property.Price,
-                Meters = property.Meters,
-                SaleTypeId = property.SaleTypeId,
-                PropertyTypeId = property.PropertyTypeId,
-                AgentId = property.AgentId,
-                Improvements = propertyImprovements,
-                PropertyImages = property.PropertyImages
-            };
+            var vm = await _propertyService.GetByIdSaveViewModel(id);
 
             await SetViewBagData();
             return View(vm);

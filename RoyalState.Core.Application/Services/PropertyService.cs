@@ -205,6 +205,40 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region GetByIdSaveViewModel Overriden
+        public async override Task<SavePropertyViewModel> GetByIdSaveViewModel(int id)
+        {
+            var property = await GetByIdViewModel(id);
+
+            List<int> propertyImprovements = new List<int>();
+            foreach (var improvement in property.Improvements)
+            {
+                var getImprovement = await _improvementService.GetByNameViewModel(improvement);
+                propertyImprovements.Add(getImprovement.Id);
+
+            }
+
+            SavePropertyViewModel vm = new SavePropertyViewModel
+            {
+                Id = property.Id,
+                Code = property.Code,
+                Bathrooms = property.Bathrooms,
+                Bedrooms = property.Bedrooms,
+                Description = property.Description,
+                Price = property.Price,
+                Meters = property.Meters,
+                SaleTypeId = property.SaleTypeId,
+                PropertyTypeId = property.PropertyTypeId,
+                AgentId = property.AgentId,
+                Improvements = propertyImprovements,
+                PropertyImages = property.PropertyImages
+            };
+
+            return vm;
+
+        }
+        #endregion
+
         #region GetPropertyByCode 
         public async Task<PropertyViewModel> GetPropertyByCode(string code)
         {
