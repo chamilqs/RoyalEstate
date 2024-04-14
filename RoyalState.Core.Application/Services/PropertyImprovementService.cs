@@ -22,11 +22,16 @@ namespace RoyalState.Core.Application.Services
         #region Get Methods
 
         #region GetImprovementsNamesByPropertyId
+        /// <summary>
+        /// Retrieves the names of improvements associated with a property based on the property ID.
+        /// </summary>
+        /// <param name="propertyId">The ID of the property.</param>
+        /// <returns>A list of improvement names.</returns>
         public async Task<List<string>> GetImprovementsNamesByPropertyId(int propertyId)
         {
             var propertyImprovementsList = await GetAllViewModel();
             var thisProperty = propertyImprovementsList.Where(p => p.PropertyId == propertyId).ToList();
-            
+
             List<string> improvements = new();
             foreach (var propertyImprovement in thisProperty)
             {
@@ -39,7 +44,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetImprovementsByPropertyId
-
+        /// <summary>
+        /// Retrieves the improvements associated with a property based on the property ID.
+        /// </summary>
+        /// <param name="propertyId">The ID of the property.</param>
+        /// <returns>A list of property improvement view models.</returns>
         public async Task<List<PropertyImprovementViewModel>> GetImprovementsByPropertyId(int propertyId)
         {
             var propertyImprovementsList = await GetAllViewModel();
@@ -50,6 +59,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region DeleteImprovementsByPropertyId
+        /// <summary>
+        /// Deletes the improvements associated with a property based on the property ID.
+        /// </summary>
+        /// <param name="propertyId">The ID of the property.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task DeleteImprovementsByPropertyId(int propertyId)
         {
             var propertyImprovements = await GetImprovementsByPropertyId(propertyId);

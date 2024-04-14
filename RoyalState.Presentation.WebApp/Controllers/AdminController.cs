@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
-using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.ViewModels.Admins;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {

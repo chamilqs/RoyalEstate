@@ -1,7 +1,4 @@
-﻿using RoyalState.Core.Application.ViewModels.Client;
-using RoyalState.Core.Application.ViewModels.Property;
-
-namespace RoyalState.Core.Application.ViewModels.ClientProperties
+﻿namespace RoyalState.Core.Application.ViewModels.ClientProperties
 {
     public class ClientPropertiesViewModel
     {

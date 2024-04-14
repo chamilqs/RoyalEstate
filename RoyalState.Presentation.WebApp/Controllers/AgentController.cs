@@ -25,7 +25,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Agent Index
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var agent = await _agentService.GetByUserIdViewModel(authViewModel.Id);
             var properties = await _propertyService.GetAgentProperties(agent.Id);

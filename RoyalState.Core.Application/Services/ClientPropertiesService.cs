@@ -9,7 +9,7 @@ using RoyalState.Core.Domain.Entities;
 
 namespace RoyalState.Core.Application.Services
 {
-    internal class ClientPropertiesService : GenericService<SaveClientPropertiesViewModel, ClientPropertiesViewModel, ClientProperties>, IClientPropertiesService
+    public class ClientPropertiesService : GenericService<SaveClientPropertiesViewModel, ClientPropertiesViewModel, ClientProperties>, IClientPropertiesService
     {
         private readonly IClientPropertiesRepository _clientPropertiesRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -25,6 +25,11 @@ namespace RoyalState.Core.Application.Services
         }
 
         #region GetByPropertyIdViewModel
+        /// <summary>
+        /// Retrieves a <see cref="ClientPropertiesViewModel"/> by property ID.
+        /// </summary>
+        /// <param name="propertyId">The ID of the property.</param>
+        /// <returns>The <see cref="ClientPropertiesViewModel"/> with the specified property ID, or null if not found.</returns>
         public async Task<ClientPropertiesViewModel> GetByPropertyIdViewModel(int propertyId)
         {
             var clientPropertiesList = await GetAllViewModel();

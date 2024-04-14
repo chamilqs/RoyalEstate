@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RoyalState.Core.Application.DTOs.Agent
+﻿namespace RoyalState.Core.Application.DTOs.Agent
 {
     public class AgentDTO
     {

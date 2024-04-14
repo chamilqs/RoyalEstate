@@ -70,7 +70,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
             var property = await _propertyService.GetByIdSaveViewModel(id);
 
             return View(property);
-        }        
+        }
 
         [HttpPost]
         public async Task<IActionResult> DeleteFavoritePost(int id)

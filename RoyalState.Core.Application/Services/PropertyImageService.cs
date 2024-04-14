@@ -29,6 +29,11 @@ namespace RoyalState.Core.Application.Services
         #region Get Methods
 
         #region GetImagesUrlByPropertyId
+        /// <summary>
+        /// Retrieves the URLs of images by property ID.
+        /// </summary>
+        /// <param name="propertyId">The ID of the property.</param>
+        /// <returns>A list of image URLs.</returns>
         public async Task<List<string>> GetImagesUrlByPropertyId(int propertyId)
         {
             var propertyImageList = await GetAllViewModel();
@@ -45,6 +50,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetPropertyImagesByPropertyId
+        /// <summary>
+        /// Retrieves the property images by property ID.
+        /// </summary>
+        /// <param name="propertyId">The ID of the property.</param>
+        /// <returns>A list of property image view models.</returns>
         public async Task<List<PropertyImageViewModel>> GetPropertyImagesByPropertyId(int propertyId)
         {
             var propertyImagesList = await GetAllViewModel();
@@ -58,6 +68,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region DeleteImagesByPropertyId
+        /// <summary>
+        /// Deletes the property images by property ID.
+        /// </summary>
+        /// <param name="propertyId">The ID of the property.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task DeleteImagesByPropertyId(int propertyId)
         {
             var propertyImages = await GetPropertyImagesByPropertyId(propertyId);
