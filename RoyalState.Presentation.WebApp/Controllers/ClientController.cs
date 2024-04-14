@@ -4,6 +4,7 @@ using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.ClientProperties;
+using RoyalState.Core.Application.ViewModels.Property;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
@@ -27,12 +28,21 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Client Index
-        public async Task<IActionResult> Index(string? error)
+        public async Task<IActionResult> Index(string? error, List<PropertyViewModel>? propertiesHome, bool? isEmpty)
         {
             if (error != null)
             {
                 ViewBag.Error = error;
             }
+            if (propertiesHome != null && propertiesHome.Count() != 0)
+            {
+               return View(propertiesHome);
+            }
+            if (isEmpty != null)
+            {
+                ViewBag.isEmpty = isEmpty;
+            }
+
             var properties = await _propertyService.GetAllViewModel();
             return View(properties);
         }

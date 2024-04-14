@@ -26,52 +26,68 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Index
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(List<PropertyViewModel>? propertiesHome, bool? isEmpty)
         {
             var properties = await _propertyService.GetAllViewModel();
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            ViewBag.PropertyTypes = propertyTypes;
+
+            if (propertiesHome != null && propertiesHome.Count > 0)
+            {
+                return View(propertiesHome);
+            }
+
+            if (isEmpty != null)
+            {
+                ViewBag.isEmpty = isEmpty;
+            }
 
             if (authViewModel != null)
             {
-                if (authViewModel.Roles.Any(role => role == Roles.Admin.ToString()))
+                var roles = authViewModel.Roles;
+                if (roles.Contains(Roles.Admin.ToString()))
                 {
                     return RedirectToAction("Index", Roles.Admin.ToString());
                 }
-                else if (authViewModel.Roles.Any(role => role == Roles.Agent.ToString()))
+                else if (roles.Contains(Roles.Agent.ToString()))
                 {
                     return RedirectToAction("Index", Roles.Agent.ToString());
                 }
-                else if (authViewModel.Roles.Any(role => role == Roles.Client.ToString()))
+                else if (roles.Contains(Roles.Client.ToString()))
                 {
                     return RedirectToAction("Index", Roles.Client.ToString());
                 }
             }
 
-            ViewBag.PropertyTypes = propertyTypes;
+
             return View(properties);
         }
+
+        #region SearchProperty
+        public async Task<IActionResult> SearchProperty(string code)
+        {
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            var property = await _propertyService.GetPropertyByCode(code);
+
+            bool isEmpty = property == null;
+            List<PropertyViewModel> propertiesHome = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
+
+            if (authViewModel != null)
+            {
+                string role = authViewModel.Roles.FirstOrDefault()?.ToString();
+                if (!string.IsNullOrEmpty(role))
+                {
+                    return RedirectToRoute(new { controller = role, action = "Index", propertiesHome = propertiesHome, isEmpty = isEmpty });
+                }
+            }
+
+            return RedirectToAction("Index", new { propertiesHome = propertiesHome, isEmpty = isEmpty });
+        }
+        #endregion
+
         #endregion
 
         #region Search
-
-        #region SearchPropertyByCode
-        public async Task<IActionResult> SearchProperty(string code)
-        {
-            var property = await _propertyService.GetPropertyByCode(code);
-            bool isEmpty = property == null;
-
-            ViewBag.IsEmpty = isEmpty;
-
-            List<PropertyViewModel> properties = new();
-            if (!isEmpty)
-            {
-                properties.Add(property);
-            }
-
-            return View("Index", property != null ? properties : new List<PropertyViewModel>());
-
-        }
-        #endregion
 
         #region SearchPropertyByFilters
         [HttpPost]
@@ -103,7 +119,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
             ViewBag.IsEmpty = isEmpty;
             return View("AllAgents", agents != null ? agents : new List<AgentViewModel>());
         }
-        #endregion
+        #endregion        
 
         #endregion
 

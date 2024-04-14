@@ -133,12 +133,12 @@ namespace RoyalState.Core.Application.Services
 
                     agentsViewModels.Add(agentViewModel);
                 }
-
             }
 
+            agentsViewModels = agentsViewModels.OrderBy(a => a.FirstName).ThenBy(a => a.LastName).ToList();
             return agentsViewModels;
-
         }
+
         #endregion
 
         #region GetByIdViewModel Overriden

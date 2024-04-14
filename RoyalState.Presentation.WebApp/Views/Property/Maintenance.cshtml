@@ -53,18 +53,16 @@ else
                 {
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="property-entry h-100">
-                            <a href="property-details.html" class="property-thumbnail">
+                            <a asp-controller="Home" asp-action="PropertyDetails" asp-route-id="@property.Id" class="property-thumbnail">
                                 <div class="offer-type-wrap">
                                     <span class="offer-type bg-success">@property.SaleTypeName</span>
                                 </div>
                                 <img src="@property.PropertyImages.FirstOrDefault()" alt="Image" class="img-fluid">
                             </a>
                             <div class="p-4 property-body">
-                                @*                             <a href="#" class="property-favorite"><span class="icon-heart-o"></span></a> *@
                                 <h2 class="property-title fs-5"><a href="property-details.html"><strong>Property Type: </strong>@property.PropertyTypeName</a></h2>
                                 <span class="property-location d-block"><strong>Code: </strong>@property.Code</span>
                                 <span class="property-location d-block mb-3"><strong>Sale Type: </strong>@property.SaleTypeName</span>
-                                @*<span class="property-location d-block mb-3"><span class="property-icon icon-room"></span> 625 S. Berendo St Unit 607 Los Angeles, CA 90005</span> *@
                                 <strong class="property-price text-primary mb-3 d-block text-success">RD$@property.Price</strong>
                                 <div class="specs d-flex mb-4">
                                     <span class="d-block d-flex align-items-center me-3">

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
+using RoyalState.Core.Application.ViewModels.Property;
 using RoyalState.Core.Application.ViewModels.Users;
 
 namespace RoyalState.Presentation.WebApp.Controllers
@@ -26,8 +27,18 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Agent Index
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(List<PropertyViewModel>? propertiesHome, bool? isEmpty)
         {
+            if (propertiesHome != null && propertiesHome.Count() != 0)
+            {
+                return View(propertiesHome);
+            }
+
+            if (isEmpty != null)
+            {
+                ViewBag.isEmpty = isEmpty;
+            }
+
             var agent = await _agentService.GetByUserIdViewModel(authViewModel.Id);
             var properties = await _propertyService.GetAgentProperties(agent.Id);
             return View(properties);
