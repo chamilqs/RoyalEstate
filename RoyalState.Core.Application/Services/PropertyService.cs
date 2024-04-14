@@ -39,6 +39,11 @@ namespace RoyalState.Core.Application.Services
         }
 
         #region Add Overriden
+        /// <summary>
+        /// Adds a new property with the specified view model.
+        /// </summary>
+        /// <param name="vm">The view model containing the property data.</param>
+        /// <returns>The view model of the added property.</returns>
         public override async Task<SavePropertyViewModel> Add(SavePropertyViewModel vm)
         {
             vm.Code = await GenerateCode();
@@ -76,9 +81,96 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region Update Overriden
+        /// <summary>
+        /// Updates a property with the specified view model and ID.
+        /// </summary>
+        /// <param name="vm">The view model containing the updated property data.</param>
+        /// <param name="id">The ID of the property to update.</param>
+        /// <returns>The updated view model of the property.</returns>
+        public override async Task<SavePropertyViewModel> Update(SavePropertyViewModel vm, int id)
+        {
+            var property = await GetByIdViewModel(id);
+
+            if (property == null)
+            {
+                return null;
+            }
+
+            Property propertyUpdate = new Property
+            {
+                Id = id,
+                Code = vm.Code,
+                PropertyTypeId = vm.PropertyTypeId,
+                SaleTypeId = vm.SaleTypeId,
+                Price = vm.Price,
+                Meters = vm.Meters,
+                Description = vm.Description,
+                Bedrooms = vm.Bedrooms,
+                Bathrooms = vm.Bathrooms,
+                AgentId = (int)vm.AgentId,
+                CreatedBy = user.UserName,
+                CreatedDate = DateTime.UtcNow,
+                LastModifiedBy = user.UserName,
+                LastModifiedDate = DateTime.UtcNow
+            };
+
+            await _propertyRepository.UpdateAsync(propertyUpdate, id);
+
+            // Delete all improvements and images associated with the property
+            await _propertyImprovementService.DeleteImprovementsByPropertyId(id);
+            await _propertyImageService.DeleteImagesByPropertyId(id);
+
+            foreach (var improvementId in vm.Improvements)
+            {
+                var improvement = await _improvementService.GetByIdViewModel(improvementId);
+                SavePropertyImprovementViewModel propertyImprovement = new SavePropertyImprovementViewModel
+                {
+                    PropertyId = vm.Id,
+                    ImprovementId = improvement.Id
+                };
+
+                await _propertyImprovementService.Add(propertyImprovement);
+
+            }
+
+            foreach (var image in vm.PropertyImages)
+            {
+                var propertyImage = new SavePropertyImageViewModel
+                {
+                    PropertyId = id,
+                    ImageUrl = image
+                };
+
+                await _propertyImageService.Add(propertyImage);
+            }
+
+            return vm;
+        }
+        #endregion
+
+        #region Delete Overriden
+        /// <summary>
+        /// Deletes a property by its ID, along with its associated improvements and images.
+        /// </summary>
+        /// <param name="id">The ID of the property to delete.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public override async Task Delete(int id)
+        {
+            await _propertyImprovementService.DeleteImprovementsByPropertyId(id);
+            await _propertyImageService.DeleteImagesByPropertyId(id);
+            await base.Delete(id);
+        }
+        #endregion
+
         #region Get Methods
 
         #region GetAllViewModel Overriden
+        /// <summary>
+        /// Retrieves all property view models.
+        /// </summary>
+        /// <returns>A list of property view models.</returns>
+        /// Unneficient way to get the properties, but it is the way I decided for now.
         public async override Task<List<PropertyViewModel>> GetAllViewModel()
         {
             var properties = await base.GetAllViewModel();
@@ -86,8 +178,8 @@ namespace RoyalState.Core.Application.Services
 
             foreach (var property in properties)
             {
-                var propertyImages = await _propertyImageService.GetImagesByPropertyId(property.Id);
-                var propertyImprovements = await _propertyImprovementService.GetImprovementsByPropertyId(property.Id);
+                var propertyImages = await _propertyImageService.GetImagesUrlByPropertyId(property.Id);
+                var propertyImprovements = await _propertyImprovementService.GetImprovementsNamesByPropertyId(property.Id);
                 var agent = await _agentService.GetByIdViewModel(property.AgentId);
                 var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
                 var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
@@ -126,6 +218,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetByIdViewModel Overriden
+        /// <summary>
+        /// Retrieves the property view model with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the property.</param>
+        /// <returns>The property view model.</returns>
         public async override Task<PropertyViewModel> GetByIdViewModel(int id)
         {
             var properties = await GetAllViewModel();
@@ -134,12 +231,57 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region GetByIdSaveViewModel Overriden
+        /// <summary>
+        /// Retrieves the property view model with the specified ID and converts it to a save property view model.
+        /// </summary>
+        /// <param name="id">The ID of the property.</param>
+        /// <returns>The save property view model.</returns>
+        public async override Task<SavePropertyViewModel> GetByIdSaveViewModel(int id)
+        {
+            var property = await GetByIdViewModel(id);
+
+            List<int> propertyImprovements = new List<int>();
+            foreach (var improvement in property.Improvements)
+            {
+                var getImprovement = await _improvementService.GetByNameViewModel(improvement);
+                propertyImprovements.Add(getImprovement.Id);
+
+            }
+
+            SavePropertyViewModel vm = new SavePropertyViewModel
+            {
+                Id = property.Id,
+                Code = property.Code,
+                Bathrooms = property.Bathrooms,
+                Bedrooms = property.Bedrooms,
+                Description = property.Description,
+                Price = property.Price,
+                Meters = property.Meters,
+                SaleTypeId = property.SaleTypeId,
+                PropertyTypeId = property.PropertyTypeId,
+                AgentId = property.AgentId,
+                Improvements = propertyImprovements,
+                PropertyImages = property.PropertyImages
+            };
+
+            return vm;
+
+        }
+        #endregion
+
         #region GetPropertyByCode 
+        /// <summary>
+        /// Retrieves the property view model with the specified code.
+        /// </summary>
+        /// <param name="code">The code of the property.</param>
+        /// <returns>The property view model.</returns>
         public async Task<PropertyViewModel> GetPropertyByCode(string code)
         {
             var propertiesList = await GetAllViewModel();
+            var thisProperty = propertiesList.FirstOrDefault(sa => sa.Code == code);
 
-            return propertiesList.FirstOrDefault(sa => sa.Code == code);
+            return thisProperty;
 
         }
         #endregion
@@ -171,6 +313,10 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region Private Methods
+        /// <summary>
+        /// Generates a unique code for a property.
+        /// </summary>
+        /// <returns>The generated code.</returns>
         private async Task<string> GenerateCode()
         {
             string code = "000000";
@@ -190,6 +336,12 @@ namespace RoyalState.Core.Application.Services
             return code;
         }
 
+
+        /// <summary>
+        /// Checks if a property with the specified code already exists.
+        /// </summary>
+        /// <param name="code">The code to check.</param>
+        /// <returns>True if the property with the code exists, otherwise false.</returns>
         private async Task<bool> CodeExists(string code)
         {
             var propertiesList = await GetAllViewModel();
@@ -203,7 +355,6 @@ namespace RoyalState.Core.Application.Services
         }
 
         #endregion
-
 
     }
 }

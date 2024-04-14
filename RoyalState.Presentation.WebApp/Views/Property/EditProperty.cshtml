@@ -1,10 +1,8 @@
-﻿@using RoyalState.Core.Application.Enums
-@using RoyalState.Core.Application.ViewModels.Property;
-@using RoyalState.Core.Application.ViewModels.Improvements;
+﻿@using RoyalState.Core.Application.ViewModels.Property;
 @model SavePropertyViewModel
 
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Edit property";
     Layout = "~/Views/Shared/_LayoutSmall.cshtml";
 }
 
@@ -148,7 +146,13 @@ else
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                 }
-                                <form method="post" asp-controller="Property" asp-action="NewPropertyPost" enctype="multipart/form-data">
+                                <form method="post" asp-controller="Property" asp-action="EditPropertyPost" enctype="multipart/form-data">
+
+                                    <input asp-for="Id" type="hidden" />
+                                    <input asp-for="Code" type="hidden" />
+                                    <input asp-for="AgentId" type="hidden" />
+
+
                                     <div class="row gy-3 overflow-hidden">
                                         <div class="row overflow-hidden">
                                             <div class="col-12">
@@ -211,15 +215,30 @@ else
                                                     @for (int i = 0; i < ViewBag.Improvements.Count; i++)
                                                     {
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="Improvements" value="@ViewBag.Improvements[i].Id" class="form-check-input" />
+                                                            <input type="checkbox" name="Improvements" value="@ViewBag.Improvements[i].Id" class="form-check-input" checked />
                                                             <label class="form-check-label">@ViewBag.Improvements[i].Name</label>
                                                         </div>
                                                     }
                                                 </div>
                                             </div>
 
+                                            <div class="mb-3 mt-3">
+                                                <label class="form-label">Modify or delete an image: </label>
+                                                @foreach (var image in Model.PropertyImages)
+                                                {
+                                                    <div class="col-12">
+                                                        <div class="form-floating mb-3">
+                                                            <input asp-for="PropertyImages" value="@image" class="form-control" id="image" placeholder="Image">
+                                                            <label asp-for="PropertyImages" for="image" class="form-label">Image</label>
+                                                            <span asp-validation-for="PropertyImages" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+
+
                                             <div class="mt-3">
-                                                <label class="form-label">Property pictures: </label>
+                                                <label class="form-label">Upload more pictures for the property: </label>
                                                 <div id="file-container">
                                                     <input type="file" name="files" id="file-input" multiple />
                                                     <label id="label-input" for="file-input">

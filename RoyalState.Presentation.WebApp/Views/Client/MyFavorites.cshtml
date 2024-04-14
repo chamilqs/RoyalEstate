@@ -1,74 +1,18 @@
 ﻿@using RoyalState.Core.Application.ViewModels.Property;
 @model List<PropertyViewModel>
 @{
-    ViewData["Title"] = "Home";
-    bool? searchResult = ViewBag.isEmpty;
+    ViewData["Title"] = "Favorites";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
 }
 
-<div class="row">
-    <form class="form-search col-md-12" style="margin-top: -100px;">
-        <div class="row  align-items-end">
-            <div class="col-md-3">
-                <label for="list-types">Property Types</label>
-                <div class="select-wrap">
-                    <span class="icon icon-arrow_drop_down"></span>
-                    <select name="list-types" id="list-types" class="form-control d-block rounded-0">
-                        <option value="">Condo</option>
-                        <option value="">Commercial Building</option>
-                        <option value="">Land Property</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <label for="min-price">Min Price</label>
-                <input type="number" id="min-price" class="form-control d-block rounded-0" placeholder="Min Price">
 
-                <label class="mt-3" for="max-price">Max Price</label>
-                <input type="number" id="max-price" class="form-control d-block rounded-0" placeholder="Max Price">
-            </div>
-            <div class="col-md-3">
-                <label for="min-price">Rooms number</label>
-                <input type="number" id="rooms-number" class="form-control d-block rounded-0" placeholder="Rooms number">
-
-                <label class="mt-3" for="max-price">Baths number</label>
-                <input type="number" id="baths-number" class="form-control d-block rounded-0" placeholder="Baths number">
-            </div>
-            <div class="col-md-3">
-                <input type="submit" class="btn btn-success text-white btn-block rounded-0" value="Search">
-            </div>
-        </div>
-    </form>
-</div>
-
-<div>
-    <nav class="navbar navbar-light mb-4 mt-4" style="margin-left:-30px;">
-        <div class="container-fluid">
-            <form method="post" asp-controller="Home" asp-action="SearchProperty" class="d-flex">
-                <input name="code" class="form-control me-2" type="search" placeholder="ej. 524484" aria-label="Search" required>
-                <button class="btn btn-outline-success" type="submit">Search by code</button>
-            </form>
-        </div>
-    </nav>
-</div>
-
-@if (searchResult == true)
+@if (Model == null || !Model.Any())
 {
-    <div class="row justify-content-center mt-4 rounded-3">
+    <div class="row justify-content-center mt-4">
         <div class="col-md-7">
             <div class="alert alert-info text-center" role="alert">
-                <p>No properties found with the search criteria.</p>
-                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">View all</a>
-            </div>
-        </div>
-    </div>
-}
-else if (Model == null || !Model.Any())
-{
-    <div class="row justify-content-center mt-4 rounded-3">
-        <div class="col-md-7">
-            <div class="alert alert-info text-center" role="alert">
-                <p>There are no properties in the system at the moment.</p>
-                <a asp-controller="Home" asp-action="AllAgents" class="btn btn-primary">See our agents!</a>
+                <p>You haven't added any property to your favorites yet.</p>
+                <a asp-controller="Client" asp-action="Index" class="btn btn-primary">Add a new property</a>
             </div>
         </div>
     </div>
@@ -77,6 +21,14 @@ else
 {
     <div class="site-section site-section-sm bg-light mt-3">
         <div class="container">
+            <div class="row mb-5 justify-content-center">
+                <div class="col-md-7">
+                    <div class="site-section-title text-center">
+                        <h2>My favorites</h2>
+                        <p>This is your list of favorite properties. You can delete them or view more details about them.</p>
+                    </div>
+                </div>
+            </div>
 
             <div class="row mb-5" style="margin-top:-50px;">
 
@@ -91,7 +43,9 @@ else
                                 <img src="@property.PropertyImages.FirstOrDefault()" alt="Image" class="img-fluid">
                             </a>
                             <div class="p-4 property-body">
-                                @*<a href="#" class="property-favorite"><span class="icon-heart-o"></span></a>*@
+@*                                 <form asp-controller="Client" asp-action="MarkPropertyAsFavorite" asp-route-propertyId="@property.Id" method="post">
+                                    <button type="submit" class="property-favorite"><span class="icon-heart-o"></span></button>
+                                </form> *@
                                 <h2 class="property-title fs-5"><a href="property-details.html"><strong>Property Type: </strong>@property.PropertyTypeName</a></h2>
                                 <span class="property-location d-block"><strong>Code: </strong>@property.Code</span>
                                 <span class="property-location d-block mb-3"><strong>Sale Type: </strong>@property.SaleTypeName</span>
@@ -111,7 +65,7 @@ else
                                         <span class="caption">@property.Meters MT<sup>2</sup></span>
                                     </span>
                                 </div>
-
+                                <a asp-controller="Client" asp-action="DeleteFavorite" asp-route-id="@property.Id" class="btn btn-sm btn-danger fw-bold">Delete</a>
                                 <a asp-controller="Home" asp-action="PropertyDetails" asp-route-id="@property.Id" class="btn btn-sm btn-warning fw-bold">Details</a>
                             </div>
                         </div>
@@ -122,4 +76,3 @@ else
         </div>
     </div>
 }
-

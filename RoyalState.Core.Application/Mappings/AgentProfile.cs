@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using RoyalState.Core.Application.ViewModels.Agent;
-using RoyalState.Core.Application.ViewModels.User;
 using RoyalState.Core.Domain.Entities;
 
 namespace RoyalState.Core.Application.Mappings

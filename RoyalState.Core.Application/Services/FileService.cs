@@ -5,6 +5,15 @@ namespace RoyalState.Core.Application.Services
 {
     public class FileService : IFileService
     {
+        #region UploadFile
+        /// <summary>
+        /// Uploads a file asynchronously locally.
+        /// </summary>
+        /// <param name="file">The file to upload.</param>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="isEditMode">Indicates whether it is in edit mode.</param>
+        /// <param name="imagePath">The path of the image.</param>
+        /// <returns>The path of the uploaded file.</returns>
         public async Task<string> UploadFileAsync(IFormFile file, string email, bool isEditMode = false, string imagePath = "")
         {
             if (isEditMode && file == null)
@@ -43,5 +52,6 @@ namespace RoyalState.Core.Application.Services
 
             return $"{basePath}/{fileName}";
         }
+        #endregion
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace RoyalState.Core.Application.ViewModels.Property
+﻿namespace RoyalState.Core.Application.ViewModels.Property
 {
     public class FilterPropertyViewModel
     {

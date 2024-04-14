@@ -1,6 +1,6 @@
 ﻿namespace RoyalState.Core.Application.Interfaces.Services
 {
-    public interface IGenericService<SaveViewModel, ViewModel, Entity> 
+    public interface IGenericService<SaveViewModel, ViewModel, Entity>
         where SaveViewModel : class
         where ViewModel : class
         where Entity : class

@@ -1,21 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using RoyalState.Core.Application.DTOs.Account;
-using RoyalState.Core.Application.Enums;
-using RoyalState.Infrastructure.Identity.Entities;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using RoyalState.Core.Application.DTOs.Account;
+using RoyalState.Core.Application.DTOs.Email;
+using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Domain.Settings;
-using Microsoft.Extensions.Options;
+using RoyalState.Infrastructure.Identity.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
-using RoyalState.Core.Application.DTOs.Email;
-using Microsoft.EntityFrameworkCore;
-using Azure.Core;
-using RoyalState.Core.Application.Wrappers;
-using MediatR;
+using System.Text;
 
 namespace RoyalState.Infrastructure.Identity.Services
 {

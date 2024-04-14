@@ -1,7 +1,7 @@
-using RoyalState.Infrastructure.Shared;
+using RoyalState.Core.Application;
 using RoyalState.Infrastructure.Identity;
 using RoyalState.Infrastructure.Persistence;
-using RoyalState.Core.Application;
+using RoyalState.Infrastructure.Shared;
 using RoyalState.Presentation.WebApp.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);

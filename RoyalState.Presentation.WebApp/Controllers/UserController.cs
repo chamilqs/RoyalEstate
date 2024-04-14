@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RoyalState.Core.Application.ViewModels.Users;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using RoyalState.Core.Application.DTOs.Account;
+using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.DTOs.Account;
+using RoyalState.Core.Application.ViewModels.Users;
 using RoyalState.Infrastructure.Identity.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using RoyalState.Presentation.WebApp.Middlewares;
-using Azure;
-using RoyalState.Core.Application.Enums;
-using RoyalState.Core.Application.Services;
 
 namespace WebAdmin.BankingApp.Controllers
 {
@@ -92,7 +89,7 @@ namespace WebAdmin.BankingApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Error", "Please fill all the required fields");                
+                ModelState.AddModelError("Error", "Please fill all the required fields");
                 return View(vm);
             }
 
@@ -115,10 +112,11 @@ namespace WebAdmin.BankingApp.Controllers
             }
 
             ViewBag.Email = vm.Email;
-            if(vm.Role == (int)Roles.Client)
+            if (vm.Role == (int)Roles.Client)
             {
                 return RedirectToAction("SuccessRegistration", new { email = vm.Email, isClient = true });
-            }else if(vm.Role == (int)Roles.Agent)
+            }
+            else if (vm.Role == (int)Roles.Agent)
             {
                 return RedirectToAction("SuccessRegistration", new { email = vm.Email, isClient = false });
             }

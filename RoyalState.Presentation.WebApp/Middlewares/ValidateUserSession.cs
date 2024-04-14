@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using RoyalState.Core.Application.DTOs.Account;
+﻿using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
-using RoyalState.Core.Application.ViewModels.Users;
 
 namespace RoyalState.Presentation.WebApp.Middlewares
 {

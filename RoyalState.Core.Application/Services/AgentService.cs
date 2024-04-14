@@ -29,6 +29,11 @@ namespace RoyalState.Core.Application.Services
         }
 
         #region Update
+        /// <summary>
+        /// Updates a user asynchronously.
+        /// </summary>
+        /// <param name="vm">The SaveUserViewModel containing the updated user details.</param>
+        /// <returns>The UpdateUserResponse indicating the result of the update.</returns>
         public async Task<UpdateUserResponse> UpdateAsync(SaveUserViewModel vm)
         {
             UpdateUserResponse response = await _userService.UpdateUserAsync(vm);
@@ -67,6 +72,12 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region Register
+        /// <summary>
+        /// Registers a new agent asynchronously.
+        /// </summary>
+        /// <param name="vm">The SaveUserViewModel containing the agent details.</param>
+        /// <param name="origin">The URL origin of the registration request.</param>
+        /// <returns>The RegisterResponse indicating the result of the registration.</returns>
         public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel vm, string origin)
         {
             RegisterResponse response = await _userService.RegisterAsync(vm, origin);

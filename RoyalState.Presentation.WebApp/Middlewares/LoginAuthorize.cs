@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using System.Threading.Tasks;
 using WebAdmin.BankingApp.Controllers;
 
 namespace RoyalState.Presentation.WebApp.Middlewares
@@ -13,7 +12,7 @@ namespace RoyalState.Presentation.WebApp.Middlewares
             _userSession = userSession;
         }
 
-        public async Task OnActionExecutionAsync(ActionExecutingContext context,ActionExecutionDelegate next)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             if (_userSession.HasUser())
             {

@@ -1,0 +1,30 @@
+﻿@using RoyalState.Core.Application.ViewModels.Property;
+@model PropertyViewModel
+
+@{
+    ViewData["Title"] = "Delete property";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-6 offset-3">
+        <div class="card mt-4">
+            <div class="card-header bg-danger text-light">
+                <h4>Are you sure you want to delete this property?</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-controller="Property" asp-action="DeletePropertyPost">
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn btn-danger fw-bold">Delete</button>
+                    <a asp-controller="Property" asp-action="Maintenance" class="btn btn-primary fw-bold">Cancel</a>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>

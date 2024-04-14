@@ -8,7 +8,7 @@ namespace RoyalState.Infrastructure.Identity.Seeds
     {
         public static async Task SeedAsync(UserManager<ApplicationUser> userManager)
         {
-            ApplicationUser superAdminUser = new() 
+            ApplicationUser superAdminUser = new()
             {
                 UserName = "superadminuser",
                 Email = "superadminuser@email.com",
@@ -16,9 +16,9 @@ namespace RoyalState.Infrastructure.Identity.Seeds
                 LastName = "Doe",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
-            };            
+            };
 
-            if(userManager.Users.All(u => u.Id != superAdminUser.Id))
+            if (userManager.Users.All(u => u.Id != superAdminUser.Id))
             {
                 var user = await userManager.FindByEmailAsync(superAdminUser.Email);
 
