@@ -173,7 +173,9 @@ namespace RoyalState.Core.Application.Services
         /// Unneficient way to get the properties, but it is the way I decided for now.
         public async override Task<List<PropertyViewModel>> GetAllViewModel()
         {
-            var properties = await base.GetAllViewModel();
+            var properties = await _propertyRepository.GetAllAsync();
+            properties = properties.OrderByDescending(p => p.CreatedDate).ToList();
+
             var propertiesViewModel = new List<PropertyViewModel>();
 
             foreach (var property in properties)
@@ -199,6 +201,7 @@ namespace RoyalState.Core.Application.Services
                     Bathrooms = property.Bathrooms,
                     PropertyImages = propertyImages,
                     Improvements = propertyImprovements,
+                    CreatedDate = property.CreatedDate,
 
                     // Agent details
                     AgentId = property.AgentId,
