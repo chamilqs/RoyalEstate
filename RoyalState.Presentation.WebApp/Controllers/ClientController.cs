@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
@@ -6,6 +7,7 @@ using RoyalState.Core.Application.ViewModels.ClientProperties;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
+    [Authorize(Roles = "Client")]
     public class ClientController : Controller
     {
         private readonly IClientService _clientService;
@@ -24,6 +26,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
         }
 
+        #region Client Index
         public async Task<IActionResult> Index(string? error)
         {
             if (error != null)
@@ -33,13 +36,18 @@ namespace RoyalState.Presentation.WebApp.Controllers
             var properties = await _propertyService.GetAllViewModel();
             return View(properties);
         }
+        #endregion
+
+        #region My Favorites
         public async Task<IActionResult> MyFavorites()
         {
             var client = await _clientService.GetByUserIdViewModel(authViewModel.Id);
             var properties = await _clientService.GetFavoritePropertiesViewModel(client.Id);
             return View(properties);
         }
+        #endregion
 
+        #region Mark Property As Favorite
         [HttpPost]
         public async Task<IActionResult> MarkPropertyAsFavorite(int propertyId)
         {
@@ -64,7 +72,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             return RedirectToAction("Index");
         }
+        #endregion
 
+        #region Delete Favorite Property
         public async Task<IActionResult> DeleteFavorite(int id)
         {
             var property = await _propertyService.GetByIdSaveViewModel(id);
@@ -79,6 +89,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
             await _clientService.DeleteFavorite(id);
             return RedirectToAction("MyFavorites");
         }
+        #endregion
 
 
     }

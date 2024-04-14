@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
@@ -6,6 +7,7 @@ using RoyalState.Core.Application.ViewModels.Property;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
+    [Authorize(Roles = "Agent")]
     public class PropertyController : Controller
     {
         #region Fields
@@ -179,14 +181,6 @@ namespace RoyalState.Presentation.WebApp.Controllers
             return RedirectToAction("Maintenance");
         }
         #endregion
-
-        #region PropertyDetails
-        public async Task<IActionResult> PropertyDetails(int id)
-        {
-            var property = await _propertyService.GetByIdViewModel(id);
-            return View(property);
-        }
-        #endregion        
 
         #endregion
 

@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.ViewModels.Agent;
 using RoyalState.Core.Application.ViewModels.Users;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
+    [Authorize(Roles = "Agent")]
     public class AgentController : Controller
     {
         private readonly IAgentService _agentService;
@@ -31,14 +32,6 @@ namespace RoyalState.Presentation.WebApp.Controllers
             var properties = await _propertyService.GetAgentProperties(agent.Id);
             return View(properties);
 
-        }
-        #endregion
-
-        #region Get Agents
-        public async Task<IActionResult> AllAgents()
-        {
-            var agents = await _agentService.GetAllViewModel();
-            return View(agents);
         }
         #endregion
 
@@ -76,17 +69,6 @@ namespace RoyalState.Presentation.WebApp.Controllers
             return RedirectToAction("EditProfile");
         }
         #endregion        
-
-        #region Search
-        public async Task<IActionResult> SearchAgent(string agentName)
-        {
-            var agents = await _agentService.GetByNameViewModel(agentName);
-            bool isEmpty = agents == null;
-
-            ViewBag.IsEmpty = isEmpty;
-            return View("AllAgents", agents != null ? agents : new List<AgentViewModel>());
-        }
-        #endregion
 
     }
 }
