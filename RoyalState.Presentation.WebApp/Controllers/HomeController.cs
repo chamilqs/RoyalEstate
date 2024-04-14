@@ -95,6 +95,25 @@ namespace RoyalState.Presentation.WebApp.Controllers
             var agents = await _agentService.GetAllViewModel();
             return View(agents);
         }
+        public async Task<IActionResult> AgentProperties(int id)
+        {
+            var properties = await _propertyService.GetAgentProperties(id);
+
+            var firstProperty = properties[0];
+
+            AgentViewModel agent = new()
+            {
+                Id = firstProperty.Id,
+                FirstName = firstProperty.AgentFirstName,
+                LastName = firstProperty.AgentLastName,
+                Email = firstProperty.AgentEmail,
+                Phone = firstProperty.AgentPhone,
+                ImageUrl = firstProperty.AgentImage,
+            };
+
+            ViewBag.Agent = agent;
+            return View("AgentProperties", properties);
+        }
         #endregion
 
     }
