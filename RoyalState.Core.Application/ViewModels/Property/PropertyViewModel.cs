@@ -15,6 +15,7 @@
         public int Bedrooms { get; set; }
         public int Bathrooms { get; set; }
         public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         #region Agent details
         // Agent details

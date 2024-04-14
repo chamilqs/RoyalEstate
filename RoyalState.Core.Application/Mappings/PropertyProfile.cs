@@ -39,7 +39,6 @@ namespace RoyalState.Core.Application.Mappings
                 .ForMember(x => x.PropertyImages, opt => opt.MapFrom(src => src.PropertyImages))
                 .ForMember(x => x.Improvements, opt => opt.MapFrom(src => src.Improvements))
                 .ReverseMap()
-                .ForMember(x => x.CreatedDate, opt => opt.Ignore())
                 .ForMember(x => x.CreatedBy, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedDate, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())

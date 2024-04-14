@@ -173,7 +173,9 @@ namespace RoyalState.Core.Application.Services
         /// Unneficient way to get the properties, but it is the way I decided for now.
         public async override Task<List<PropertyViewModel>> GetAllViewModel()
         {
-            var properties = await base.GetAllViewModel();
+            var properties = await _propertyRepository.GetAllAsync();
+            properties = properties.OrderByDescending(p => p.CreatedDate).ToList();
+
             var propertiesViewModel = new List<PropertyViewModel>();
 
             foreach (var property in properties)
@@ -199,6 +201,7 @@ namespace RoyalState.Core.Application.Services
                     Bathrooms = property.Bathrooms,
                     PropertyImages = propertyImages,
                     Improvements = propertyImprovements,
+                    CreatedDate = property.CreatedDate,
 
                     // Agent details
                     AgentId = property.AgentId,
@@ -304,9 +307,24 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetAllViewModelWIthFilters
-        public Task<PropertyViewModel> GetAllViewModelWIthFilters(FilterPropertyViewModel filterProperty)
+        /// <summary>
+        /// Retrieves the list of property view models with the specified filters.
+        /// </summary>
+        /// <param name="filter">The filter object containing the filter criteria.</param>
+        /// <returns>The list of property view models.</returns>
+        public async Task<List<PropertyViewModel>> GetAllViewModelWIthFilters(FilterPropertyViewModel filter)
         {
-            throw new NotImplementedException();
+            var propertiesList = await GetAllViewModel();
+
+            propertiesList = propertiesList
+                .Where(p => !filter.MinPrice.HasValue || p.Price >= filter.MinPrice.Value)
+                .Where(p => !filter.MaxPrice.HasValue || p.Price <= filter.MaxPrice.Value)
+                .Where(p => !filter.PropertyTypeId.HasValue || p.PropertyTypeId == filter.PropertyTypeId.Value)
+                .Where(p => !filter.Bedrooms.HasValue || p.Bedrooms == filter.Bedrooms.Value)
+                .Where(p => !filter.Bathrooms.HasValue || p.Bathrooms == filter.Bathrooms.Value)
+                .ToList();
+
+            return propertiesList;
         }
         #endregion
 

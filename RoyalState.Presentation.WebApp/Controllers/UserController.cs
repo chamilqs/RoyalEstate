@@ -16,10 +16,11 @@ namespace WebAdmin.BankingApp.Controllers
         private readonly IAgentService _agentService;
         private readonly IClientService _clientService;
         private readonly IUserService _userService;
+        private readonly IFileService _fileService;
         private readonly AuthenticationResponse authViewModel;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserController(IUserService userService, IAgentService agentService, IClientService clientService, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
+        public UserController(IUserService userService, IAgentService agentService, IClientService clientService, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager, IFileService fileService)
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
@@ -27,6 +28,7 @@ namespace WebAdmin.BankingApp.Controllers
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _agentService = agentService;
             _clientService = clientService;
+            _fileService = fileService;
         }
 
         #region Login & Logout
@@ -93,7 +95,7 @@ namespace WebAdmin.BankingApp.Controllers
                 return View(vm);
             }
 
-            vm.ImageUrl = await UploadFileAsync(vm.File, vm.Email);
+            vm.ImageUrl = await _fileService.UploadFileAsync(vm.File, vm.Email);
             var origin = Request.Headers["origin"];
 
             RegisterResponse response = vm.Role switch
@@ -125,6 +127,7 @@ namespace WebAdmin.BankingApp.Controllers
 
         }
 
+        [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult SuccessRegistration(string email, bool isClient)
         {
             ViewBag.Email = email;
@@ -136,48 +139,6 @@ namespace WebAdmin.BankingApp.Controllers
         {
             string response = await _userService.ConfirmEmailAsync(userId, token);
             return View("ConfirmEmail", response);
-        }
-
-        #endregion
-
-        #region Private Methods
-        private async Task<string> UploadFileAsync(IFormFile file, string email, bool isEditMode = false, string imagePath = "")
-        {
-            if (isEditMode && file == null)
-            {
-                return imagePath;
-            }
-
-            string basePath = $"/Images/Users/{email}";
-            string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{basePath}");
-
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            Guid guid = Guid.NewGuid();
-            string fileName = $"{guid}{Path.GetExtension(file.FileName)}";
-            string fileNameWithPath = Path.Combine(path, fileName);
-
-            using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            if (isEditMode)
-            {
-                string[] oldImagePart = imagePath.Split("/");
-                string oldImagePath = oldImagePart[^1];
-                string completeImageOldPath = Path.Combine(path, oldImagePath);
-
-                if (System.IO.File.Exists(completeImageOldPath))
-                {
-                    System.IO.File.Delete(completeImageOldPath);
-                }
-            }
-
-            return $"{basePath}/{fileName}";
         }
 
         #endregion
