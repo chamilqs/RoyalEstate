@@ -307,6 +307,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetAllViewModelWIthFilters
+        /// <summary>
+        /// Retrieves the list of property view models with the specified filters.
+        /// </summary>
+        /// <param name="filter">The filter object containing the filter criteria.</param>
+        /// <returns>The list of property view models.</returns>
         public async Task<List<PropertyViewModel>> GetAllViewModelWIthFilters(FilterPropertyViewModel filter)
         {
             var propertiesList = await GetAllViewModel();
@@ -321,7 +326,6 @@ namespace RoyalState.Core.Application.Services
 
             return propertiesList;
         }
-
         #endregion
 
         #endregion
