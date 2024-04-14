@@ -307,10 +307,21 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetAllViewModelWIthFilters
-        public Task<PropertyViewModel> GetAllViewModelWIthFilters(FilterPropertyViewModel filterProperty)
+        public async Task<List<PropertyViewModel>> GetAllViewModelWIthFilters(FilterPropertyViewModel filter)
         {
-            throw new NotImplementedException();
+            var propertiesList = await GetAllViewModel();
+
+            propertiesList = propertiesList
+                .Where(p => !filter.MinPrice.HasValue || p.Price >= filter.MinPrice.Value)
+                .Where(p => !filter.MaxPrice.HasValue || p.Price <= filter.MaxPrice.Value)
+                .Where(p => !filter.PropertyTypeId.HasValue || p.PropertyTypeId == filter.PropertyTypeId.Value)
+                .Where(p => !filter.Bedrooms.HasValue || p.Bedrooms == filter.Bedrooms.Value)
+                .Where(p => !filter.Bathrooms.HasValue || p.Bathrooms == filter.Bathrooms.Value)
+                .ToList();
+
+            return propertiesList;
         }
+
         #endregion
 
         #endregion
