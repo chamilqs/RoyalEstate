@@ -15,7 +15,7 @@ namespace RoyalState.Core.Application.Interfaces.Services
         Task SingOutAsync();
         Task<List<UserDTO>> GetAllAgentAsync();
         Task<List<UserDTO>> GetAllAdminAsync();
-        Task<List<UserDTO>> GetAllDevloperAsync();
+        Task<List<UserDTO>> GetAllDeveloperAsync();
         Task<List<UserDTO>> GetAllClientAsync();
     }
 }
