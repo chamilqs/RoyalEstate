@@ -256,7 +256,7 @@ namespace RoyalState.Infrastructure.Identity.Services
             };
 
             var userWithSameUserName = await _userManager.FindByNameAsync(request.UserName);
-            if (userWithSameUserName != null)
+            if (userWithSameUserName != null && userWithSameUserName.Id != request.Id)
             {
                 response.HasError = true;
                 response.Error = $"Username '{request.UserName}' is already taken.";
@@ -264,7 +264,7 @@ namespace RoyalState.Infrastructure.Identity.Services
             }
 
             var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
-            if (userWithSameEmail != null)
+            if (userWithSameEmail != null && userWithSameEmail.Id != request.Id)
             {
                 response.HasError = true;
                 response.Error = $"Email '{request.Email}'is already registered.";
@@ -429,7 +429,7 @@ namespace RoyalState.Infrastructure.Identity.Services
             return userDTOList;
         }
 
-        public async Task<List<UserDTO>> GetAllDevloperAsync()
+        public async Task<List<UserDTO>> GetAllDeveloperAsync()
         {
             var userDTOList = await GetAllUserAsync();
             userDTOList = userDTOList.Where(user => user.Role == Roles.Developer.ToString()).ToList();

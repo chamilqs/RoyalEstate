@@ -32,7 +32,7 @@ namespace RoyalState.Core.Application.Services
             DahsboardViewModel dashboard = new();
             var agents = await _accountService.GetAllAgentAsync();
             var clients = await _accountService.GetAllClientAsync();
-            var developers = await _accountService.GetAllDevloperAsync();
+            var developers = await _accountService.GetAllDeveloperAsync();
             var properties = await _propertyService.GetAllViewModel();
 
             dashboard.ActiveAgents = agents.FindAll(agent => agent.EmailConfirmed == true).Count;

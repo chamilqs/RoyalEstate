@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace RoyalState.Core.Application.ViewModels.Admins
+﻿namespace RoyalState.Core.Application.ViewModels.Admins
 {
     public class SaveAdminViewModel
     {
