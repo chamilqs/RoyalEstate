@@ -87,23 +87,14 @@ namespace RoyalState.Presentation.WebApp.Controllers
             if (!ModelState.IsValid)
                 return View("UpdateAdmin", vm);
 
-            await _adminService.Update(vm);
+            var response = await _adminService.Update(vm);
 
-            return RedirectToRoute(new { controller = "Admin", action = "Index" });
-        }
-        #endregion
-
-        #region Delete
-        public async Task<IActionResult> Delete(int id)
-        {
-            return View(await _adminService.GetByIdViewModel(id));
-        }
-
-        [HttpPost]
-        [ActionName("Delete")]
-        public async Task<IActionResult> DeletePost(int id)
-        {
-            await _adminService.Delete(id);
+            if (response.HasError)
+            {
+                vm.HasError = response.HasError;
+                vm.Error = response.Error;
+                return View("UpdateAdmin", vm);
+            }
 
             return RedirectToRoute(new { controller = "Admin", action = "Index" });
         }
