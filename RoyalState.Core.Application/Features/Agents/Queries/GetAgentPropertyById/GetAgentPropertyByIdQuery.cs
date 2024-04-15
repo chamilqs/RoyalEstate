@@ -32,15 +32,15 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyBy
     {
         private readonly IAgentRepository _agentRepository;
         private readonly IPropertyRepository _propertyRepository;
+        private readonly IPropertyService _propertyService;
         private readonly IMapper _mappper;
         private readonly IAccountService _accountService;
 
-        public GetAgentPropertyByIdQueryHandler(IAgentRepository agentRepository, IAccountService accountService, IPropertyRepository propertyRepository, IMapper mappper)
+        public GetAgentPropertyByIdQueryHandler(IAgentRepository agentRepository, IPropertyService propertyService, IMapper mappper)
         {
             _agentRepository = agentRepository;
-            _propertyRepository = propertyRepository;
             _mappper = mappper;
-            _accountService = accountService;
+            _propertyService = propertyService;
         }
 
         public async Task<Response<IList<PropertyDTO>>> Handle(GetAgentPropertyByIdQuery request, CancellationToken cancellationToken)
@@ -53,8 +53,7 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyBy
 
         private async Task<List<PropertyDTO>> GetAllPropertiesByAgentId(int agentId)
         {
-            var propertyList = await _propertyRepository.GetAllAsync();
-
+            var propertyList = await _propertyService.GetAllViewModel();
             if (propertyList == null || propertyList.Count == 0) throw new ApiException($"Properties not found."
                 , (int)HttpStatusCode.NotFound);
 
@@ -62,22 +61,20 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyBy
 
             foreach (var property in propertyList.Where(p => p.AgentId == agentId))
             {
-                var agent = await _agentRepository.GetByIdAsync(property.AgentId);
-                var agentUser = await _accountService.FindByIdAsync(agent.UserId);
                 var propertyDTO = new PropertyDTO
                 {
                     Id = property.Id,
-                    AgentId = agentId,
-                    SaleType = property.SaleType.Name,
+                    AgentId = property.AgentId,
+                    SaleType = property.SaleTypeName,
                     Bathrooms = property.Bathrooms,
                     Bedrooms = property.Bedrooms,
                     Code = property.Code,
                     Description = property.Description,
                     Meters = property.Meters,
                     Price = property.Price,
-                    PropertyType = property.PropertyType.Name,
-                    AgentFirstName = agentUser.FirstName,
-                    Improvements = property.Improvements.Select(i => i.Name).ToList(),
+                    PropertyType = property.PropertyTypeName,
+                    AgentFirstName = property.AgentFirstName,
+                    Improvements = property.Improvements,
                 };
                 propertiesDTOs.Add(propertyDTO);
             }

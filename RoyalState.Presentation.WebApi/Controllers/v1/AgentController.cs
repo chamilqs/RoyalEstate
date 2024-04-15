@@ -16,7 +16,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Authorize(Roles = "Developer,Admin")]
-    [SwaggerTag("Mantenimiento de productos")]
+    [SwaggerTag("Agent management")]
 
     public class AgentController : BaseApiController
     {
@@ -63,6 +63,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
             return Ok(await Mediator.Send(new GetAgentPropertyByIdQuery { AgentId = agentId }));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch("{id}")]
         [SwaggerOperation(
                Summary = "Status Change of an agent",

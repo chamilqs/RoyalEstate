@@ -11,25 +11,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Features\Improvements\Commands\CreateImprovement\" />
-		<Folder Include="Features\Improvements\Commands\DeleteImprovementById\" />
-		<Folder Include="Features\Improvements\Commands\UpdateImprovement\" />
-		<Folder Include="Features\Improvements\Queries\GetAllImprovements\" />
-		<Folder Include="Features\Improvements\Queries\GetImprovementById\" />
 		<Folder Include="Features\Properties\Commands\" />
-		<Folder Include="Features\Properties\Queries\GetAllProperties\" />
-		<Folder Include="Features\Properties\Queries\GetPropertyById\" />
-		<Folder Include="Features\Properties\Queries\GetPropertyByCode\" />
-		<Folder Include="Features\PropertyTypes\Commands\CreatePropertyType\" />
-		<Folder Include="Features\PropertyTypes\Commands\DeletePropertyTypeById\" />
-		<Folder Include="Features\PropertyTypes\Commands\UpdatePropertyType\" />
-		<Folder Include="Features\PropertyTypes\Queries\GetAllPropertyTypes\" />
-		<Folder Include="Features\PropertyTypes\Queries\GetPropertyTypeById\" />
-		<Folder Include="Features\SaleTypes\Commands\CreateSaleType\" />
-		<Folder Include="Features\SaleTypes\Commands\DeleteSaleType\" />
-		<Folder Include="Features\SaleTypes\Commands\UpdateSaleType\" />
-		<Folder Include="Features\SaleTypes\Queries\GetAllSaleTypes\" />
-		<Folder Include="Features\SaleTypes\Queries\GetSaleTypeById\" />
 	</ItemGroup>
 
 	<ItemGroup>
