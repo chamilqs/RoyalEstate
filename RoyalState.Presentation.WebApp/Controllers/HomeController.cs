@@ -1,40 +1,162 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Enums;
+using RoyalState.Core.Application.Helpers;
+using RoyalState.Core.Application.Interfaces.Services;
+using RoyalState.Core.Application.ViewModels.Agent;
+using RoyalState.Core.Application.ViewModels.Property;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IPropertyService _propertyService;
+        private readonly IPropertyTypeService _propertyTypeService;
+        private readonly IAgentService _agentService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse authViewModel;
 
-        public HomeController(IHttpContextAccessor httpContextAccessor)
+        public HomeController(IHttpContextAccessor httpContextAccessor, IPropertyService propertyService, IAgentService agentService, IPropertyTypeService propertyTypeService)
         {
             _httpContextAccessor = httpContextAccessor;
+            _propertyTypeService = propertyTypeService;
+            _propertyService = propertyService;
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            _agentService = agentService;
         }
 
-        public IActionResult Index()
+        #region Index
+        public async Task<IActionResult> Index(List<PropertyViewModel>? propertiesHome, bool? isEmpty)
         {
+            var properties = await _propertyService.GetAllViewModel();
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            ViewBag.PropertyTypes = propertyTypes;
+
+            if (propertiesHome != null && propertiesHome.Count > 0)
+            {
+                return View(propertiesHome);
+            }
+
+            if (isEmpty != null)
+            {
+                ViewBag.isEmpty = isEmpty;
+            }
+
             if (authViewModel != null)
             {
-                // ViewBag.PropertyTypes = authViewModel;
-                Console.WriteLine("authViewModel is not null");
-
-                if (authViewModel.Roles.Any(role => role == Roles.Admin.ToString()))
+                var roles = authViewModel.Roles;
+                if (roles.Contains(Roles.Admin.ToString()))
                 {
                     return RedirectToAction("Dashboard", Roles.Admin.ToString());
                 }
-            }
-            else
-            {
-                Console.WriteLine("authViewModel is null");
+                else if (roles.Contains(Roles.Agent.ToString()))
+                {
+                    return RedirectToAction("Index", Roles.Agent.ToString());
+                }
+                else if (roles.Contains(Roles.Client.ToString()))
+                {
+                    return RedirectToAction("Index", Roles.Client.ToString());
+                }
             }
 
-            return View();
+
+            return View(properties);
         }
+
+        #region SearchProperty
+        public async Task<IActionResult> SearchProperty(string code)
+        {
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            var property = await _propertyService.GetPropertyByCode(code);
+
+            bool isEmpty = property == null;
+            List<PropertyViewModel> propertiesHome = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
+
+            if (authViewModel != null)
+            {
+                string role = authViewModel.Roles.FirstOrDefault()?.ToString();
+                if (!string.IsNullOrEmpty(role))
+                {
+                    return RedirectToRoute(new { controller = role, action = "Index", propertiesHome = propertiesHome, isEmpty = isEmpty });
+                }
+            }
+
+            return RedirectToAction("Index", new { propertiesHome = propertiesHome, isEmpty = isEmpty });
+        }
+        #endregion
+
+        #endregion
+
+        #region Search
+
+        #region SearchPropertyByFilters
+        [HttpPost]
+        public async Task<IActionResult> SearchPropertyByFilters(int? propertyTypeId, double? maxPrice, double? minPrice, int? roomsNumber, int? bathsNumber)
+        {
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            FilterPropertyViewModel filter = new FilterPropertyViewModel();
+            filter.PropertyTypeId = propertyTypeId;
+            filter.MaxPrice = maxPrice;
+            filter.MinPrice = minPrice;
+            filter.Bedrooms = roomsNumber;
+            filter.Bathrooms = bathsNumber;
+
+            var properties = await _propertyService.GetAllViewModelWIthFilters(filter);
+            bool isEmpty = properties == null || properties.Count() == 0;
+
+            ViewBag.IsEmpty = isEmpty;
+            ViewBag.PropertyTypes = propertyTypes;
+            return View("Index", properties != null ? properties : new List<PropertyViewModel>());
+        }
+        #endregion
+
+        #region SearchAgentByName
+        public async Task<IActionResult> SearchAgent(string agentName)
+        {
+            var agents = await _agentService.GetByNameViewModel(agentName);
+            bool isEmpty = agents == null;
+
+            ViewBag.IsEmpty = isEmpty;
+            return View("AllAgents", agents != null ? agents : new List<AgentViewModel>());
+        }
+        #endregion        
+
+        #endregion
+
+        #region PropertyDetails
+        public async Task<IActionResult> PropertyDetails(int id)
+        {
+            var property = await _propertyService.GetByIdViewModel(id);
+            return View(property);
+        }
+        #endregion        
+
+        #region Get Agents
+        public async Task<IActionResult> AllAgents()
+        {
+            var agents = await _agentService.GetAllViewModel();
+            return View(agents);
+        }
+        public async Task<IActionResult> AgentProperties(int id)
+        {
+            var properties = await _propertyService.GetAgentProperties(id);
+
+            var firstProperty = properties[0];
+
+            AgentViewModel agent = new()
+            {
+                Id = firstProperty.Id,
+                FirstName = firstProperty.AgentFirstName,
+                LastName = firstProperty.AgentLastName,
+                Email = firstProperty.AgentEmail,
+                Phone = firstProperty.AgentPhone,
+                ImageUrl = firstProperty.AgentImage,
+            };
+
+            ViewBag.Agent = agent;
+            return View("AgentProperties", properties);
+        }
+        #endregion
 
     }
 }

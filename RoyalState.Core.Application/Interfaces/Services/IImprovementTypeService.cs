@@ -5,5 +5,6 @@ namespace RoyalState.Core.Application.Interfaces.Services
 {
     public interface IImprovementService : IGenericService<SaveImprovementViewModel, ImprovementViewModel, SaleType>
     {
+        Task<ImprovementViewModel> GetByNameViewModel(string name);
     }
 }

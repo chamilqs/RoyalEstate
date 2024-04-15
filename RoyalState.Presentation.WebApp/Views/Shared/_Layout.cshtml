@@ -89,15 +89,15 @@
                                     <a asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
                                 <li>
-                                    <a asp-controller="Agent" asp-action="AllAgents">Agents</a>
+                                    <a asp-controller="Home" asp-action="AllAgents">Agents</a>
                                 </li>
                                 @if(User != null){
                                     if(isAgent){
                                         <li><a asp-controller="Agent" asp-action="EditProfile">Profile</a></li>
-                                        <li><a asp-controller="Agent" asp-action="Maintenance">Property Maintenance</a></li>
+                                        <li><a asp-controller="Property" asp-action="Maintenance">Property Maintenance</a></li>
                                     }
                                     else if(isClient){
-                                        <li><a asp-controller="Client" asp-action="Index">My Properties</a></li>
+                                        <li><a asp-controller="Client" asp-action="MyFavorites">My Favorites</a></li>
                                     }                                
                                     else if (isAdmin)
                                     {

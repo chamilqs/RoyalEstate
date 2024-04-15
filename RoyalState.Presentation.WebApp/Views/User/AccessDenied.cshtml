@@ -1,21 +1,17 @@
 ﻿@using RoyalState.Core.Application.ViewModels.Users
 @model string
+
 @{
     ViewData["Title"] = "Access Denied";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
 }
 
-<div class="row mt-5">
-    <div class="col-12">
-        <div class="card shadow-sm">
-            <div class="card-body">
-
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <h2>You don't have access to this page' - <a class="btn btn-warning" asp-controller="Home" asp-action="Index"> Home</a></h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-
-            </div>
-        </div>
+<div class="content text-center" style="margin-top:-100px;">
+    <img src="https://img.freepik.com/free-vector/locker_53876-25496.jpg" />
+    <div class="message" style="margin-top:-60px;">
+        <h1 class="">Access to this page is restricted</h1>
+        <p>Please check with the site admin if you believe this is a mistake.</p>
+        <a class="btn btn-lg btn-warning" asp-controller="Home" asp-action="Index"> Home</a>
     </div>
 </div>
 

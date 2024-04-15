@@ -8,7 +8,7 @@ namespace RoyalState.Infrastructure.Persistence.Repositories
     {
         private readonly ApplicationContext _dbContext;
 
-        public ImprovementRepository(ApplicationContext dbContext) : base (dbContext)
+        public ImprovementRepository(ApplicationContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }

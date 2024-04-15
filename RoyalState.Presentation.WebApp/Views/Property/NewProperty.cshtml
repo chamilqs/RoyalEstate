@@ -84,7 +84,7 @@
             <div class="col-md-7">
                 <div class="alert alert-info text-center" role="alert">
                     <p>Cannot create a property because the are no improvements registered in the system.</p>
-                    <a asp-controller="Agent" asp-action="Maintenance" class="btn btn-primary">Go back</a>
+                    <a asp-controller="Property" asp-action="Maintenance" class="btn btn-primary">Go back</a>
                 </div>
             </div>
         </div>
@@ -97,7 +97,7 @@ else if (ViewBag.PropertyTypes == null || ViewBag.PropertyTypes.Count == 0)
             <div class="col-md-7">
                 <div class="alert alert-info text-center" role="alert">
                     <p>Cannot create a property because the are no PropertyTypes registered in the system.</p>
-                    <a asp-controller="Agent" asp-action="Maintenance" class="btn btn-primary">Go back</a>
+                    <a asp-controller="Property" asp-action="Maintenance" class="btn btn-primary">Go back</a>
                 </div>
             </div>
         </div>
@@ -110,12 +110,13 @@ else if (ViewBag.SaleTypes == null || ViewBag.SaleTypes.Count == 0)
             <div class="col-md-7">
                 <div class="alert alert-info text-center" role="alert">
                     <p>Cannot create a property because the are no SaleTypes registered in the system.</p>
-                    <a asp-controller="Agent" asp-action="Maintenance" class="btn btn-primary">Go back</a>
+                    <a asp-controller="Property" asp-action="Maintenance" class="btn btn-primary">Go back</a>
                 </div>
             </div>
         </div>
     </div>
-} else
+} 
+else
 {
     <div class="container mt-3">
         <section class="py-3 py-md-5 py-xl-8" style="border-radius: 1rem; background-color:rgb(249, 249, 249);">
@@ -148,7 +149,7 @@ else if (ViewBag.SaleTypes == null || ViewBag.SaleTypes.Count == 0)
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                 }
-                                <form method="post" asp-controller="Agent" asp-action="NewPropertyPost" enctype="multipart/form-data">
+                                <form method="post" asp-controller="Property" asp-action="NewPropertyPost" enctype="multipart/form-data">
                                     <div class="row gy-3 overflow-hidden">
                                         <div class="row overflow-hidden">
                                             <div class="col-12">
@@ -237,6 +238,7 @@ else if (ViewBag.SaleTypes == null || ViewBag.SaleTypes.Count == 0)
                                             <div class="col-12">
                                                 <div class="d-grid">
                                                     <button class="btn btn-primary btn-lg" type="submit">Create</button>
+                                                    <button asp-controller="Property" asp-action="Maintenance" class="btn btn-warning text-dark btn-lg mt-2" type="submit">Go back</button>
                                                 </div>
                                             </div>
                                         </div>

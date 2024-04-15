@@ -7,12 +7,15 @@
         public int Id { get; set; }
         public string Code { get; set; }
         public int PropertyTypeId { get; set; }
+        public string PropertyTypeName { get; set; }
         public int SaleTypeId { get; set; }
+        public string SaleTypeName { get; set; }
         public double Price { get; set; }
         public double Meters { get; set; }
         public int Bedrooms { get; set; }
         public int Bathrooms { get; set; }
         public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         #region Agent details
         // Agent details

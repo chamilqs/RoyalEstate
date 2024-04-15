@@ -23,7 +23,7 @@
         <div>
             <nav class="navbar navbar-light bg-light mb-4 mt-4">
                 <div class="container-fluid">
-                    <form method="post" asp-controller="Agent" asp-action="SearchAgent" class="d-flex">
+                    <form method="post" asp-controller="Home" asp-action="SearchAgent" class="d-flex">
                         <input name="agentName" class="form-control me-2" type="search" placeholder="ej. Samil Quezada" aria-label="Search" required>
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
@@ -60,7 +60,7 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title mb-1">@agent.FirstName @agent.LastName</h5>
                                 <p class="card-text text-muted mb-2">Real Estate Agent</p>
-                                <a href="#" class="btn btn-primary">View Profile</a>
+                                <a asp-controller="Home" asp-action="AgentProperties" asp-route-id="@agent.Id" class="btn btn-primary">View Profile</a>
                             </div>
                         </div>
                     </div>

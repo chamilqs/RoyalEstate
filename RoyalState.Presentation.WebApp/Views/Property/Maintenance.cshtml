@@ -1,0 +1,97 @@
+﻿@using RoyalState.Core.Application.ViewModels.Property;
+@model List<PropertyViewModel>
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+}
+
+<style>
+    .property-item .property-content .specs {
+        font-size: 18px;
+    }
+
+        .property-item .property-content .specs .caption {
+            font-size: 13px;
+        }
+</style>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-7">
+            <div class="alert alert-info text-center" role="alert">
+                <p>No properties registered.</p>
+                <a asp-controller="Property" asp-action="NewProperty" class="btn btn-primary">Add New Property</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="site-section site-section-sm pb-0">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="view-options bg-white py-3 d-md-flex align-items-center" style="margin-left:-10px;">
+                        <div class="mr-auto">
+                            <a class="btn btn-primary text-light fs-5" asp-controller="Property" asp-action="NewProperty">Add New Property</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="site-section site-section-sm bg-light">
+        <div class="container">
+
+            <div class="row mb-5">
+
+                @foreach (var property in Model)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="property-entry h-100">
+                            <a asp-controller="Home" asp-action="PropertyDetails" asp-route-id="@property.Id" class="property-thumbnail">
+                                <div class="offer-type-wrap">
+                                    <span class="offer-type bg-success">@property.SaleTypeName</span>
+                                </div>
+                                <img src="@property.PropertyImages.FirstOrDefault()" alt="Image" class="img-fluid">
+                            </a>
+                            <div class="p-4 property-body">
+                                <h2 class="property-title fs-5"><a href="property-details.html"><strong>Property Type: </strong>@property.PropertyTypeName</a></h2>
+                                <span class="property-location d-block"><strong>Code: </strong>@property.Code</span>
+                                <span class="property-location d-block mb-3"><strong>Sale Type: </strong>@property.SaleTypeName</span>
+                                <strong class="property-price text-primary mb-3 d-block text-success">RD$@property.Price</strong>
+                                <div class="specs d-flex mb-4">
+                                    <span class="d-block d-flex align-items-center me-3">
+                                        <span class="icon-bed me-2"></span>
+                                        <span class="caption">@property.Bedrooms beds</span>
+                                    </span>
+                                    <span class="d-block d-flex align-items-center me-3">
+                                        <span class="icon-bath me-2"></span>
+                                        <span class="caption">@property.Bathrooms baths</span>
+                                    </span>
+                                    <span class="d-block d-flex align-items-center">
+                                        <span class="icon-home me-2"></span>
+                                        <span class="caption">@property.Meters MT<sup>2</sup></span>
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <div class="btn-group">
+                                        <a asp-controller="Property" asp-action="EditProperty" asp-route-id="@property.Id" class="btn btn-sm btn-primary fw-bold">Edit</a>
+                                        <a asp-controller="Home" asp-action="PropertyDetails" asp-route-id="@property.Id" class="btn btn-sm btn-warning fw-bold">Details</a>
+                                        <a asp-controller="Property" asp-action="DeleteProperty" asp-route-id="@property.Id" class="btn btn-sm btn-danger fw-bold">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+}

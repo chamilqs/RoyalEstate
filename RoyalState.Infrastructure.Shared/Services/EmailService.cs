@@ -14,7 +14,7 @@ namespace RoyalState.Infrastructure.Shared.Services
 
         public EmailService(IOptions<MailSettings> mailSettings)
         {
-            MailSettings = mailSettings.Value;           
+            MailSettings = mailSettings.Value;
         }
 
         public async Task SendAsync(EmailRequest request)
@@ -43,7 +43,7 @@ namespace RoyalState.Infrastructure.Shared.Services
 
             }
             catch (Exception ex)
-            {               
+            {
                 Console.WriteLine(ex.Message);
             }
         }

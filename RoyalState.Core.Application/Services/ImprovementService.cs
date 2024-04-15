@@ -16,5 +16,19 @@ namespace RoyalState.Core.Application.Services
             _mapper = mapper;
             _improvementRepository = improvementRepository;
         }
+
+        #region GetByNameViewModel
+        /// <summary>
+        /// Retrieves an ImprovementViewModel by name.
+        /// </summary>
+        /// <param name="name">The name to search for.</param>
+        /// <returns>The ImprovementViewModel with the matching name, or null if not found.</returns>
+        public async Task<ImprovementViewModel> GetByNameViewModel(string name)
+        {
+            var improvements = await GetAllViewModel();
+            return improvements.Where(n => n.Name.Contains(name)).FirstOrDefault();
+
+        }
+        #endregion
     }
 }

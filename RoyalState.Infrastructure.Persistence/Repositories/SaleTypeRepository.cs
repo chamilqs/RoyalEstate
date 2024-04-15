@@ -8,7 +8,7 @@ namespace RoyalState.Infrastructure.Persistence.Repositories
     {
         private readonly ApplicationContext _dbContext;
 
-        public SaleTypeRepository(ApplicationContext dbContext) : base (dbContext)
+        public SaleTypeRepository(ApplicationContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }

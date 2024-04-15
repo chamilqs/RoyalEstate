@@ -8,17 +8,17 @@ namespace RoyalState.Infrastructure.Identity.Seeds
     {
         public static async Task SeedAsync(UserManager<ApplicationUser> userManager)
         {
-            ApplicationUser defaultUser = new() 
+            ApplicationUser defaultUser = new()
             {
                 UserName = "agentuser",
                 Email = "agentuser@email.com",
                 FirstName = "Jules",
                 LastName = "Doe",
-                EmailConfirmed = false,
+                EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
             };
 
-            if(userManager.Users.All(u => u.Id != defaultUser.Id))
+            if (userManager.Users.All(u => u.Id != defaultUser.Id))
             {
                 var user = await userManager.FindByEmailAsync(defaultUser.Email);
 
