@@ -12,11 +12,11 @@
     }
 
     .site-section {
-        flex: 0 0 70%; /* Increase the width of the properties section */
+        flex: 0 0 70%; 
     }
 
     .col-lg-4 {
-        flex: 0 0 25%; /* Decrease the width of the agent's information column */
+        flex: 0 0 25%;
     }
 </style>
 
@@ -48,7 +48,6 @@ else
                                     <img src="@property.PropertyImages.FirstOrDefault()" alt="Image" class="img-fluid">
                                 </a>
                                 <div class="p-4 property-body">
-                                    @*<a href="#" class="property-favorite"><span class="icon-heart-o"></span></a>*@
                                     <h2 class="property-title fs-5"><a href="property-details.html"><strong>Property Type: </strong>@property.PropertyTypeName</a></h2>
                                     <span class="property-location d-block"><strong>Code: </strong>@property.Code</span>
                                     <span class="property-location d-block mb-3"><strong>Sale Type: </strong>@property.SaleTypeName</span>

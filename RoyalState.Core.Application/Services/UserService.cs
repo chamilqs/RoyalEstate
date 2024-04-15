@@ -162,5 +162,15 @@ namespace RoyalState.Core.Application.Services
             return await _accountService.UpdateUserAsync(updateRequest);
         }
         #endregion
+
+        #region Delete
+        public async Task<GenericResponse> DeleteUserAsync(string userId)
+        {
+            var response = await _accountService.DeleteUserAsync(userId);
+            return response;
+
+        }
+        #endregion
+
     }
 }

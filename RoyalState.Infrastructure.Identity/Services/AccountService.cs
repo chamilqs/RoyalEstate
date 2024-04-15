@@ -304,6 +304,34 @@ namespace RoyalState.Infrastructure.Identity.Services
 
         #endregion
 
+        #region Delete
+        public async Task<GenericResponse> DeleteUserAsync(string Id)
+        {
+            GenericResponse response = new()
+            {
+                HasError = false
+            };
+
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Error = $"User not found.";
+                return response;
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                response.HasError = true;
+                response.Error = $"An error has ocurred trying to delete the user.";
+                return response;
+            }
+
+            return response;
+        }
+        #endregion
+
         #region Active & Unactive 
         public async Task<GenericResponse> UpdateUserStatusAsync(string username)
         {

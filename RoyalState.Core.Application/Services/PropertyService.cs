@@ -4,6 +4,7 @@ using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
+using RoyalState.Core.Application.ViewModels.Agent;
 using RoyalState.Core.Application.ViewModels.Property;
 using RoyalState.Core.Application.ViewModels.PropertyImage;
 using RoyalState.Core.Application.ViewModels.PropertyImprovement;
@@ -163,6 +164,42 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region DeleteByAgentId
+        /// <summary>
+        /// Deletes all properties associated with the specified agent ID.
+        /// </summary>     
+        /// <param name="id">The ID of the agent.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task<GenericResponse> DeleteByAgentId(int id)
+        {
+            GenericResponse response = new ();
+
+            try
+            {
+                var properties = await GetAgentProperties(id);
+
+                foreach (var property in properties)
+                {
+                    await Delete(property.Id);
+                }
+
+                response.HasError = false;
+                response.Error = null;
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+
+                response.HasError = true;
+                response.Error = ex.Message.ToString();
+                return response;
+
+            }
+
+        }
+        #endregion
+
         #region Get Methods
 
         #region GetAllViewModel Overriden
@@ -212,8 +249,10 @@ namespace RoyalState.Core.Application.Services
                     AgentImage = agent.ImageUrl
                 };
 
-                propertiesViewModel.Add(propertyViewModel);
-
+                if (agent.EmailConfirmed)
+                {
+                    propertiesViewModel.Add(propertyViewModel);
+                }
             }
 
             return propertiesViewModel;
@@ -297,12 +336,18 @@ namespace RoyalState.Core.Application.Services
         /// <returns>The list of property view models.</returns>
         public async Task<List<PropertyViewModel>> GetAgentProperties(int id)
         {
-            var propertiesList = await GetAllViewModel();
             var agent = await _agentService.GetByIdViewModel(id);
 
-            propertiesList = propertiesList.Where(p => p.AgentId == agent.Id).ToList();
-
-            return propertiesList;
+            if (agent.EmailConfirmed)
+            {
+                var propertiesList = await GetAllViewModel();
+                propertiesList = propertiesList.Where(p => p.AgentId == agent.Id).ToList();
+                return propertiesList;
+            }
+            else
+            {
+                return new List<PropertyViewModel>();
+            }
         }
         #endregion
 
@@ -325,6 +370,42 @@ namespace RoyalState.Core.Application.Services
                 .ToList();
 
             return propertiesList;
+        }
+        #endregion
+
+        #region GetPropertyQuantities
+        public async Task<List<int>> GetPropertyQuantities(List<int> agentIds)
+        {
+            var propertyQuantities = new List<int>();
+
+            foreach (var agentId in agentIds)
+            {
+                var agentProperties = await GetAgentProperties(agentId);
+                propertyQuantities.Add(agentProperties.Count);
+            }
+
+            return propertyQuantities;
+        }
+        #endregion
+
+        #region GetAgentsWithPropertyQuantity
+        /// <summary>
+        /// Retrieves the list of agents with the corresponding property quantity.
+        /// </summary>
+        /// <returns>The list of agents with property quantity.</returns>
+        public async Task<List<AgentViewModel>> GetAgentsWithPropertyQuantity()
+        {
+            List<AgentViewModel> agentList = await _agentService.GetConfirmedAndUnconfirmedAgents();
+            agentList = agentList.OrderByDescending(agentList => agentList.Id).ToList();
+
+            var propertyQuantities = await GetPropertyQuantities(agentList.Select(agent => agent.Id).ToList());
+
+            for (int i = 0; i < agentList.Count; i++)
+            {
+                agentList[i].PropertyQuantity = propertyQuantities[i];
+            }
+
+            return agentList;
         }
         #endregion
 
@@ -371,7 +452,6 @@ namespace RoyalState.Core.Application.Services
 
             return false;
         }
-
         #endregion
 
     }

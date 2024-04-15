@@ -9,6 +9,7 @@ namespace RoyalState.Core.Application.Interfaces.Services
         Task<RegisterResponse> RegisterUserAsync(RegisterRequest request, string origin);
         Task<UpdateUserResponse> UpdateUserAsync(UpdateUserRequest request);
         Task<GenericResponse> UpdateUserStatusAsync(string userId);
+        Task<GenericResponse> DeleteUserAsync(string userId);
         Task<UserDTO> FindByEmailAsync(string email);
         Task<UserDTO> FindByIdAsync(string id);
         Task<List<UserDTO>> FindByNameAsync(string name);

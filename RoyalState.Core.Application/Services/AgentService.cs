@@ -141,6 +141,38 @@ namespace RoyalState.Core.Application.Services
 
         #endregion
 
+        #region GetConfirmedAndUnconfirmedAgents
+        public async Task<List<AgentViewModel>> GetConfirmedAndUnconfirmedAgents()
+        {
+            var agents = await base.GetAllViewModel();
+            var agentsViewModels = new List<AgentViewModel>();
+
+            foreach (var agent in agents)
+            {
+                var user = await _userService.GetByIdAsync(agent.UserId);
+
+                var agentViewModel = new AgentViewModel
+                {
+                    Id = agent.Id,
+                    UserId = agent.UserId,
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    Phone = user.Phone,
+                    ImageUrl = agent.ImageUrl,
+                };
+
+                agentsViewModels.Add(agentViewModel);
+
+            }
+
+            agentsViewModels = agentsViewModels.OrderBy(a => a.FirstName).ThenBy(a => a.LastName).ToList();
+            return agentsViewModels;
+        }
+        #endregion
+
         #region GetByIdViewModel Overriden
         /// <summary>
         /// Retrieves an agent view model by ID.
@@ -149,7 +181,7 @@ namespace RoyalState.Core.Application.Services
         /// <returns>The agent view model.</returns>
         public async override Task<AgentViewModel> GetByIdViewModel(int id)
         {
-            var agents = await GetAllViewModel();
+            var agents = await GetConfirmedAndUnconfirmedAgents();
             var agent = agents.FirstOrDefault(agent => agent.Id == id);
 
             return agent;
@@ -233,6 +265,8 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #endregion
+
+
     }
 }
 
