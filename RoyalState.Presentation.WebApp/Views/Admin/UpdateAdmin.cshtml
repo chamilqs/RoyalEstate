@@ -1,9 +1,9 @@
-﻿@using RoyalState.Core.Application.ViewModels.Admins;
-@model SaveAdminViewModel;
+﻿@using RoyalState.Core.Application.Enums
+@using RoyalState.Core.Application.ViewModels.Users;
+@model SaveUserViewModel;
 
 @{
-    bool editMode = Model.Id == 0 ? false : true;
-    ViewData["Title"] = editMode ? "Edit Admin" : "Create Admin";
+    ViewData["Title"] = "Edit Admin";
     Layout = "~/Views/Shared/_LayoutSmall.cshtml";
 }
 
@@ -26,11 +26,12 @@
                         <h3 class="">@ViewData["Title"]</h3>
                     </div>
 
-                    <form method="post" asp-controller="Admin" asp-action="Create">
+                    <form method="post" asp-controller="Admin" asp-action="Edit">
 
                         <div class="mb-4 mt-3">
 
                             <input type="hidden" asp-for="Id" value="@Model.Id" />
+                            <input type="hidden" asp-for="Role" value="@((int)Roles.Admin)" />
 
                             <div class="row mb-3">
                                 <div class="col-6">
@@ -55,20 +56,26 @@
 
                                 <div class="col-6">
                                     <label asp-for="Identification" class="form-label">Identification:</label>
-                                    <input type="text" asp-for="Identification" class="form-control" placeholder="###-#######-#" maxlength="13" />
+                                    <input type="text" asp-for="Identification" class="form-control" placeholder="###-#######-#" maxlength="13" required />
                                     <span asp-validation-for="Identification" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <div class="mb-3">
+                                <label asp-for="UserName" class="form-label">Username:</label>
+                                <input asp-for="UserName" class="form-control" placeholder="Username" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
                                 <label asp-for="Password" class="form-label">Password:</label>
-                                <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
+                                <input asp-for="Password" class="form-control" placeholder="Password" />
                                 <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
                                 <label asp-for="ConfirmPassword" class="form-label">Confirm Password:</label>
-                                <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="ConfirmPassword" />
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="ConfirmPassword" />
                                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                             </div>
                         </div>

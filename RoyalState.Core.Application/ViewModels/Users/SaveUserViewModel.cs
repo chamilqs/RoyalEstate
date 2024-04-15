@@ -23,6 +23,10 @@ namespace RoyalState.Core.Application.ViewModels.Users
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+        [RegularExpression(@"^\d{3}\-\d{7}-\d{1}$", ErrorMessage = "Your Id must be with the following format: ###-#######-#.")]
+        [DataType(DataType.Text)]
+        public string? Identification { get; set; }
+
         [DataType(DataType.Password)]
         public string? Password { get; set; }
 
@@ -32,10 +36,6 @@ namespace RoyalState.Core.Application.ViewModels.Users
 
         [Range(1, int.MaxValue, ErrorMessage = "You must select a role.")]
         public int Role { get; set; }
-
-        [RegularExpression(@"^\d{3}\-\d{7}-\d{1}$", ErrorMessage = "Your Id must be with the following format: ###-#######-#.")]
-        [DataType(DataType.Text)]
-        public string? Identification { get; set; }
 
         [DataType(DataType.Url)]
         public string? ImageUrl { get; set; }

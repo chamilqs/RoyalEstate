@@ -6,10 +6,11 @@ using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.Admins;
+using RoyalState.Core.Application.ViewModels.Users;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -25,22 +26,38 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View();
+            ViewBag.User = _authViewModel;
+            return View(await _adminService.GetAllViewModel());
         }
+
+        #region Dashboard
+        public async Task<IActionResult> Dashboard()
+        {
+            return View(await _adminService.Dashboard());
+        }
+        #endregion
 
         #region Create
         public async Task<IActionResult> Create()
         {
-            return View("SaveAdmin", new SaveAdminViewModel());
+            return View("RegisterAdmin", new SaveUserViewModel());
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(SaveAdminViewModel vm)
+        public async Task<IActionResult> Create(SaveUserViewModel vm)
         {
             if (!ModelState.IsValid)
-                return View("SaveAdmin", vm);
+                return View("RegisterAdmin", vm);
 
-            await _adminService.Add(vm);
+            var origin = Request.Headers["origin"];
+            RegisterResponse response = await _adminService.Add(vm, origin);
+
+            if (response.HasError)
+            {
+                vm.HasError = response.HasError;
+                vm.Error = response.Error;
+                return View("RegisterAdmin", vm);
+            }
 
             return RedirectToRoute(new { controller = "Admin", action = "Index" });
         }
@@ -49,18 +66,28 @@ namespace RoyalState.Presentation.WebApp.Controllers
         #region Edit
         public async Task<IActionResult> Edit(int id)
         {
-            SaveAdminViewModel vm = await _adminService.GetByIdSaveViewModel(id);
+            AdminViewModel admin = await _adminService.GetByIdViewModel(id);
+            SaveUserViewModel vm = new()
+            {
+                Id = admin.UserId,
+                FirstName = admin.FirstName,
+                LastName = admin.LastName,
+                UserName = admin.Username,
+                Email = admin.Email,
+                Identification = admin.Identification,
+                Role = (int)Roles.Admin,
+            };
 
-            return View("SaveAdmin", vm);
+            return View("UpdateAdmin", vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(SaveAdminViewModel vm)
+        public async Task<IActionResult> Edit(SaveUserViewModel vm)
         {
             if (!ModelState.IsValid)
-                return View("SaveAdmin", vm);
+                return View("UpdateAdmin", vm);
 
-            await _adminService.Update(vm, vm.Id);
+            await _adminService.Update(vm);
 
             return RedirectToRoute(new { controller = "Admin", action = "Index" });
         }
@@ -82,12 +109,11 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
         #endregion
 
-
         #region Active & Unactive User
         [HttpPost]
-        public async Task<IActionResult> UpdateUserStatus(string userId, string controller)
+        public async Task<IActionResult> UpdateUserStatus(string username, string controller)
         {
-            var response = await _adminService.UpdateUserStatus(userId);
+            var response = await _adminService.UpdateUserStatus(username);
 
             if (response.HasError)
             {
