@@ -4,7 +4,7 @@ using RoyalState.Core.Application.ViewModels.SaleTypes;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class SaleTypeController : Controller
     {
         private readonly ISaleTypeService _saleTypeService;

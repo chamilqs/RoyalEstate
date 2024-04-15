@@ -1,6 +1,6 @@
-﻿namespace RoyalState.Core.Application.ViewModels.Admins
+﻿namespace RoyalState.Core.Application.ViewModels.Developers
 {
-    public class AdminViewModel
+    public class DeveloperViewModel
     {
         public int Id { get; set; }
         public string UserId { get; set; }

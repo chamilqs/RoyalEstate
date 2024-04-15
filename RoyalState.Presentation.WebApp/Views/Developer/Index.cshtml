@@ -1,9 +1,9 @@
 ﻿@using RoyalState.Core.Application.DTOs.Account
-@using RoyalState.Core.Application.ViewModels.Admins;
-@model List<AdminViewModel>;
+@using RoyalState.Core.Application.ViewModels.Developers;
+@model List<DeveloperViewModel>;
 
 @{
-    ViewData["Title"] = "Manage Admin";
+    ViewData["Title"] = "Manage Developer";
     Layout = "~/Views/Shared/_LayoutSmall.cshtml";
     AuthenticationResponse user = ViewBag.User;
 }
@@ -13,14 +13,14 @@
         <h1 class="h2 mb-3">@ViewData["Title"]</h1>
 
         <div>
-            <a asp-controller="Admin" asp-action="Create" class="btn btn-success">Add new admin</a>
+            <a asp-controller="Developer" asp-action="Create" class="btn btn-success">Add new developer</a>
         </div>
     </div>
 
     <div class="">
         @if (Model.Count == 0 || Model == null)
         {
-            <h3 class="text-center">There are not any admin</h3>
+            <h3 class="text-center">There are not any developer</h3>
         }
         else
         {
@@ -37,16 +37,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (AdminViewModel admin in Model)
+                    @foreach (DeveloperViewModel developer in Model)
                     {
                         <tr>
-                            <td>@admin.FirstName</td>
-                            <td>@admin.LastName</td>
-                            <td>@admin.Username</td>
-                            <td>@admin.Identification</td>
-                            <td>@admin.Email</td>
+                            <td>@developer.FirstName</td>
+                            <td>@developer.LastName</td>
+                            <td>@developer.Username</td>
+                            <td>@developer.Identification</td>
+                            <td>@developer.Email</td>
                             <td class="text-center">
-                                @if (admin.EmailConfirmed)
+                                @if (developer.EmailConfirmed)
                                 {
                                     <div class="badge text-bg-success">Active</div>
                                 }
@@ -56,37 +56,37 @@
                                 }
                             </td>
                             <td class="text-center">
-                                @if (admin.UserId != user.Id)
+                                @if (developer.UserId != user.Id)
                                 {
-                                    <a asp-controller="Admin" asp-action="Edit" class="btn btn-warning" asp-route-id="@admin.Id" title="Edit">
+                                    <a asp-controller="Developer" asp-action="Edit" class="btn btn-warning" asp-route-id="@developer.Id" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
-                                    <a class="btn btn-@(admin.EmailConfirmed ? "danger" : "success" )" href="#" data-bs-toggle="modal" data-bs-target="#modal-update-user-status-@admin.Username" title="@(admin.EmailConfirmed ? " Unactive" : "Active")">
-                                        <i class="bi bi-person-@(admin.EmailConfirmed ? "dash-fill" : "check-fill")"></i>
+                                    <a class="btn btn-@(developer.EmailConfirmed ? "danger" : "success" )" href="#" data-bs-toggle="modal" data-bs-target="#modal-update-user-status-@developer.Username" title="@(developer.EmailConfirmed ? " Unactive" : "Active")">
+                                        <i class="bi bi-person-@(developer.EmailConfirmed ? "dash-fill" : "check-fill")"></i>
                                     </a>
 
                                     <!-- Modal Update-User-Status -->
-                                    <div class="modal fade" id="modal-update-user-status-@admin.Username" tabindex="-1" aria-labelledby="modal-update-user-status-@admin.Username-label" aria-hidden="true">
+                                    <div class="modal fade" id="modal-update-user-status-@developer.Username" tabindex="-1" aria-labelledby="modal-update-user-status-@developer.Username-label" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
 
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">@(admin.EmailConfirmed ? "Unactive" : "Active") User: @admin.Username</h5>
+                                                    <h5 class="modal-title">@(developer.EmailConfirmed ? "Unactive" : "Active") User: @developer.Username</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
 
-                                                <form method="post" asp-controller="Admin" asp-action="UpdateUserStatus">
+                                                <form method="post" asp-controller="Developer" asp-action="UpdateUserStatus">
                                                     <div class="modal-body">
 
-                                                        <input type="hidden" name="username" value="@admin.Username" />
+                                                        <input type="hidden" name="username" value="@developer.Username" />
 
                                                         <div class="mb-3 text-start">
-                                                            <p class="text-center">Are you sure you want to <span class="fw-bolder">@(admin.EmailConfirmed ? "unactive" : "active")</span> this user?</p>
-                                                            <p><span class="fw-bolder">Id: </span>@admin.Identification</p>
-                                                            <p><span class="fw-bolder">Name: </span>@admin.FirstName</p>
-                                                            <p><span class="fw-bolder">LastName: </span>@admin.LastName</p>
-                                                            <p><span class="fw-bolder">Username: </span>@admin.Username</p>
+                                                            <p class="text-center">Are you sure you want to <span class="fw-bolder">@(developer.EmailConfirmed ? "unactive" : "active")</span> this user?</p>
+                                                            <p><span class="fw-bolder">Id: </span>@developer.Identification</p>
+                                                            <p><span class="fw-bolder">Name: </span>@developer.FirstName</p>
+                                                            <p><span class="fw-bolder">LastName: </span>@developer.LastName</p>
+                                                            <p><span class="fw-bolder">Username: </span>@developer.Username</p>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">

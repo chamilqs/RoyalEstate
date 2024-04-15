@@ -26,6 +26,7 @@ namespace RoyalState.Core.Application
             services.AddTransient<IPropertyImprovementService, PropertyImprovementService>();
             services.AddTransient<IImprovementService, ImprovementService>();
             services.AddTransient<IAdminService, AdminService>();
+            services.AddTransient<IDeveloperService, DeveloperService>();
             services.AddTransient<IFileService, FileService>();
             #endregion
         }

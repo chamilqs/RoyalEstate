@@ -4,7 +4,7 @@ using RoyalState.Core.Application.ViewModels.PropertyTypes;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class PropertyTypeController : Controller
     {
         private readonly IPropertyTypeService _propertyTypeService;

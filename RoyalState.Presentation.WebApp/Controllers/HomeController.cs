@@ -47,7 +47,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 var roles = authViewModel.Roles;
                 if (roles.Contains(Roles.Admin.ToString()))
                 {
-                    return RedirectToAction("Index", Roles.Admin.ToString());
+                    return RedirectToAction("Dashboard", Roles.Admin.ToString());
                 }
                 else if (roles.Contains(Roles.Agent.ToString()))
                 {

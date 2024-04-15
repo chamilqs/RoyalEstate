@@ -252,6 +252,22 @@ namespace RoyalState.Infrastructure.Identity.Services
                 HasError = false
             };
 
+            var userWithSameUserName = await _userManager.FindByNameAsync(request.UserName);
+            if (userWithSameUserName != null && userWithSameUserName.Id != request.Id)
+            {
+                response.HasError = true;
+                response.Error = $"Username '{request.UserName}' is already taken.";
+                return response;
+            }
+
+            var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
+            if (userWithSameEmail != null && userWithSameEmail.Id != request.Id)
+            {
+                response.HasError = true;
+                response.Error = $"Email '{request.Email}'is already registered.";
+                return response;
+            }
+
             var user = await _userManager.FindByIdAsync(request.Id);
 
             user.FirstName = request.FirstName;
@@ -289,18 +305,18 @@ namespace RoyalState.Infrastructure.Identity.Services
         #endregion
 
         #region Active & Unactive 
-        public async Task<GenericResponse> UpdateUserStatusAsync(string userId)
+        public async Task<GenericResponse> UpdateUserStatusAsync(string username)
         {
             GenericResponse response = new()
             {
                 HasError = false
             };
 
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByNameAsync(username);
             if (user == null)
             {
                 response.HasError = true;
-                response.Error = $"User: {userId} not found.";
+                response.Error = $"User: {username} not found.";
                 return response;
             }
 
@@ -309,7 +325,7 @@ namespace RoyalState.Infrastructure.Identity.Services
             if (!result.Succeeded)
             {
                 response.HasError = true;
-                response.Error = $"An error has ocurred trying to update the status of the user: {userId}.";
+                response.Error = $"An error has ocurred trying to update the status of the user: {username}.";
                 return response;
             }
 
@@ -401,6 +417,40 @@ namespace RoyalState.Infrastructure.Identity.Services
 
         #endregion
 
+        #region GetAllUserAsync
+        public async Task<List<UserDTO>> GetAllAdminAsync()
+        {
+            var userDTOList = await GetAllUserAsync();
+            userDTOList = userDTOList.Where(user => user.Role == Roles.Admin.ToString()).ToList();
+
+            return userDTOList;
+        }
+
+        public async Task<List<UserDTO>> GetAllDeveloperAsync()
+        {
+            var userDTOList = await GetAllUserAsync();
+            userDTOList = userDTOList.Where(user => user.Role == Roles.Developer.ToString()).ToList();
+
+            return userDTOList;
+        }
+
+        public async Task<List<UserDTO>> GetAllClientAsync()
+        {
+            var userDTOList = await GetAllUserAsync();
+            userDTOList = userDTOList.Where(user => user.Role == Roles.Client.ToString()).ToList();
+
+            return userDTOList;
+        }
+
+        public async Task<List<UserDTO>> GetAllAgentAsync()
+        {
+            var userDTOList = await GetAllUserAsync();
+            userDTOList = userDTOList.Where(user => user.Role == Roles.Agent.ToString()).ToList();
+
+            return userDTOList;
+        }
+        #endregion
+
         #region Private Methods
 
         #region JWT Methods
@@ -484,6 +534,33 @@ namespace RoyalState.Infrastructure.Identity.Services
             return verificationUri;
         }
 
+        #endregion
+
+        #region GetAllUserAsync
+        private async Task<List<UserDTO>> GetAllUserAsync()
+        {
+            var userList = await _userManager.Users.ToListAsync();
+
+            var userDTOList = userList.Select(user => new UserDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                EmailConfirmed = user.EmailConfirmed
+            }).ToList();
+
+            foreach (var userDTO in userDTOList)
+            {
+                var user = await _userManager.FindByIdAsync(userDTO.Id);
+
+                var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+                userDTO.Role = rolesList.ToList()[0];
+            }
+
+            return userDTOList;
+        }
         #endregion
 
         #endregion
