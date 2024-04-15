@@ -5,7 +5,7 @@ using RoyalState.Core.Application.ViewModels.Improvements;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class ImprovementController : Controller
     {
         private readonly IImprovementService _improvementService;
