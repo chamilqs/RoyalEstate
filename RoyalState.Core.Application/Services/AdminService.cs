@@ -12,18 +12,20 @@ namespace RoyalState.Core.Application.Services
     public class AdminService : GenericService<SaveAdminViewModel, AdminViewModel, Admin>, IAdminService
     {
         private readonly IAdminRepository _adminRepository;
+        private readonly IAgentService _agentService;
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
         private readonly IUserService _userService;
         private readonly IPropertyService _propertyService;
 
-        public AdminService(IAdminRepository adminRepository, IMapper mapper, IAccountService accountService, IUserService userService, IPropertyService propertyService) : base(adminRepository, mapper)
+        public AdminService(IAdminRepository adminRepository, IMapper mapper, IAccountService accountService, IUserService userService, IPropertyService propertyService, IAgentService agentService) : base(adminRepository, mapper)
         {
             _mapper = mapper;
             _adminRepository = adminRepository;
             _accountService = accountService;
             _userService = userService;
             _propertyService = propertyService;
+            _agentService = agentService;
         }
 
         #region Dashboard
@@ -134,6 +136,31 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region DeleteAgent
+        public async Task<GenericResponse> DeleteAgent(int id)
+        {
+            var agent = await _agentService.GetByIdViewModel(id);
+            GenericResponse response = new();
+
+            if (agent != null)
+            {
+                response = await _propertyService.DeleteByAgentId(agent.Id);
+
+                if (!response.HasError)
+                {
+                    await _agentService.Delete(id);
+                    response = await _accountService.DeleteUserAsync(agent.UserId);
+                }
+                else
+                {
+                    response.HasError = true;
+                    response.Error = response.Error;
+                }
+            }
+
+            return response;
+        }
+        #endregion
 
         #region UpdateUserStatus
         public async Task<GenericResponse> UpdateUserStatus(string username)

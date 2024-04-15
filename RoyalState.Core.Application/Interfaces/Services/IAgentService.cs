@@ -11,6 +11,7 @@ namespace RoyalState.Core.Application.Interfaces.Services
         Task<UpdateUserResponse> UpdateAsync(SaveUserViewModel vm);
         Task<AgentViewModel> GetByUserIdViewModel(string userId);
         Task<List<AgentViewModel>> GetByNameViewModel(string name);
+        Task<List<AgentViewModel>> GetConfirmedAndUnconfirmedAgents();
         Task<SaveUserViewModel> GetProfileDetails();
 
     }

@@ -10,6 +10,7 @@ namespace RoyalState.Core.Application.Interfaces.Services
         Task<RegisterResponse> Add(SaveUserViewModel vm, string origin);
         Task<UpdateUserResponse> Update(SaveUserViewModel vm);
         Task<GenericResponse> UpdateUserStatus(string username);
+        Task<GenericResponse> DeleteAgent(int id);
         Task<DahsboardViewModel> Dashboard();
     }
 }

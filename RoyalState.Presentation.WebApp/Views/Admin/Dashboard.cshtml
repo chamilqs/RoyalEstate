@@ -1,7 +1,188 @@
 ﻿@using RoyalState.Core.Application.ViewModels.Admins
-@model DahsboardViewModel;
+@model DahsboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_LayoutSmall.cshtml";
 }
+
+<div class="mt-4">
+    <div class="row">
+        <div class="col-12 col-md-6 col-xxl-3 d-flex">
+            <div class="card flex-fill w-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 text-center">Agents</h5>
+                </div>
+                <div class="card-body d-flex">
+                    <div class="align-self-center w-100">
+                        <div class="py-3">
+                            <div class="chart chart-xs">
+                                <canvas id="chartjs-dashboard-pie"></canvas>
+                            </div>
+                        </div>
+                        <table class="table mb-0">
+                            <tbody>
+                                <tr>
+                                    <td>Active agents</td>
+                                    <td class="text-end">@Model.ActiveAgents</td>
+                                </tr>
+                                <tr>
+                                    <td>Unactive agents</td>
+                                    <td class="text-end">@Model.UnactiveAgents</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title text-center mb-2">Clients</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart chart-sm">
+                        <canvas id="chartjs-pie"></canvas>
+                    </div>
+                </div>
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <td>Active Clients</td>
+                            <td class="text-end">@Model.ActiveClients</td>
+                        </tr>
+                        <tr>
+                            <td class="mt-3">Unactive Clients</td>
+                            <td class="text-end">@Model.UnactiveClients</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-xxl-5 d-flex">
+            <div class="w-100">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Developers</h5>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="stat text-primary">
+                                            <i class="align-middle" data-feather="user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">@Model.ActiveDevelopers</h1>
+                                <div class="mb-0">
+                                    <span class="text-muted">Total of active developers.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title"></h5>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <div class="stat text-primary">
+                                            <i class="align-middle" data-feather="user-x"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">@Model.UnactiveDevelopers</h1>
+                                <div class="mb-0">
+                                    <span class="text-muted">Total of unactive developers.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mt-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title"></h5>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <div class="stat text-primary">
+                                            <i class="align-middle" data-feather="home"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">@Model.PropertyQuantity</h1>
+                                <div class="mb-0">
+                                    <span class="text-muted">Total of properties registered in the system.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/charts/app.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new Chart(document.getElementById("chartjs-dashboard-pie"), {
+            type: "pie",
+            data: {
+                labels: ["Active", "Unactive"],
+                datasets: [{
+                    data: [@Model.ActiveAgents, @Model.UnactiveAgents],
+                    backgroundColor: [
+                        window.theme.primary,
+                        window.theme.danger
+                    ],
+                    borderWidth: 5
+                }]
+            },
+            options: {
+                responsive: !window.MSInputMethodContext,
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 75
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new Chart(document.getElementById("chartjs-pie"), {
+            type: "pie",
+            data: {
+                labels: ["Active Clients", "Unactive Clients", "Unactive Clients"],
+                datasets: [{
+                    data: [@Model.ActiveClients, @Model.UnactiveClients, @Model.UnactiveClients],
+                    backgroundColor: [
+                        window.theme.primary,
+                        window.theme.warning,
+                        window.theme.danger,
+                        "#dee2e6"
+                    ],
+                    borderColor: "transparent"
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                }
+            }
+        });
+    });
+</script>

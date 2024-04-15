@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
+using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.Admins;
 using RoyalState.Core.Application.ViewModels.Users;
 
@@ -13,13 +14,17 @@ namespace RoyalState.Presentation.WebApp.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAdminService _adminService;
+        private readonly IPropertyService _propertyService;
+        private readonly IAgentService _agentService;
         private readonly AuthenticationResponse _authViewModel;
 
-        public AdminController(IHttpContextAccessor httpContextAccessor, IAdminService adminService)
+        public AdminController(IHttpContextAccessor httpContextAccessor, IAdminService adminService, IAgentService agentService, IPropertyService propertyService)
         {
             _httpContextAccessor = httpContextAccessor;
             _authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _adminService = adminService;
+            _agentService = agentService;
+            _propertyService = propertyService;
         }
 
         public async Task<IActionResult> Index()
@@ -98,6 +103,13 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
         #endregion
 
+        #region AgentList
+        public async Task<IActionResult> AgentList()
+        {
+            return View(await _propertyService.GetAgentsWithPropertyQuantity());
+        }
+        #endregion
+
         #region Active & Unactive User
         [HttpPost]
         public async Task<IActionResult> UpdateUserStatus(string username, string controller)
@@ -106,11 +118,40 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             if (response.HasError)
             {
-                return RedirectToRoute(new { controller = controller, action = "Index", hasError = response.HasError, message = response.Error });
+                return RedirectToRoute(new { controller = controller, action = "AgentList", hasError = response.HasError, message = response.Error });
             }
 
-            return RedirectToRoute(new { controller = controller, action = "Index", });
+            return RedirectToRoute(new { controller = controller, action = "AgentList", });
         }
         #endregion
+
+        #region DeleteAgent
+        public async Task<IActionResult> DeleteAgent(int id)
+        {
+            return View(await _agentService.GetByIdSaveViewModel(id));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAgentPost(int id)
+        {
+            var response = await _adminService.DeleteAgent(id);
+
+            if (response.HasError)
+            {
+                var errorRouteValues = new
+                {
+                    controller = "Admin",
+                    action = "AgentList",
+                    hasError = response.HasError,
+                    message = response.Error
+                };
+
+                return RedirectToRoute(errorRouteValues);
+            }
+
+            return RedirectToRoute(new { controller = "Admin", action = "AgentList" });
+        }
+        #endregion
+
     }
 }
