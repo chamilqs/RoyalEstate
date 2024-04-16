@@ -58,7 +58,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
          Description = "Recieves the parameters for creating a sale type"
        )]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(CreateSaleTypeCommand command)

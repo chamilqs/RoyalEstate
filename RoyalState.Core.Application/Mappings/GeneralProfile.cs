@@ -29,6 +29,12 @@ namespace RoyalState.Core.Application.Mappings
                 .ForMember(dest => dest.Error, option => option.Ignore())
                 .ReverseMap();
 
+            CreateMap<RegisterRequest, RegisterDTO>()
+             .ReverseMap()
+             .ForMember(dest => dest.Role, option => option.Ignore())
+             .ForMember(dest => dest.Phone, option => option.Ignore())
+             .ForMember(dest => dest.ImageUrl, option => option.Ignore());
+
             CreateMap<UserViewModel, UserDTO>()
                 .ReverseMap()
                 .ForMember(src => src.Identification, option => option.Ignore());
