@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
+using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.ClientProperties;
 using RoyalState.Core.Application.ViewModels.Property;
 
@@ -13,18 +14,19 @@ namespace RoyalState.Presentation.WebApp.Controllers
     {
         private readonly IClientService _clientService;
         private readonly IAccountService _accountService;
+        private readonly IPropertyTypeService _propertyTypeService;
         private readonly IPropertyService _propertyService;
         private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse authViewModel;
-        public ClientController(IClientService clientService, IHttpContextAccessor httpContextAccessor, IFileService fileService, IPropertyService propertyService)
+        public ClientController(IClientService clientService, IHttpContextAccessor httpContextAccessor, IFileService fileService, IPropertyService propertyService, IPropertyTypeService propertyTypeService)
         {
             _clientService = clientService;
             _httpContextAccessor = httpContextAccessor;
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _fileService = fileService;
             _propertyService = propertyService;
-
+            _propertyTypeService = propertyTypeService;
         }
 
         #region Client Index
@@ -42,6 +44,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
             {
                 ViewBag.isEmpty = isEmpty;
             }
+
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            ViewBag.PropertyTypes = propertyTypes;
 
             var properties = await _propertyService.GetAllViewModel();
             return View(properties);
