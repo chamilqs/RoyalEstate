@@ -34,7 +34,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            return Ok(await Mediator.Send(new GetAllSaleTypeQuery()));
+            return Ok(await Mediator.Send(new GetAllSaleTypesQuery()));
         }
 
         [HttpGet("{id}")]
