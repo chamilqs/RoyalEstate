@@ -1,6 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace RoyalState.Core.Application.DTOs.Account
         [SwaggerParameter(Description = "The password of the user")]
         public string Password { get; set; }
 
+        [Compare(nameof(Password), ErrorMessage = "The password must match")]
         [SwaggerParameter(Description = "The confirmation of the users password")]
         public string ConfirmPassword { get; set; }
 

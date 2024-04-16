@@ -49,7 +49,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         }
 
 
-        [HttpGet("{agentId}")]
+        [HttpGet("{agentId}/properties")]
         [SwaggerOperation(
           Summary = "Property by agent id",
           Description = "Returns a property using the agent id as a filter"

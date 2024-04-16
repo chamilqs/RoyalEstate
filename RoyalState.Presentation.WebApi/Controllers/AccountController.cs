@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Interfaces.Services;
+using RoyalState.Core.Application.ViewModels.Users;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 
@@ -17,11 +18,15 @@ namespace RoyalState.WebApi.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly IAdminService _adminService;
+        private readonly IDeveloperService _developerService;
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountService accountService, IMapper mapper)
+        public AccountController(IAccountService accountService, IAdminService adminService, IDeveloperService developerService, IMapper mapper)
         {
             _accountService = accountService;
+            _adminService = adminService;
+            _developerService = developerService;
             _mapper = mapper;
         }
 
@@ -47,7 +52,10 @@ namespace RoyalState.WebApi.Controllers
             var origin = Request.Headers["origin"];
             var request = _mapper.Map<RegisterRequest>(dto);
             request.Role = (int)Roles.Developer;
-            return Ok(await _accountService.RegisterUserAsync(request, origin));
+            var results = await _accountService.RegisterUserAsync(request, origin);
+            await _developerService.Add( , origin);
+            return Ok(results);
+
         }
 
 
@@ -63,7 +71,9 @@ namespace RoyalState.WebApi.Controllers
             var origin = Request.Headers["origin"];
             var request = _mapper.Map<RegisterRequest>(dto);
             request.Role = (int)Roles.Admin;
-            return Ok(await _accountService.RegisterUserAsync(request, origin));
+            var results = await _accountService.RegisterUserAsync(request, origin);
+            await _adminService.Add(_mapper.Map<SaveUserViewModel>(request), origin);
+            return Ok(results);
         }
     }
 }

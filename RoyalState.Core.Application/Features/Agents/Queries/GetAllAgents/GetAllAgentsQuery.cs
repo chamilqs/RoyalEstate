@@ -41,7 +41,7 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents
 
         private async Task<List<AgentDTO>> GetAllAgents()
         {
-            var agentList = await _agentRepository.GetAllAsync();
+            var agentList = await _agentRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
 
             if (agentList == null || agentList.Count == 0) throw new ApiException($"Agents not found."
                , (int)HttpStatusCode.NotFound);

@@ -45,6 +45,16 @@ namespace RoyalState.Core.Application.Mappings
                 .ForMember(dest => dest.HasError, opt => opt.Ignore())
                 .ForMember(dest => dest.Error, opt => opt.Ignore())
                 .ReverseMap();
+
+            CreateMap<RegisterDTO, SaveUserViewModel>()
+            .ForMember(dest => dest.File, opt => opt.Ignore())
+            .ForMember(dest => dest.Role, opt => opt.Ignore())
+            .ForMember(dest => dest.HasError, opt => opt.Ignore())
+            .ForMember(dest => dest.Error, opt => opt.Ignore())
+            .ForMember(dest => dest.ImageUrl, opt => opt.Ignore())
+            .ForMember(dest => dest.Phone, opt => opt.Ignore())
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ReverseMap();
             #endregion
 
             #region CQRS

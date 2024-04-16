@@ -49,8 +49,8 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentById
         }
         private async Task<AgentDTO> GetByIdViewModel(int id)
         {
-            var agent = await _agentRepository.GetByIdAsync(id);
-
+            var agentList = await _agentRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
+            var agent = agentList.Where(a => a.Id == id).FirstOrDefault();
             var agentUser = await _accountService.FindByIdAsync(agent.UserId);
             AgentDTO agentDTO = new()
             {
