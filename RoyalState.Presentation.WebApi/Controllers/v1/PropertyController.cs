@@ -47,7 +47,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
             return Ok(await Mediator.Send(new GetPropertyByIdQuery { Id = id }));
         }
 
-        [HttpGet("{code}")]
+        [HttpGet]
         [SwaggerOperation(
            Summary = "Property by code",
            Description = "Returns a property using the code as a filter"
@@ -56,7 +56,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Get([FromQuery] GetPropertyByCodeParameter filter)
+        public async Task<IActionResult> GetByCode([FromQuery] GetPropertyByCodeParameter filter)
         {
             return Ok(await Mediator.Send(new GetPropertyByCodeQuery() { Code = filter.Code }));
         }

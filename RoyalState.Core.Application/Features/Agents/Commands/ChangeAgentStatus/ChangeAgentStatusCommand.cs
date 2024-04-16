@@ -45,11 +45,7 @@ namespace RoyalState.Core.Application.Features.Agents.Commands.ChangeAgentStatus
         {
             var agent = await _agentRepository.GetByIdAsync(command.Id);
             if (agent == null) throw new ApiException($"Agent not found.", (int)HttpStatusCode.NotFound);
-            var agentUser = await _accountService.FindByIdAsync(agent.UserId);
-            if (agentUser == null) throw new ApiException($"User not found.", (int)HttpStatusCode.NotFound);
-            agentUser.EmailConfirmed = command.Status;
-
-            // await _accountService.ChangeUserStatus(agentUser);
+            await _accountService.ChangeUserStatus(agent.UserId, command.Status);
             return new Response<int>(command.Id);
         }
     }
