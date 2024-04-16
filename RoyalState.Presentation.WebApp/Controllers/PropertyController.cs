@@ -71,6 +71,10 @@ namespace RoyalState.Presentation.WebApp.Controllers
             {
                 error = "You need to provide at least one image for the property.";
             }
+            else if (files.Count > 4)
+            {
+                error = "The maximum number of property images allowed is 4.";
+            }
 
             if (error != null)
             {
@@ -99,7 +103,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         {
             var property = await _propertyService.GetByIdViewModel(id);
 
-            List<int> propertyImprovements = new List<int>();
+            List<int> propertyImprovements = new();
             foreach (var improvement in property.Improvements)
             {
                 var getImprovement = await _improvmentService.GetByNameViewModel(improvement);
@@ -107,7 +111,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             }
 
-            SavePropertyViewModel vm = new SavePropertyViewModel
+            SavePropertyViewModel vm = new()
             {
                 Id = property.Id,
                 Code = property.Code,
@@ -150,15 +154,31 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             if (files.Any())
             {
-                if (vm.PropertyImages == null) { vm.PropertyImages = new List<string>(); };
+                vm.PropertyImages ??= new List<string>();
+
+                var fileCount = 0;
                 foreach (var file in files)
                 {
+                    if (fileCount >= 4)
+                    {
+                        break;
+                    }
+
                     var filename = await _fileService.UploadFileAsync(file, authViewModel.Email);
                     vm.PropertyImages.Add(filename);
+                    fileCount++;
                 }
             }
 
             vm.PropertyImages?.RemoveAll(image => image == null);
+
+            if (vm.PropertyImages.Count > 4)
+            {
+                error = "The maximum number of property images allowed is 4.";
+                await SetViewBagData();
+                ViewBag.Error = error;
+                return View("EditProperty", vm);
+            }
 
             await _propertyService.Update(vm, vm.Id);
             return RedirectToAction("Maintenance");
