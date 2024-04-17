@@ -60,8 +60,7 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByI
         {
             var property = await _propertyService.GetByIdViewModel(id);
 
-            if (property == null) throw new ApiException($"Property not found."
-               , (int)HttpStatusCode.NoContent);
+            if (property == null) return null;
 
             PropertyDTO propertyDTO = new PropertyDTO
             {
