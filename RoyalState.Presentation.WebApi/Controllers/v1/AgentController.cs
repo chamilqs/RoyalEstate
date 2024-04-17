@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using RoyalState.Core.Application.DTOs.Agent;
 using RoyalState.Core.Application.DTOs.Property;
+using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Features.Agents.Commands.ChangeAgentStatus;
 using RoyalState.Core.Application.Features.Agents.Queries.GetAgentById;
 using RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyById;
 using RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents;
+using RoyalState.Core.Application.Features.Properties.Queries.GetAllProperties;
 using RoyalState.WebApi.Controllers.v1;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 using System.Net.Mime;
 
 namespace RoyalState.Presentation.WebApi.Controllers.v1
@@ -31,7 +34,21 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            return Ok(await Mediator.Send(new GetAllAgentsQuery()));
+
+
+            var agents = await Mediator.Send(new GetAllAgentsQuery());
+
+            if (agents.Data == null || agents.Data.Count == 0)
+            {
+                return NoContent();
+            }
+
+            if (!agents.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
+            }
+
+            return Ok(agents);
         }
 
         [HttpGet("{id}")]
@@ -45,7 +62,20 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
-            return Ok(await Mediator.Send(new GetAgentByIdQuery { Id = id }));
+
+            var agent = await Mediator.Send(new GetAgentByIdQuery { Id = id });
+
+            if (agent.Data == null)
+            {
+                return NoContent();
+            }
+
+            if (!agent.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
+            }
+
+            return Ok(agent);
         }
 
 
@@ -60,7 +90,20 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAgentProperty(int agentId)
         {
-            return Ok(await Mediator.Send(new GetAgentPropertyByIdQuery { AgentId = agentId }));
+            var properties = await Mediator.Send(new GetAgentPropertyByIdQuery { AgentId = agentId });
+
+            if (properties.Data == null || properties.Data.Count == 0)
+            {
+                return NoContent();
+            }
+
+            if (!properties.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
+            }
+
+            return Ok(properties);
+
         }
 
         [Authorize(Roles = "Admin")]

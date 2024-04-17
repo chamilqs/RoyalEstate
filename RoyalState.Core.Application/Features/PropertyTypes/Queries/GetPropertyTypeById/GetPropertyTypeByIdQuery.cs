@@ -39,15 +39,14 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetProperty
         public async Task<Response<TypeDTO>> Handle(GetPropertyTypeByIdQuery request, CancellationToken cancellationToken)
         {
             var propertyType = await GetById(request.Id);
-            if (propertyType == null) throw new ApiException($"Property type not found.", (int)HttpStatusCode.NoContent);
+            if (propertyType == null) return new Response<TypeDTO>("Property type not found");
             return new Response<TypeDTO>(propertyType);
         }
         private async Task<TypeDTO> GetById(int id)
         {
             var propertyType = await _propertyTypeRepository.GetByIdAsync(id);
 
-            if (propertyType == null) throw new ApiException($"Property type not found."
-               , (int)HttpStatusCode.NoContent);
+            if (propertyType == null) return null;
 
             var propertyTypeDTO = _mapper.Map<TypeDTO>(propertyType);
 
