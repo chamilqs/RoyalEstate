@@ -32,7 +32,7 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPrope
         public async Task<Response<IList<TypeDTO>>> Handle(GetAllPropertyTypeQuery request, CancellationToken cancellationToken)
         {
             var propertyTypes = await GetAllPropertyTypes();
-            if (propertyTypes == null) throw new ApiException($"Property Types not found", (int)HttpStatusCode.NotFound);
+            if (propertyTypes == null) throw new ApiException($"Property Types not found", (int)HttpStatusCode.NoContent);
             return new Response<IList<TypeDTO>>(propertyTypes);
         }
 
@@ -41,7 +41,7 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPrope
             var propertyTypesList = await _propertyTypeRepository.GetAllAsync();
 
             if (propertyTypesList == null || propertyTypesList.Count == 0) throw new ApiException($"Property types not found."
-               , (int)HttpStatusCode.NotFound);
+               , (int)HttpStatusCode.NoContent);
 
             var propertyTypesDtos = _mapper.Map<List<TypeDTO>>(propertyTypesList);
 

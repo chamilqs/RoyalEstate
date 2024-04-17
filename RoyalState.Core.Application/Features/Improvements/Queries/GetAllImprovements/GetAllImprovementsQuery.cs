@@ -32,7 +32,7 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetAllImprov
         public async Task<Response<IList<TypeDTO>>> Handle(GetAllImprovementsQuery request, CancellationToken cancellationToken)
         {
             var improvements = await GetAllPropertyTypes();
-            if (improvements == null) throw new ApiException($"Improvement not found", (int)HttpStatusCode.NotFound);
+            if (improvements == null) throw new ApiException($"Improvement not found", (int)HttpStatusCode.NoContent);
             return new Response<IList<TypeDTO>>(improvements);
         }
 
@@ -41,7 +41,7 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetAllImprov
             var improvementsList = await _improvementRepository.GetAllAsync();
 
             if (improvementsList == null || improvementsList.Count == 0) throw new ApiException($"Improvement not found."
-               , (int)HttpStatusCode.NotFound);
+               , (int)HttpStatusCode.NoContent);
 
             var improvementDTOS = _mapper.Map<List<TypeDTO>>(improvementsList);
 

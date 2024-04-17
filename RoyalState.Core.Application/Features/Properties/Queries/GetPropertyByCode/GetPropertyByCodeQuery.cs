@@ -37,7 +37,7 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByC
         {
             var filter = _mapper.Map<GetPropertyByCodeParameter>(request);
             var property = await GetByCode(filter);
-            if (property == null) throw new ApiException($"Property not found.", (int)HttpStatusCode.NotFound);
+            if (property == null) throw new ApiException($"Property not found.", (int)HttpStatusCode.NoContent);
             return new Response<PropertyDTO>(property);
         }
 
@@ -46,7 +46,7 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByC
             var property = await _propertyService.GetPropertyByCode(filter.Code);
 
             if (property == null) throw new ApiException($"Property not found."
-               , (int)HttpStatusCode.NotFound);
+               , (int)HttpStatusCode.NoContent);
 
             PropertyDTO propertyDTO = new PropertyDTO
             {

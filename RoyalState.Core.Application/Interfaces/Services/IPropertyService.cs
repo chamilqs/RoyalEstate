@@ -8,6 +8,7 @@ namespace RoyalState.Core.Application.Interfaces.Services
     public interface IPropertyService : IGenericService<SavePropertyViewModel, PropertyViewModel, Property>
     {
         Task<List<PropertyViewModel>> GetAllViewModelWIthFilters(FilterPropertyViewModel filterProperty);
+        Task<List<PropertyViewModel>> GetAllViewModelApi();
         Task<List<PropertyViewModel>> GetAgentProperties(int id);
         Task<List<int>> GetPropertyQuantities(List<int> agentIds);
         Task<List<AgentViewModel>> GetAgentsWithPropertyQuantity();

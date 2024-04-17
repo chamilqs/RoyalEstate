@@ -41,7 +41,7 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetSaleTypeById
         public async Task<Response<TypeDTO>> Handle(GetSaleTypeByIdQuery request, CancellationToken cancellationToken)
         {
             var saleType = await GetById(request.Id);
-            if (saleType == null) throw new ApiException($"Sale type not found.", (int)HttpStatusCode.NotFound);
+            if (saleType == null) throw new ApiException($"Sale type not found.", (int)HttpStatusCode.NoContent);
             return new Response<TypeDTO>(saleType);
         }
         private async Task<TypeDTO> GetById(int id)
@@ -49,7 +49,7 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetSaleTypeById
             var saleType = await _saleTypeRepository.GetByIdAsync(id);
 
             if (saleType == null) throw new ApiException($"Sale type not found."
-               , (int)HttpStatusCode.NotFound);
+               , (int)HttpStatusCode.NoContent);
 
             var propertyDTO = _mapper.Map<TypeDTO>(saleType);
 
