@@ -258,6 +258,61 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region GetAllViewModelApi
+        /// <summary>
+        /// Retrieves all property view models.
+        /// </summary>
+        /// <returns>A list of property view models.</returns>
+        /// Unneficient way to get the properties, but it is the way I decided for now.
+        public async Task<List<PropertyViewModel>> GetAllViewModelApi()
+        {
+            var properties = await _propertyRepository.GetAllAsync();
+            properties = properties.OrderByDescending(p => p.CreatedDate).ToList();
+
+            var propertiesViewModel = new List<PropertyViewModel>();
+
+            foreach (var property in properties)
+            {
+                var propertyImages = await _propertyImageService.GetImagesUrlByPropertyId(property.Id);
+                var propertyImprovements = await _propertyImprovementService.GetImprovementsNamesByPropertyId(property.Id);
+                var agent = await _agentService.GetByIdViewModel(property.AgentId);
+                var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
+                var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
+
+                PropertyViewModel propertyViewModel = new()
+                {
+                    Id = property.Id,
+                    Code = property.Code,
+                    PropertyTypeId = property.PropertyTypeId,
+                    PropertyTypeName = propertyType.Name,
+                    SaleTypeId = property.SaleTypeId,
+                    SaleTypeName = saleType.Name,
+                    Price = property.Price,
+                    Meters = property.Meters,
+                    Description = property.Description,
+                    Bedrooms = property.Bedrooms,
+                    Bathrooms = property.Bathrooms,
+                    PropertyImages = propertyImages,
+                    Improvements = propertyImprovements,
+                    CreatedDate = property.CreatedDate,
+
+                    // Agent details
+                    AgentId = property.AgentId,
+                    AgentFirstName = agent.FirstName,
+                    AgentLastName = agent.LastName,
+                    AgentPhone = agent.Phone,
+                    AgentEmail = agent.Email,
+                    AgentImage = agent.ImageUrl
+                };
+
+                propertiesViewModel.Add(propertyViewModel);
+   
+            }
+
+            return propertiesViewModel;
+        }
+        #endregion
+
         #region GetByIdViewModel Overriden
         /// <summary>
         /// Retrieves the property view model with the specified ID.
