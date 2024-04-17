@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="">
+    <div class="table-responsive">
         @if (Model.Count == 0 || Model == null)
         {
             <h3 class="text-center">There are not any admin</h3>
@@ -32,7 +32,6 @@
                         <th>Username</th>
                         <th>Identification</th>
                         <th>Email</th>
-                         <th class="text-center col-1">Status</th>
                         <th class="text-center col-2">Actions</th>
                     </tr>
                 </thead>
@@ -45,16 +44,6 @@
                             <td>@admin.Username</td>
                             <td>@admin.Identification</td>
                             <td>@admin.Email</td>
-                            <td class="text-center">
-                                @if (admin.EmailConfirmed)
-                                {
-                                    <div class="badge text-bg-success">Active</div>
-                                }
-                                else
-                                {
-                                    <div class="badge text-bg-danger">Unactive</div>
-                                }
-                            </td>
                             <td class="text-center">
                                 @if (admin.UserId != user.Id)
                                 {
@@ -83,7 +72,7 @@
 
                                                         <div class="mb-3 text-start">
                                                             <p class="text-center">Are you sure you want to <span class="fw-bolder">@(admin.EmailConfirmed ? "unactive" : "active")</span> this user?</p>
-                                                            <p><span class="fw-bolder">Id: </span>@admin.Identification</p>
+                                                            <p><span class="fw-bolder">Identification: </span>@admin.Identification</p>
                                                             <p><span class="fw-bolder">Name: </span>@admin.FirstName</p>
                                                             <p><span class="fw-bolder">LastName: </span>@admin.LastName</p>
                                                             <p><span class="fw-bolder">Username: </span>@admin.Username</p>
