@@ -160,6 +160,7 @@ namespace RoyalState.Core.Application.Services
         {
             await _propertyImprovementService.DeleteImprovementsByPropertyId(id);
             await _propertyImageService.DeleteImagesByPropertyId(id);
+
             await base.Delete(id);
         }
         #endregion
@@ -465,6 +466,34 @@ namespace RoyalState.Core.Application.Services
             }
 
             return agentList;
+        }
+        #endregion
+
+        #region GetPropertiesBySaleType
+        /// <summary>
+        /// Retrieves the list of property view models with the specified sale type ID.
+        /// </summary>
+        /// <param name="saleTypeId">The ID of the sale type.</param>
+        /// <returns>The list of property view models.</returns>
+        public async Task<List<PropertyViewModel>> GetPropertiesBySaleType(int saleTypeId)
+        {
+            var propertiesList = await GetAllViewModel();
+            propertiesList = propertiesList.Where(p => p.SaleTypeId == saleTypeId).ToList();
+            return propertiesList;
+        }
+        #endregion
+
+        #region GetPropertiesByPropertyType
+        /// <summary>
+        /// Retrieves the list of property view models with the specified property type ID.
+        /// </summary>
+        /// <param name="propertyTypeId">The ID of the property type.</param>
+        /// <returns>The list of property view models.</returns>
+        public async Task<List<PropertyViewModel>> GetPropertiesByPropertyType(int propertyTypeId)
+        {
+            var propertiesList = await GetAllViewModel();
+            propertiesList = propertiesList.Where(p => p.PropertyTypeId == propertyTypeId).ToList();
+            return propertiesList;
         }
         #endregion
 
