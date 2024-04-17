@@ -5,5 +5,6 @@ namespace RoyalState.Core.Application.Interfaces.Services
 {
     public interface ISaleTypeService : IGenericService<SaveSaleTypeViewModel, SaleTypeViewModel, SaleType>
     {
+        Task<List<SaleTypeViewModel>> GetAllViewModelWithInclude();
     }
 }

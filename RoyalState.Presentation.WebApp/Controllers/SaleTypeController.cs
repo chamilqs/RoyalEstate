@@ -17,7 +17,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _saleTypeService.GetAllViewModel());
+            return View(await _saleTypeService.GetAllViewModelWithInclude());
         }
 
         #region Create

@@ -16,5 +16,18 @@ namespace RoyalState.Core.Application.Services
             _mapper = mapper;
             _saleTypeRepository = saleTypeRepository;
         }
+
+        public async Task<List<SaleTypeViewModel>> GetAllViewModelWithInclude()
+        {
+            var saleTypeList = await _saleTypeRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
+
+            return saleTypeList.Select(saleType => new SaleTypeViewModel
+            {
+                Id = saleType.Id,
+                Name = saleType.Name,
+                Description = saleType.Description,
+                PropertiesQuantity = saleType.Properties.Count
+            }).ToList();
+        }
     }
 }
