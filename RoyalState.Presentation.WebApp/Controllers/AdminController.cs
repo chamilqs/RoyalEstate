@@ -131,7 +131,8 @@ namespace RoyalState.Presentation.WebApp.Controllers
             return View(await _agentService.GetByIdViewModel(id));
         }
 
-        [HttpPost(Name = "DeleteAgent")]
+        [HttpPost]
+        [ActionName("DeleteAgent")]
         public async Task<IActionResult> DeleteAgentPost(int id)
         {
             var response = await _adminService.DeleteAgent(id);
