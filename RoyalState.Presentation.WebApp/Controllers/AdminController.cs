@@ -112,26 +112,26 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
         #region Active & Unactive User
         [HttpPost]
-        public async Task<IActionResult> UpdateUserStatus(string username, string controller)
+        public async Task<IActionResult> UpdateUserStatus(string username, string action)
         {
             var response = await _adminService.UpdateUserStatus(username);
 
             if (response.HasError)
             {
-                return RedirectToRoute(new { controller = controller, action = "AgentList", hasError = response.HasError, message = response.Error });
+                return RedirectToRoute(new { controller = "Admin", action = action == "UpdateUserStatus" ? "Index" : action, hasError = response.HasError, message = response.Error });
             }
 
-            return RedirectToRoute(new { controller = controller, action = "AgentList", });
+            return RedirectToRoute(new { controller = "Admin", action = action == "UpdateUserStatus" ? "Index" : action });
         }
         #endregion
 
         #region DeleteAgent
         public async Task<IActionResult> DeleteAgent(int id)
         {
-            return View(await _agentService.GetByIdSaveViewModel(id));
+            return View(await _agentService.GetByIdViewModel(id));
         }
 
-        [HttpPost]
+        [HttpPost(Name = "DeleteAgent")]
         public async Task<IActionResult> DeleteAgentPost(int id)
         {
             var response = await _adminService.DeleteAgent(id);
