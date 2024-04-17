@@ -2,6 +2,7 @@
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.PropertyTypes;
+using RoyalState.Core.Application.ViewModels.User;
 using RoyalState.Core.Domain.Entities;
 
 namespace RoyalState.Core.Application.Services
@@ -15,6 +16,19 @@ namespace RoyalState.Core.Application.Services
         {
             _mapper = mapper;
             _propertyTypeRepository = propertyTypeRepository;
+        }
+
+        public async Task<List<PropertyTypeViewModel>> GetAllViewModelWithInclude()
+        {
+            var propertyTypeList = await _propertyTypeRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
+
+            return propertyTypeList.Select(propertyType => new PropertyTypeViewModel
+            {
+                Id = propertyType.Id,
+                Name = propertyType.Name,
+                Description = propertyType.Description,
+                PropertiesQuantity = propertyType.Properties.Count
+            }).ToList();
         }
     }
 }

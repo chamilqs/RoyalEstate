@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <div class="">
+    <div class="table responsive">
         @if (Model.Count == 0 || Model == null)
         {
             <h3 class="text-center">There are not any improvement</h3>
@@ -37,10 +37,10 @@
                             <td>@improvement.Name</td>
                             <td>@improvement.Description</td>
                             <td class="text-center">
-                                <a asp-controller="Improvement" asp-action="Edit" asp-route-id="@improvement.Id" class="btn btn-warning">
+                                <a asp-controller="Improvement" asp-action="Edit" asp-route-id="@improvement.Id" class="btn btn-warning" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a asp-controller="Improvement" asp-action="Delete" asp-route-id="@improvement.Id" class="btn btn-danger">
+                                <a asp-controller="Improvement" asp-action="Delete" asp-route-id="@improvement.Id" class="btn btn-danger" title="Delete">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </td>
