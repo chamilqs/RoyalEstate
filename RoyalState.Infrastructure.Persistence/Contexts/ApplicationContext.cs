@@ -132,7 +132,7 @@ namespace RoyalState.Infrastructure.Persistence.Contexts
                  .HasMany<Property>(s => s.Properties)
                  .WithOne(prop => prop.SaleType)
                  .HasForeignKey(prop => prop.SaleTypeId)
-                 .OnDelete(DeleteBehavior.NoAction);
+                 .OnDelete(DeleteBehavior.Cascade);
 
             #endregion
 
