@@ -16,13 +16,14 @@ namespace RoyalState.Core.Application.Services
     {
         private readonly IAgentRepository _agentRepository;
         private readonly IUserService _userService;
+        private readonly IFileService _fileService;
         private readonly IAccountService _accountService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
         public AgentService(IAgentRepository agentRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper,
-            IUserService userService, IAccountService accountService) : base(agentRepository, mapper)
+            IUserService userService, IAccountService accountService, IFileService fileService) : base(agentRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _agentRepository = agentRepository;
@@ -30,6 +31,7 @@ namespace RoyalState.Core.Application.Services
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _userService = userService;
             _accountService = accountService;
+            _fileService = fileService;
         }
 
         #region Update
@@ -48,6 +50,14 @@ namespace RoyalState.Core.Application.Services
                 if (vm.ImageUrl == null)
                 {
                     vm.ImageUrl = agent.ImageUrl;
+                }
+                else 
+                { 
+                    if (agent.ImageUrl != null)
+                    {
+                        await _fileService.DeleteFileAsync(agent.ImageUrl);
+                    }              
+                
                 }
 
                 Agent avm = new()
@@ -270,6 +280,27 @@ namespace RoyalState.Core.Application.Services
 
         #endregion
 
+        #region DeleteAgent
+        /// <summary>
+        /// Deletes an agent by ID.
+        /// </summary>
+        /// <param name="id">The ID of the agent to delete.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public override async Task Delete(int id)
+        {
+            var agent = await GetByIdViewModel(id);
+            if (agent != null)
+            {
+                if (agent.ImageUrl != null)
+                {
+                    await _fileService.DeleteFileAsync(agent.ImageUrl);
+                }
+
+            }
+
+            await base.Delete(id);
+        }
+        #endregion
 
     }
 }

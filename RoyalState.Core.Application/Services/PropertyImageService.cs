@@ -12,18 +12,20 @@ namespace RoyalState.Core.Application.Services
     public class PropertyImageService : GenericService<SavePropertyImageViewModel, PropertyImageViewModel, PropertyImage>, IPropertyImageService
     {
         private readonly IPropertyImageRepository _propertyImageRepository;
+        private readonly IFileService _fileService;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
-        public PropertyImageService(IPropertyImageRepository propertyImageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IUserService userService) : base(propertyImageRepository, mapper)
+        public PropertyImageService(IPropertyImageRepository propertyImageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IUserService userService, IFileService fileService) : base(propertyImageRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _propertyImageRepository = propertyImageRepository;
             _mapper = mapper;
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _userService = userService;
+            _fileService = fileService;
         }
 
         #region Get Methods
@@ -76,11 +78,22 @@ namespace RoyalState.Core.Application.Services
         public async Task DeleteImagesByPropertyId(int propertyId)
         {
             var propertyImages = await GetPropertyImagesByPropertyId(propertyId);
+            var imagesToDelete = new List<string>();
+
             foreach (var image in propertyImages)
             {
                 await Delete(image.Id);
+                var imagePath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{image.ImageUrl}");
+                if (File.Exists(imagePath))
+                {
+                    imagesToDelete.Add(imagePath);
+                }
             }
 
+            foreach (var imagePath in imagesToDelete)
+            {
+                await _fileService.DeleteFileAsync(imagePath);
+            }
         }
         #endregion
 
