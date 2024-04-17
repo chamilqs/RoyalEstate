@@ -36,7 +36,7 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetAllSaleTypes
         public async Task<Response<IList<TypeDTO>>> Handle(GetAllSaleTypesQuery request, CancellationToken cancellationToken)
         {
             var saleTypes = await GetAllSaleTypes();
-            if (saleTypes == null) throw new ApiException($"Sale Types not found", (int)HttpStatusCode.NotFound);
+            if (saleTypes == null) throw new ApiException($"Sale Types not found", (int)HttpStatusCode.NoContent);
             return new Response<IList<TypeDTO>>(saleTypes);
         }
 
@@ -45,7 +45,7 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetAllSaleTypes
             var saleTypesList = await _saleTypeRepository.GetAllAsync();
 
             if (saleTypesList == null || saleTypesList.Count == 0) throw new ApiException($"Sale types not found."
-               , (int)HttpStatusCode.NotFound);
+               , (int)HttpStatusCode.NoContent);
 
             var propertyDtos = _mapper.Map<List<TypeDTO>>(saleTypesList);
 

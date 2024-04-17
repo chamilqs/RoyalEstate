@@ -39,7 +39,7 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetImproveme
         public async Task<Response<TypeDTO>> Handle(GetImprovementByIdQuery request, CancellationToken cancellationToken)
         {
             var improvement = await GetById(request.Id);
-            if (improvement == null) throw new ApiException($"Improvement not found.", (int)HttpStatusCode.NotFound);
+            if (improvement == null) throw new ApiException($"Improvement not found.", (int)HttpStatusCode.NoContent);
             return new Response<TypeDTO>(improvement);
         }
         private async Task<TypeDTO> GetById(int id)
@@ -47,7 +47,7 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetImproveme
             var improvement = await _improvementRepository.GetByIdAsync(id);
 
             if (improvement == null) throw new ApiException($"Improvement not found."
-               , (int)HttpStatusCode.NotFound);
+               , (int)HttpStatusCode.NoContent);
 
             var improvementDTO = _mapper.Map<TypeDTO>(improvement);
 

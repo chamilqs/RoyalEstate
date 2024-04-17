@@ -56,7 +56,7 @@ namespace RoyalState.Core.Application.Services
             foreach (var improvementId in vm.Improvements)
             {
                 var improvement = await _improvementService.GetByIdViewModel(improvementId);
-                SavePropertyImprovementViewModel propertyImprovement = new SavePropertyImprovementViewModel
+                SavePropertyImprovementViewModel propertyImprovement = new()
                 {
                     PropertyId = findProperty.Id,
                     ImprovementId = improvement.Id
@@ -98,7 +98,7 @@ namespace RoyalState.Core.Application.Services
                 return null;
             }
 
-            Property propertyUpdate = new Property
+            Property propertyUpdate = new()
             {
                 Id = id,
                 Code = vm.Code,
@@ -125,7 +125,7 @@ namespace RoyalState.Core.Application.Services
             foreach (var improvementId in vm.Improvements)
             {
                 var improvement = await _improvementService.GetByIdViewModel(improvementId);
-                SavePropertyImprovementViewModel propertyImprovement = new SavePropertyImprovementViewModel
+                SavePropertyImprovementViewModel propertyImprovement = new()
                 {
                     PropertyId = vm.Id,
                     ImprovementId = improvement.Id
@@ -184,7 +184,6 @@ namespace RoyalState.Core.Application.Services
                 }
 
                 response.HasError = false;
-                response.Error = null;
                 return response;
 
             }
@@ -223,7 +222,7 @@ namespace RoyalState.Core.Application.Services
                 var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
                 var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
 
-                PropertyViewModel propertyViewModel = new PropertyViewModel
+                PropertyViewModel propertyViewModel = new()
                 {
                     Id = property.Id,
                     Code = property.Code,
@@ -259,6 +258,61 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region GetAllViewModelApi
+        /// <summary>
+        /// Retrieves all property view models.
+        /// </summary>
+        /// <returns>A list of property view models.</returns>
+        /// Unneficient way to get the properties, but it is the way I decided for now.
+        public async Task<List<PropertyViewModel>> GetAllViewModelApi()
+        {
+            var properties = await _propertyRepository.GetAllAsync();
+            properties = properties.OrderByDescending(p => p.CreatedDate).ToList();
+
+            var propertiesViewModel = new List<PropertyViewModel>();
+
+            foreach (var property in properties)
+            {
+                var propertyImages = await _propertyImageService.GetImagesUrlByPropertyId(property.Id);
+                var propertyImprovements = await _propertyImprovementService.GetImprovementsNamesByPropertyId(property.Id);
+                var agent = await _agentService.GetByIdViewModel(property.AgentId);
+                var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
+                var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
+
+                PropertyViewModel propertyViewModel = new()
+                {
+                    Id = property.Id,
+                    Code = property.Code,
+                    PropertyTypeId = property.PropertyTypeId,
+                    PropertyTypeName = propertyType.Name,
+                    SaleTypeId = property.SaleTypeId,
+                    SaleTypeName = saleType.Name,
+                    Price = property.Price,
+                    Meters = property.Meters,
+                    Description = property.Description,
+                    Bedrooms = property.Bedrooms,
+                    Bathrooms = property.Bathrooms,
+                    PropertyImages = propertyImages,
+                    Improvements = propertyImprovements,
+                    CreatedDate = property.CreatedDate,
+
+                    // Agent details
+                    AgentId = property.AgentId,
+                    AgentFirstName = agent.FirstName,
+                    AgentLastName = agent.LastName,
+                    AgentPhone = agent.Phone,
+                    AgentEmail = agent.Email,
+                    AgentImage = agent.ImageUrl
+                };
+
+                propertiesViewModel.Add(propertyViewModel);
+   
+            }
+
+            return propertiesViewModel;
+        }
+        #endregion
+
         #region GetByIdViewModel Overriden
         /// <summary>
         /// Retrieves the property view model with the specified ID.
@@ -283,7 +337,7 @@ namespace RoyalState.Core.Application.Services
         {
             var property = await GetByIdViewModel(id);
 
-            List<int> propertyImprovements = new List<int>();
+            List<int> propertyImprovements = new();
             foreach (var improvement in property.Improvements)
             {
                 var getImprovement = await _improvementService.GetByNameViewModel(improvement);
@@ -291,7 +345,7 @@ namespace RoyalState.Core.Application.Services
 
             }
 
-            SavePropertyViewModel vm = new SavePropertyViewModel
+            SavePropertyViewModel vm = new()
             {
                 Id = property.Id,
                 Code = property.Code,
@@ -374,6 +428,11 @@ namespace RoyalState.Core.Application.Services
         #endregion
 
         #region GetPropertyQuantities
+        /// <summary>
+        /// Retrieves the property quantities for the specified agent IDs.
+        /// </summary>
+        /// <param name="agentIds">The list of agent IDs.</param>
+        /// <returns>The list of property quantities.</returns>
         public async Task<List<int>> GetPropertyQuantities(List<int> agentIds)
         {
             var propertyQuantities = new List<int>();
@@ -422,7 +481,7 @@ namespace RoyalState.Core.Application.Services
 
             while (true)
             {
-                Random randomNumber = new Random();
+                Random randomNumber = new();
                 int number = randomNumber.Next(100000, 1000000);
                 code = number.ToString("D6");
 

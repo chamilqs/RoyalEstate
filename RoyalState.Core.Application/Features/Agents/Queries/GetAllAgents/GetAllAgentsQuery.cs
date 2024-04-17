@@ -35,16 +35,16 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents
         public async Task<Response<IList<AgentDTO>>> Handle(GetAllAgentsQuery request, CancellationToken cancellationToken)
         {
             var agents = await GetAllAgents();
-            if (agents == null) throw new ApiException($"Agents not found", (int)HttpStatusCode.NotFound);
+            if (agents == null) throw new ApiException($"Agents not found", (int)HttpStatusCode.NoContent);
             return new Response<IList<AgentDTO>>(agents);
         }
 
         private async Task<List<AgentDTO>> GetAllAgents()
         {
-            var agentList = await _agentRepository.GetAllAsync();
+            var agentList = await _agentRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
 
             if (agentList == null || agentList.Count == 0) throw new ApiException($"Agents not found."
-               , (int)HttpStatusCode.NotFound);
+               , (int)HttpStatusCode.NoContent);
 
             var agentDtos = new List<AgentDTO>();
 

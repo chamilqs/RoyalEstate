@@ -31,7 +31,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TypeDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
@@ -45,7 +45,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
        )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TypeDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
@@ -59,7 +59,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
          Description = "Recieves the parameters for creating a property type"
        )]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(CreatePropertyTypeCommand command)
@@ -69,7 +69,8 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
                 return BadRequest();
             }
 
-            return Ok(await Mediator.Send(command));
+            await Mediator.Send(command);
+            return Created(string.Empty, null);
         }
 
         [Authorize(Roles = "Admin")]

@@ -7,6 +7,7 @@ using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.DTOs.Email;
 using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Interfaces.Services;
+using RoyalState.Core.Application.Services;
 using RoyalState.Core.Domain.Settings;
 using RoyalState.Infrastructure.Identity.Entities;
 using System.IdentityModel.Tokens.Jwt;
@@ -354,6 +355,31 @@ namespace RoyalState.Infrastructure.Identity.Services
             {
                 response.HasError = true;
                 response.Error = $"An error has ocurred trying to update the status of the user: {username}.";
+                return response;
+            }
+
+            return response;
+        }
+
+        public async Task<GenericResponse> ChangeUserStatus(string userId, bool status)
+        {
+            GenericResponse response = new()
+            {
+                HasError = false
+            };
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Error = $"User not found.";
+                return response;
+            }
+            user.EmailConfirmed = status;
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                response.HasError = true;
+                response.Error = $"An error has ocurred trying to update the status of the user.";
                 return response;
             }
 

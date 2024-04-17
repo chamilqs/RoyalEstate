@@ -26,7 +26,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
        )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
@@ -40,23 +40,23 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
        )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
             return Ok(await Mediator.Send(new GetPropertyByIdQuery { Id = id }));
         }
 
-        [HttpGet("{code}")]
+        [HttpGet("Code/{code}")]
         [SwaggerOperation(
            Summary = "Property by code",
            Description = "Returns a property using the code as a filter"
        )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Get([FromQuery] GetPropertyByCodeParameter filter)
+        public async Task<IActionResult> GetByCode([FromQuery] GetPropertyByCodeParameter filter)
         {
             return Ok(await Mediator.Send(new GetPropertyByCodeQuery() { Code = filter.Code }));
         }

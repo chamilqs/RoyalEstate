@@ -27,7 +27,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AgentDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
@@ -41,7 +41,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
        )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AgentDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
@@ -49,42 +49,40 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         }
 
 
-        [HttpGet("{agentId}")]
+        [HttpGet("{agentId}/properties")]
         [SwaggerOperation(
           Summary = "Property by agent id",
           Description = "Returns a property using the agent id as a filter"
       )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetProperties(int agentId)
+        public async Task<IActionResult> GetAgentProperty(int agentId)
         {
             return Ok(await Mediator.Send(new GetAgentPropertyByIdQuery { AgentId = agentId }));
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPatch("{id}")]
+        [HttpPatch]
         [SwaggerOperation(
                Summary = "Status Change of an agent",
                Description = "Accepts the parameters to change the status of an agent."
         )]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AgentDTO))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ChangeStatus(int id, ChangeAgentStatusCommand command)
+        public async Task<IActionResult> ChangeStatus(ChangeAgentStatusCommand command)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
 
-            return Ok(await Mediator.Send(command));
+
+            await Mediator.Send(command);
+            return NoContent();
+
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Agent;
 using RoyalState.Core.Application.DTOs.TypeDTO;
@@ -28,7 +29,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TypeDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
@@ -42,7 +43,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
        )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TypeDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
@@ -56,8 +57,8 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
          Description = "Recieves the parameters for creating an improvement"
        )]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(CreateImprovementCommand command)
         {
@@ -66,7 +67,8 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
                 return BadRequest();
             }
 
-            return Ok(await Mediator.Send(command));
+            await Mediator.Send(command);
+            return Created(string.Empty, null);
         }
 
         [Authorize(Roles = "Admin")]
