@@ -35,7 +35,7 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetAllProperti
         public async Task<Response<IList<PropertyDTO>>> Handle(GetAllPropertiesQuery request, CancellationToken cancellationToken)
         {
             var properties = await GetAllProperties();
-            if (properties == null) throw new ApiException($"Agents not found", (int)HttpStatusCode.NoContent);
+            if (properties == null) return new Response<IList<PropertyDTO>>("Properties Not Found");
             return new Response<IList<PropertyDTO>>(properties);
         }
 
@@ -43,9 +43,7 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetAllProperti
         {
             var propertyList = await _propertyService.GetAllViewModelApi();
 
-            if (propertyList == null || propertyList.Count == 0) throw new ApiException($"Properties not found."
-               , (int)HttpStatusCode.NoContent);
-
+            if (propertyList == null || propertyList.Count == 0) return null;
             var propertyDtos = new List<PropertyDTO>();
 
             foreach (var prop in propertyList)

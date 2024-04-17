@@ -30,7 +30,14 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            return Ok(await Mediator.Send(new GetAllPropertiesQuery()));
+            var properties = await Mediator.Send(new GetAllPropertiesQuery());
+
+            if (properties.Data == null || properties.Data.Count == 0)
+            {
+                return NoContent();
+            }
+
+            return Ok(properties);
         }
 
         [HttpGet("{id}")]
@@ -70,7 +77,14 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByCode([FromQuery] GetPropertyByCodeParameter filter)
         {
-            return Ok(await Mediator.Send(new GetPropertyByCodeQuery() { Code = filter.Code }));
+
+            var property = await Mediator.Send(new GetPropertyByCodeQuery() { Code = filter.Code });
+            if (!property.Succeeded)
+            {
+                return NoContent();
+            }
+
+            return Ok(property);
         }
 
     }
