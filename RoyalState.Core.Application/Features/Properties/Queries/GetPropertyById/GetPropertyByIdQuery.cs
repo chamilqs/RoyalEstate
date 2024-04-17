@@ -61,7 +61,6 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByI
             var property = await _propertyService.GetByIdViewModel(id);
 
             if (property == null) return null;
-
             PropertyDTO propertyDTO = new PropertyDTO
             {
                 Id = property.Id,

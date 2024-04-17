@@ -46,14 +46,14 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         {
             if (id <= 0)
             {
-                return NoContent(); 
+                return NoContent();
             }
 
             var property = await Mediator.Send(new GetPropertyByIdQuery { Id = id });
 
-            if (property == null)
+            if (!property.Succeeded)
             {
-                return NoContent(); 
+                return NoContent();
             }
 
             return Ok(property);
