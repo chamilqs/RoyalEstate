@@ -47,7 +47,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
             return Ok(await Mediator.Send(new GetPropertyByIdQuery { Id = id }));
         }
 
-        [HttpGet("{code}")]
+        [HttpGet("Code/{code}")]
         [SwaggerOperation(
            Summary = "Property by code",
            Description = "Returns a property using the code as a filter"

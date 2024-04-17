@@ -51,7 +51,7 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentById
         {
             var agentList = await _agentRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
             if (agentList == null) throw new ApiException($"Agents not found.", (int)HttpStatusCode.NoContent);
-            var agent = agentList.Where(a => a.Id == id).FirstOrDefault();
+            var agent = agentList.FirstOrDefault(a => a.Id == id);
             var agentUser = await _accountService.FindByIdAsync(agent.UserId);
             AgentDTO agentDTO = new()
             {
