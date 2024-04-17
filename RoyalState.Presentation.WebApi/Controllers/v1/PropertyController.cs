@@ -44,7 +44,19 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
-            return Ok(await Mediator.Send(new GetPropertyByIdQuery { Id = id }));
+            if (id <= 0)
+            {
+                return NoContent(); 
+            }
+
+            var property = await Mediator.Send(new GetPropertyByIdQuery { Id = id });
+
+            if (property == null)
+            {
+                return NoContent(); 
+            }
+
+            return Ok(property);
         }
 
         [HttpGet("Code/{code}")]

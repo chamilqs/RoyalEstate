@@ -43,11 +43,16 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByI
         public async Task<Response<PropertyDTO>> Handle(GetPropertyByIdQuery request, CancellationToken cancellationToken)
         {
             if (request.Id <= 0)
-                return new Response<PropertyDTO>();
+            {
+                return new Response<PropertyDTO>("Invalid property id.");
+            }
 
             var property = await GetById(request.Id);
+
             if (property == null)
-                return new Response<PropertyDTO>();
+            {
+                return new Response<PropertyDTO>("Property not found.");
+            }
 
             return new Response<PropertyDTO>(property);
         }
@@ -55,7 +60,8 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByI
         {
             var property = await _propertyService.GetByIdViewModel(id);
 
-            if (property == null) return null;
+            if (property == null) throw new ApiException($"Property not found."
+               , (int)HttpStatusCode.NoContent);
 
             PropertyDTO propertyDTO = new PropertyDTO
             {
