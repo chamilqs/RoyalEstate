@@ -101,10 +101,10 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             if (response.HasError)
             {
-                return RedirectToRoute(new { controller = controller, action = "Index", hasError = response.HasError, message = response.Error });
+                return RedirectToRoute(new { controller = "Developer", action = "Index", hasError = response.HasError, message = response.Error });
             }
 
-            return RedirectToRoute(new { controller = controller, action = "Index", });
+            return RedirectToRoute(new { controller = "Developer", action = "Index", });
         }
         #endregion
     }
