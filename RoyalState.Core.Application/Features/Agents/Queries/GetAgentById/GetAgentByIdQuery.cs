@@ -44,15 +44,16 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentById
         public async Task<Response<AgentDTO>> Handle(GetAgentByIdQuery request, CancellationToken cancellationToken)
         {
             var agent = await GetByIdViewModel(request.Id);
-            if (agent == null) throw new ApiException($"Agent not found.", (int)HttpStatusCode.NoContent);
+            if (agent == null) return new Response<AgentDTO>("Agent not found");
+
             return new Response<AgentDTO>(agent);
         }
         private async Task<AgentDTO> GetByIdViewModel(int id)
         {
             var agentList = await _agentRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
-            if (agentList == null) throw new ApiException($"Agents not found.", (int)HttpStatusCode.NoContent);
+            if (agentList == null) return null;
             var agent = agentList.FirstOrDefault(a => a.Id == id);
-            if (agent == null) throw new ApiException($"Agent not found.", (int)HttpStatusCode.NoContent);
+            if (agent == null) return null;
             var agentUser = await _accountService.FindByIdAsync(agent.UserId);
             AgentDTO agentDTO = new()
             {

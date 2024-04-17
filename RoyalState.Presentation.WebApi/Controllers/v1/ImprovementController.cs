@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Agent;
 using RoyalState.Core.Application.DTOs.TypeDTO;
+using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Features.Agents.Queries.GetAgentById;
 using RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents;
 using RoyalState.Core.Application.Features.Improvements.Commands.CreateImprovement;
@@ -12,6 +13,7 @@ using RoyalState.Core.Application.Features.Improvements.Queries.GetAllImprovemen
 using RoyalState.Core.Application.Features.Improvements.Queries.GetImprovementById;
 using RoyalState.WebApi.Controllers.v1;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 using System.Net.Mime;
 
 namespace RoyalState.Presentation.WebApi.Controllers.v1
@@ -33,7 +35,21 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            return Ok(await Mediator.Send(new GetAllImprovementsQuery()));
+
+
+            var improvements = await Mediator.Send(new GetAllImprovementsQuery());
+
+            if (improvements.Data == null || improvements.Data.Count == 0)
+            {
+                return NoContent();
+            }
+
+            if (!improvements.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
+            }
+
+            return Ok(improvements);
         }
 
         [HttpGet("{id}")]
@@ -47,7 +63,20 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
-            return Ok(await Mediator.Send(new GetImprovementByIdQuery { Id = id }));
+            var improvement = await Mediator.Send(new GetImprovementByIdQuery { Id = id });
+
+            if (improvement.Data == null)
+            {
+                return NoContent();
+            }
+
+            if (!improvement.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
+            }
+
+            return Ok(improvement);
+
         }
 
         [Authorize(Roles = "Admin")]
