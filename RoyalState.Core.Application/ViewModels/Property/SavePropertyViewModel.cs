@@ -8,9 +8,11 @@ namespace RoyalState.Core.Application.ViewModels.Property
         public string? Code { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Please select a Property Type.")]
+        [Required(ErrorMessage = "Please select a Property Type.")]
         public int PropertyTypeId { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Please select a Sale Type.")]
+        [Required(ErrorMessage = "Please select a Sale Type.")]
         public int SaleTypeId { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "The meters field must be a positive value.")]
@@ -22,9 +24,11 @@ namespace RoyalState.Core.Application.ViewModels.Property
         public double Meters { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Please provide a valid number of bedrooms.")]
+        [Required(ErrorMessage = "Please provide a number of bedrooms.")]
         public int Bedrooms { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Please provide a valid number of bathrooms.")]
+        [Required(ErrorMessage = "Please provide a number of bathrooms.")]
         public int Bathrooms { get; set; }
 
         [DataType(DataType.Text)]

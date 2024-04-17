@@ -141,8 +141,12 @@ namespace RoyalState.Presentation.WebApp.Controllers
         {
             var properties = await _propertyService.GetAgentProperties(id);
 
-            var firstProperty = properties[0];
+            if (properties == null || !properties.Any())
+            {
+                return View("AgentProperties", new List<PropertyViewModel>());
+            }
 
+            var firstProperty = properties[0];
             AgentViewModel agent = new()
             {
                 Id = firstProperty.Id,

@@ -50,17 +50,8 @@
                             </div>
                             @if (!String.IsNullOrWhiteSpace(ViewBag.Error))
                             {
-                                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                                <div class="alert alert-danger alert-dismissible fade show mb-5" role="alert">
                                     <p class="mb-0">@ViewBag.Error</p>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            }
-                            @if (!String.IsNullOrWhiteSpace(Html.ValidationSummary().ToString()))
-                            {
-                                <div class="alert alert-danger alert-dismissible fade show mb-3" id="validationSummary" style="display:none;">
-                                    <p class="mb-0 text-danger">
-                                        @Html.ValidationSummary()
-                                    </p>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             }

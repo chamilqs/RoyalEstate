@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Helpers;
@@ -89,9 +90,16 @@ namespace WebAdmin.BankingApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(SaveUserViewModel vm)
         {
+
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Error", "Please fill all the required fields");
+                ViewBag.Error = "Please fill all the required fields";
+                return View(vm);
+            }
+
+            if (vm.Password.IsNullOrEmpty())
+            {
+                ViewBag.Error = "Please fill all the required fields";
                 return View(vm);
             }
 
