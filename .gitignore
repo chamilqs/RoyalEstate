@@ -366,3 +366,5 @@ FodyWeavers.xsd
 /RoyalState.Presentation.WebApp/appsettings.json
 /RoyalState.Presentation.WebApi/appsettings.Development.json
 /RoyalState.Presentation.WebApp/wwwroot/images/Users
+/RoyalState.Presentation.WebApi/appsettings.json
+/RoyalState.Presentation.WebApi/appsettings.Development.json

@@ -81,7 +81,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
             }
             else
             {
-                var error = "This property is already in your favorites";
+                await _clientService.DeleteFavorite(propertyId);
+
+                var error = "Property deleted from your favorites";
                 return RedirectToAction("Index", "Client", new { error = error });
             }
 
