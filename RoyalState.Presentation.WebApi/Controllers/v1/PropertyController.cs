@@ -44,8 +44,8 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
                 throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
             }
 
-                return Ok(properties);
-           
+            return Ok(properties);
+
         }
 
         [HttpGet("{id}")]
@@ -67,16 +67,18 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
 
             var property = await Mediator.Send(new GetPropertyByIdQuery { Id = id });
 
+            if (property.Data == null)
+            {
+                return NoContent();
+            }
+
             if (!property.Succeeded)
             {
                 throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
             }
 
 
-            if (property.Data == null)
-            {
-                return NoContent();
-            }
+
 
             return Ok(property);
         }
