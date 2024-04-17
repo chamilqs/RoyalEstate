@@ -75,6 +75,14 @@ namespace RoyalState.Infrastructure.Identity.Services
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
             response.Roles = rolesList.ToList();
+
+            if (response.Roles.Any(role => role == "Agent" || role == "Client"))
+            {
+                response.HasError = true;
+                response.Error = $"Account not authorize for this resource.";
+                return response;
+            }
+
             response.IsVerified = user.EmailConfirmed;
             response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             var refreshToken = GenerateRefreshToken();
@@ -123,6 +131,14 @@ namespace RoyalState.Infrastructure.Identity.Services
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
             response.Roles = rolesList.ToList();
+
+            if (response.Roles.Any(role => role == "Developer"))
+            {
+                response.HasError = true;
+                response.Error = $"Account not authorize for this resource.";
+                return response;
+            }
+
             response.IsVerified = user.EmailConfirmed;
 
 
