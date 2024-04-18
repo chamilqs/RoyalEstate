@@ -39,9 +39,9 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetSaleTypeById
         {
             var saleType = await _saleTypeRepository.GetByIdAsync(id);
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (saleType == null) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
 
             var propertyDTO = _mapper.Map<TypeDTO>(saleType);
 

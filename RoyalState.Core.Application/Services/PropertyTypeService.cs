@@ -21,9 +21,9 @@ namespace RoyalState.Core.Application.Services
         {
             var propertyTypeList = await GetAllViewModelWithInclude();
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             return propertyTypeList.FirstOrDefault(propertyType => propertyType.Id == id);
-#pragma warning restore CS8603 // Possible null reference return.
+
         }
 
         public async Task<List<PropertyTypeViewModel>> GetAllViewModelWithInclude()

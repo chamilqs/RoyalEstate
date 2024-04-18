@@ -51,9 +51,9 @@ namespace RoyalState.WebApi.Controllers
             var origin = Request.Headers["origin"];
             var request = _mapper.Map<RegisterRequest>(dto);
             request.Role = (int)Roles.Developer;
-#pragma warning disable CS8604 // Possible null reference argument.
+
             var results = await _developerService.Add(_mapper.Map<SaveUserViewModel>(request), origin);
-#pragma warning restore CS8604 // Possible null reference argument.
+
             return Ok(results);
 
         }
@@ -71,9 +71,9 @@ namespace RoyalState.WebApi.Controllers
             var origin = Request.Headers["origin"];
             var request = _mapper.Map<RegisterRequest>(dto);
             request.Role = (int)Roles.Admin;
-#pragma warning disable CS8604 // Possible null reference argument.
+
             var results = await _adminService.Add(_mapper.Map<SaveUserViewModel>(request), origin);
-#pragma warning restore CS8604 // Possible null reference argument.
+
             return Ok(results);
         }
     }

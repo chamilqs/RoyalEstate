@@ -43,7 +43,7 @@ namespace RoyalState.Infrastructure.Identity
             {
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = false;
-#pragma warning disable CS8604 // Possible null reference argument.
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -55,7 +55,7 @@ namespace RoyalState.Infrastructure.Identity
                     ValidAudience = configuration["JWTSettings:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:Key"]))
                 };
-#pragma warning restore CS8604 // Possible null reference argument.
+
                 options.Events = new JwtBearerEvents()
                 {
                     OnAuthenticationFailed = context =>

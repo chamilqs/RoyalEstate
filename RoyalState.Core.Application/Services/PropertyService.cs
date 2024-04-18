@@ -101,12 +101,12 @@ namespace RoyalState.Core.Application.Services
 
             if (property == null)
             {
-#pragma warning disable CS8603 // Possible null reference return.
+
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
             }
 
-#pragma warning disable CS8601 // Possible null reference assignment.
+
 #pragma warning disable CS8629 // Nullable value type may be null.
             Property propertyUpdate = new()
             {
@@ -126,7 +126,7 @@ namespace RoyalState.Core.Application.Services
                 LastModifiedDate = DateTime.UtcNow
             };
 #pragma warning restore CS8629 // Nullable value type may be null.
-#pragma warning restore CS8601 // Possible null reference assignment.
+
 
             await _propertyRepository.UpdateAsync(propertyUpdate, id);
 
@@ -239,7 +239,7 @@ namespace RoyalState.Core.Application.Services
                 var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
                 var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
 
-#pragma warning disable CS8601 // Possible null reference assignment.
+
                 PropertyViewModel propertyViewModel = new()
                 {
                     Id = property.Id,
@@ -265,7 +265,7 @@ namespace RoyalState.Core.Application.Services
                     AgentEmail = agent.Email,
                     AgentImage = agent.ImageUrl
                 };
-#pragma warning restore CS8601 // Possible null reference assignment.
+
 
                 if (agent.EmailConfirmed)
                 {
@@ -298,7 +298,7 @@ namespace RoyalState.Core.Application.Services
                 var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
                 var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
 
-#pragma warning disable CS8601 // Possible null reference assignment.
+
                 PropertyViewModel propertyViewModel = new()
                 {
                     Id = property.Id,
@@ -324,7 +324,7 @@ namespace RoyalState.Core.Application.Services
                     AgentEmail = agent.Email,
                     AgentImage = agent.ImageUrl
                 };
-#pragma warning restore CS8601 // Possible null reference assignment.
+
 
                 propertiesViewModel.Add(propertyViewModel);
 
@@ -343,9 +343,9 @@ namespace RoyalState.Core.Application.Services
         public async override Task<PropertyViewModel> GetByIdViewModel(int id)
         {
             var properties = await GetAllViewModel();
-#pragma warning disable CS8603 // Possible null reference return.
+
             return properties.Where(p => p.Id == id).FirstOrDefault();
-#pragma warning restore CS8603 // Possible null reference return.
+
 
         }
         #endregion
@@ -402,9 +402,9 @@ namespace RoyalState.Core.Application.Services
             var propertiesList = await GetAllViewModel();
             var thisProperty = propertiesList.FirstOrDefault(sa => sa.Code == code);
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             return thisProperty;
-#pragma warning restore CS8603 // Possible null reference return.
+
 
         }
         #endregion

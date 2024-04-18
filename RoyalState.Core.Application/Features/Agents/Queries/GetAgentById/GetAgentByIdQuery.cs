@@ -42,16 +42,16 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentById
         private async Task<AgentDTO> GetByIdViewModel(int id)
         {
             var agentList = await _agentRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (agentList == null) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
             var agent = agentList.FirstOrDefault(a => a.Id == id);
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (agent == null) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
             var agentUser = await _accountService.FindByIdAsync(agent.UserId);
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8601 // Possible null reference assignment.
+
+
             AgentDTO agentDTO = new()
             {
                 Id = id,
@@ -62,8 +62,8 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentById
                 Phone = agentUser.Phone
 
             };
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning restore CS8604 // Possible null reference argument.
+
+
             return agentDTO;
         }
 

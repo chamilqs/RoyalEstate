@@ -25,9 +25,9 @@ namespace RoyalState.Presentation.WebApi.Middlewares
             {
                 var response = context.Response;
                 response.ContentType = "application/json";
-#pragma warning disable CS8601 // Possible null reference assignment.
+
                 var responseModel = new Response<string>() { Succeeded = false, Message = error?.Message };
-#pragma warning restore CS8601 // Possible null reference assignment.
+
 
                 switch (error)
                 {

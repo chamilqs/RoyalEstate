@@ -36,9 +36,9 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetAllProperti
         {
             var propertyList = await _propertyService.GetAllViewModelApi();
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (propertyList == null || propertyList.Count == 0) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
             var propertyDtos = new List<PropertyDTO>();
 
             foreach (var prop in propertyList)

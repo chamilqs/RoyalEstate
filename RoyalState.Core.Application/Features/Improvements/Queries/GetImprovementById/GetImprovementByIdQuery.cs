@@ -39,9 +39,9 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetImproveme
         {
             var improvement = await _improvementRepository.GetByIdAsync(id);
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (improvement == null) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
 
             var improvementDTO = _mapper.Map<TypeDTO>(improvement);
 

@@ -250,9 +250,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             bool isEmpty = property == null;
             ViewBag.IsEmpty = isEmpty;
-#pragma warning disable CS8604 // Possible null reference argument.
+
             List<PropertyViewModel> properties = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
-#pragma warning restore CS8604 // Possible null reference argument.
+
 
             return View("Maintenance", properties);
         }

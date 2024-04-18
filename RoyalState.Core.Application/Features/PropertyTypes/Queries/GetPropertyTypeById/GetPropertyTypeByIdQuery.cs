@@ -39,9 +39,9 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetProperty
         {
             var propertyType = await _propertyTypeRepository.GetByIdAsync(id);
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (propertyType == null) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
 
             var propertyTypeDTO = _mapper.Map<TypeDTO>(propertyType);
 

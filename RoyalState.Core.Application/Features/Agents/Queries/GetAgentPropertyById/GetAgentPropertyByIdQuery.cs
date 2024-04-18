@@ -22,16 +22,10 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyBy
     public class GetAgentPropertyByIdQueryHandler : IRequestHandler<GetAgentPropertyByIdQuery, Response<IList<PropertyDTO>>>
     {
         private readonly IAgentRepository _agentRepository;
-#pragma warning disable CS0169 // The field 'GetAgentPropertyByIdQueryHandler._propertyRepository' is never used
         private readonly IPropertyRepository _propertyRepository;
-#pragma warning restore CS0169 // The field 'GetAgentPropertyByIdQueryHandler._propertyRepository' is never used
         private readonly IPropertyService _propertyService;
         private readonly IMapper _mappper;
-#pragma warning disable CS0169 // The field 'GetAgentPropertyByIdQueryHandler._accountService' is never used
         private readonly IAccountService _accountService;
-#pragma warning restore CS0169 // The field 'GetAgentPropertyByIdQueryHandler._accountService' is never used
-
-
 
         public GetAgentPropertyByIdQueryHandler(IAgentRepository agentRepository, IPropertyService propertyService, IMapper mappper)
 
@@ -53,9 +47,9 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyBy
         private async Task<List<PropertyDTO>> GetAllPropertiesByAgentId(int agentId)
         {
             var propertyList = await _propertyService.GetAllViewModel();
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (propertyList == null || propertyList.Count == 0) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
 
             var propertiesDTOs = new List<PropertyDTO>();
 

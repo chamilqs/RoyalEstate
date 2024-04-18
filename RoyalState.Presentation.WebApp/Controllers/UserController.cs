@@ -109,21 +109,21 @@ namespace WebAdmin.BankingApp.Controllers
                 return View(vm);
             }
 
-#pragma warning disable CS8604 // Possible null reference argument.
+
             vm.ImageUrl = await _fileService.UploadFileAsync(vm.File, vm.Email);
-#pragma warning restore CS8604 // Possible null reference argument.
+
             var origin = Request.Headers["origin"];
 
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8604 // Possible null reference argument.
+
+
             RegisterResponse response = vm.Role switch
             {
                 (int)Roles.Agent => await _agentService.RegisterAsync(vm, origin),
                 (int)Roles.Client => await _clientService.RegisterAsync(vm, origin),
                 _ => new RegisterResponse()
             };
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CS8604 // Possible null reference argument.
+
+
 
             if (response.HasError)
             {

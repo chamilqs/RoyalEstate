@@ -12,9 +12,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
     public class ClientController : Controller
     {
         private readonly IClientService _clientService;
-#pragma warning disable CS0169 // The field 'ClientController._accountService' is never used
         private readonly IAccountService _accountService;
-#pragma warning restore CS0169 // The field 'ClientController._accountService' is never used
         private readonly IPropertyTypeService _propertyTypeService;
         private readonly IPropertyService _propertyService;
         private readonly IFileService _fileService;
@@ -154,9 +152,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             bool isEmpty = property == null;
             ViewBag.IsEmpty = isEmpty;
-#pragma warning disable CS8604 // Possible null reference argument.
+
             List<PropertyViewModel> properties = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
-#pragma warning restore CS8604 // Possible null reference argument.
+
 
             return View("MyFavorites", properties);
         }

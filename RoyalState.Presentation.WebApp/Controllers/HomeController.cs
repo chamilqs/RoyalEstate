@@ -77,9 +77,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
             var property = await _propertyService.GetPropertyByCode(code);
 
             bool isEmpty = property == null;
-#pragma warning disable CS8604 // Possible null reference argument.
+
             List<PropertyViewModel> propertiesHome = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
-#pragma warning restore CS8604 // Possible null reference argument.
+
 
             if (authViewModel != null)
             {

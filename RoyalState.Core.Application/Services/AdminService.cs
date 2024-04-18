@@ -64,7 +64,7 @@ namespace RoyalState.Core.Application.Services
 
                 if (!activeUser.HasError)
                 {
-#pragma warning disable CS8601 // Possible null reference assignment.
+
                     SaveAdminViewModel saveAdminViewModel = new()
                     {
                         UserId = user.Id,
@@ -72,7 +72,7 @@ namespace RoyalState.Core.Application.Services
                         CreatedBy = "DefaultAppUser",
                         CreatedDate = DateTime.Now
                     };
-#pragma warning restore CS8601 // Possible null reference assignment.
+
 
                     await base.Add(saveAdminViewModel);
                 }
@@ -100,9 +100,9 @@ namespace RoyalState.Core.Application.Services
 
                 SaveAdminViewModel saveAdminViewModel = await base.GetByIdSaveViewModel(admin.Id);
 
-#pragma warning disable CS8601 // Possible null reference assignment.
+
                 saveAdminViewModel.Identification = vm.Identification;
-#pragma warning restore CS8601 // Possible null reference assignment.
+
 
                 await base.Update(saveAdminViewModel, admin.Id);
             }
@@ -139,9 +139,9 @@ namespace RoyalState.Core.Application.Services
         {
             List<AdminViewModel> adminList = await GetAllViewModel();
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             return adminList.Find(admin => admin.Id == id);
-#pragma warning restore CS8603 // Possible null reference return.
+
         }
         #endregion
 

@@ -93,9 +93,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             if (vm.File != null)
             {
-#pragma warning disable CS8604 // Possible null reference argument.
+
                 vm.ImageUrl = await _fileService.UploadFileAsync(vm.File, authViewModel.Email, true, vm.ImageUrl);
-#pragma warning restore CS8604 // Possible null reference argument.
+
             }
 
             UpdateUserResponse response = new();

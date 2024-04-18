@@ -55,9 +55,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 return View("RegisterAdmin", vm);
 
             var origin = Request.Headers["origin"];
-#pragma warning disable CS8604 // Possible null reference argument.
+
             RegisterResponse response = await _adminService.Add(vm, origin);
-#pragma warning restore CS8604 // Possible null reference argument.
+
 
             if (response.HasError)
             {

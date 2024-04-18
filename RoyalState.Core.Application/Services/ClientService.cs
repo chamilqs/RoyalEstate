@@ -51,13 +51,13 @@ namespace RoyalState.Core.Application.Services
             {
                 var user = await _userService.GetByEmailAsync(vm.Email);
 
-#pragma warning disable CS8601 // Possible null reference assignment.
+
                 SaveClientViewModel saveClientViewModel = new()
                 {
                     UserId = user.Id,
                     ImageUrl = vm.ImageUrl,
                 };
-#pragma warning restore CS8601 // Possible null reference assignment.
+
 
                 await base.Add(saveClientViewModel);
 
@@ -110,9 +110,9 @@ namespace RoyalState.Core.Application.Services
             ClientViewModel client = clientList.FirstOrDefault(client => client.UserId == userId);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             return client;
-#pragma warning restore CS8603 // Possible null reference return.
+
         }
         #endregion
 

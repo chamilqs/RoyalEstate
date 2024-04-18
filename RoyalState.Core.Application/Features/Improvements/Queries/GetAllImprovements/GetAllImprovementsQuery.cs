@@ -33,9 +33,9 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetAllImprov
         {
             var improvementsList = await _improvementRepository.GetAllAsync();
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (improvementsList == null || improvementsList.Count == 0) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
 
             var improvementDTOS = _mapper.Map<List<TypeDTO>>(improvementsList);
 

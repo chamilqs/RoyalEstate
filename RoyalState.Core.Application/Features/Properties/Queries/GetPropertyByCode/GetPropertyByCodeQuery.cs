@@ -40,13 +40,13 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByC
 
         private async Task<PropertyDTO> GetByCode(GetPropertyByCodeParameter filter)
         {
-#pragma warning disable CS8604 // Possible null reference argument.
-            var property = await _propertyService.GetPropertyByCode(filter.Code);
-#pragma warning restore CS8604 // Possible null reference argument.
 
-#pragma warning disable CS8603 // Possible null reference return.
+            var property = await _propertyService.GetPropertyByCode(filter.Code);
+
+
+
             if (property == null) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
 
             PropertyDTO propertyDTO = new PropertyDTO
             {

@@ -33,9 +33,9 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPrope
         {
             var propertyTypesList = await _propertyTypeRepository.GetAllAsync();
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (propertyTypesList == null || propertyTypesList.Count == 0) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
 
             var propertyTypesDtos = _mapper.Map<List<TypeDTO>>(propertyTypesList);
 

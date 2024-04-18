@@ -33,9 +33,9 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetAllSaleTypes
         {
             var saleTypesList = await _saleTypeRepository.GetAllAsync();
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             if (saleTypesList == null || saleTypesList.Count == 0) return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
 
             var propertyDtos = _mapper.Map<List<TypeDTO>>(saleTypesList);
 

@@ -45,9 +45,9 @@ namespace RoyalState.Core.Application.Services
 
             if (!response.HasError)
             {
-#pragma warning disable CS8604 // Possible null reference argument.
+
                 var agent = await GetByUserIdViewModel(vm.Id);
-#pragma warning restore CS8604 // Possible null reference argument.
+
                 if (vm.ImageUrl == null)
                 {
                     vm.ImageUrl = agent.ImageUrl;
@@ -101,13 +101,13 @@ namespace RoyalState.Core.Application.Services
             {
                 var user = await _userService.GetByEmailAsync(vm.Email);
 
-#pragma warning disable CS8601 // Possible null reference assignment.
+
                 SaveAgentViewModel saveAgentViewModel = new()
                 {
                     UserId = user.Id,
                     ImageUrl = vm.ImageUrl,
                 };
-#pragma warning restore CS8601 // Possible null reference assignment.
+
 
                 await base.Add(saveAgentViewModel);
 
@@ -201,9 +201,9 @@ namespace RoyalState.Core.Application.Services
             var agents = await GetConfirmedAndUnconfirmedAgents();
             var agent = agents.FirstOrDefault(agent => agent.Id == id);
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             return agent;
-#pragma warning restore CS8603 // Possible null reference return.
+
         }
         #endregion
 
@@ -219,9 +219,9 @@ namespace RoyalState.Core.Application.Services
 
             if (users == null)
             {
-#pragma warning disable CS8603 // Possible null reference return.
+
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
+
             }
 
             var agentsViewModels = new List<AgentViewModel>();
@@ -263,9 +263,9 @@ namespace RoyalState.Core.Application.Services
             AgentViewModel agent = agentList.FirstOrDefault(agent => agent.UserId == userId);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             return agent;
-#pragma warning restore CS8603 // Possible null reference return.
+
         }
         #endregion
 

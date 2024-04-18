@@ -21,9 +21,9 @@ namespace RoyalState.Core.Application.Services
         {
             var saleTypeList = await GetAllViewModelWithInclude();
 
-#pragma warning disable CS8603 // Possible null reference return.
+
             return saleTypeList.FirstOrDefault(saleType => saleType.Id == id);
-#pragma warning restore CS8603 // Possible null reference return.
+
         }
 
         public async Task<List<SaleTypeViewModel>> GetAllViewModelWithInclude()
