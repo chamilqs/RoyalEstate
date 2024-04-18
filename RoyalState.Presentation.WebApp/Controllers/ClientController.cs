@@ -6,6 +6,7 @@ using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.ClientProperties;
 using RoyalState.Core.Application.ViewModels.Property;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
@@ -30,7 +31,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Client Index
-        public async Task<IActionResult> Index(string? error, List<PropertyViewModel>? propertiesHome, bool? isEmpty)
+        public async Task<IActionResult> Index(string? error, List<PropertyViewModel>? propertiesHome, bool? isEmpty, bool? favorite)
         {
             if (error != null)
             {
@@ -43,6 +44,10 @@ namespace RoyalState.Presentation.WebApp.Controllers
             if (isEmpty != null)
             {
                 ViewBag.isEmpty = isEmpty;
+            }
+            if (favorite != null)
+            {
+                ViewBag.NewFavorite = favorite;
             }
 
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
@@ -58,6 +63,8 @@ namespace RoyalState.Presentation.WebApp.Controllers
         {
             var client = await _clientService.GetByUserIdViewModel(authViewModel.Id);
             var properties = await _clientService.GetFavoritePropertiesViewModel(client.Id);
+
+            ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
             return View(properties);
         }
         #endregion
@@ -78,12 +85,13 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 };
 
                 await _clientService.MarkPropertyAsFavorite(clientProperty);
+                return RedirectToAction("Index", "Client", new { favorite = true });
             }
             else
             {
                 await _clientService.DeleteFavorite(propertyId);
 
-                var error = "Property deleted from your favorites";
+                var error = "Property deleted from your favorites.";
                 return RedirectToAction("Index", "Client", new { error = error });
             }
 
