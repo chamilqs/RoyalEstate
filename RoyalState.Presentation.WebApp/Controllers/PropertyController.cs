@@ -27,7 +27,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
             _fileService = fileService;
             _agentService = agentService;
             _httpContextAccessor = httpContextAccessor;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             _improvmentService = improvmentService;
             _saleTypeService = saleTypeService;
             _propertyTypeService = propertyTypeService;
@@ -60,7 +62,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> NewPropertyPost(SavePropertyViewModel vm, IFormFileCollection files)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             string error = null;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             if (!ModelState.IsValid)
             {
@@ -107,12 +111,14 @@ namespace RoyalState.Presentation.WebApp.Controllers
             var property = await _propertyService.GetByIdViewModel(id);
 
             List<int> propertyImprovements = new();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             foreach (var improvement in property.Improvements)
             {
                 var getImprovement = await _improvmentService.GetByNameViewModel(improvement);
                 propertyImprovements.Add(getImprovement.Id);
 
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             SavePropertyViewModel vm = new()
             {
@@ -137,7 +143,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> EditPropertyPost(SavePropertyViewModel vm, IFormFileCollection files)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             string error = null;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             if (!ModelState.IsValid)
             {
@@ -175,6 +183,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             vm.PropertyImages?.RemoveAll(image => image == null);
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (vm.PropertyImages.Count > 4)
             {
                 error = "The maximum number of property images allowed is 4.";
@@ -182,6 +191,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 ViewBag.Error = error;
                 return View("EditProperty", vm);
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             await _propertyService.Update(vm, vm.Id);
             return RedirectToAction("Maintenance");
@@ -212,19 +222,21 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public async Task<IActionResult> SearchPropertyByFilters(int? propertyTypeId, double? maxPrice, double? minPrice, int? roomsNumber, int? bathsNumber)
         {
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
-            FilterPropertyViewModel filter = new FilterPropertyViewModel();
-            filter.PropertyTypeId = propertyTypeId;
-            filter.MaxPrice = maxPrice;
-            filter.MinPrice = minPrice;
-            filter.Bedrooms = roomsNumber;
-            filter.Bathrooms = bathsNumber;
+            FilterPropertyViewModel filter = new()
+            {
+                PropertyTypeId = propertyTypeId,
+                MaxPrice = maxPrice,
+                MinPrice = minPrice,
+                Bedrooms = roomsNumber,
+                Bathrooms = bathsNumber
+            };
 
             var properties = await _propertyService.GetAllViewModelWIthFilters(filter);
-            bool isEmpty = properties == null || properties.Count() == 0;
+            bool isEmpty = properties == null || properties.Count == 0;
 
             ViewBag.IsEmpty = isEmpty;
             ViewBag.PropertyTypes = propertyTypes;
-            return View("Maintenance", properties != null ? properties : new List<PropertyViewModel>());
+            return View("Maintenance", properties ?? new List<PropertyViewModel>());
         }
         #endregion
 
@@ -238,7 +250,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             bool isEmpty = property == null;
             ViewBag.IsEmpty = isEmpty;
+#pragma warning disable CS8604 // Possible null reference argument.
             List<PropertyViewModel> properties = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
+#pragma warning restore CS8604 // Possible null reference argument.
 
             return View("Maintenance", properties);
         }

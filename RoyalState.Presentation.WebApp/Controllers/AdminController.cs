@@ -21,7 +21,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public AdminController(IHttpContextAccessor httpContextAccessor, IAdminService adminService, IAgentService agentService, IPropertyService propertyService)
         {
             _httpContextAccessor = httpContextAccessor;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             _authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             _adminService = adminService;
             _agentService = agentService;
             _propertyService = propertyService;
@@ -41,7 +43,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         #endregion
 
         #region Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View("RegisterAdmin", new SaveUserViewModel());
         }
@@ -53,7 +55,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 return View("RegisterAdmin", vm);
 
             var origin = Request.Headers["origin"];
+#pragma warning disable CS8604 // Possible null reference argument.
             RegisterResponse response = await _adminService.Add(vm, origin);
+#pragma warning restore CS8604 // Possible null reference argument.
 
             if (response.HasError)
             {

@@ -1,19 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using RoyalState.Core.Application.DTOs.Property;
 using RoyalState.Core.Application.DTOs.TypeDTO;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
-using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
-using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetAllSaleTypes
 {
@@ -44,7 +33,9 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetAllSaleTypes
         {
             var saleTypesList = await _saleTypeRepository.GetAllAsync();
 
+#pragma warning disable CS8603 // Possible null reference return.
             if (saleTypesList == null || saleTypesList.Count == 0) return null;
+#pragma warning restore CS8603 // Possible null reference return.
 
             var propertyDtos = _mapper.Map<List<TypeDTO>>(saleTypesList);
 

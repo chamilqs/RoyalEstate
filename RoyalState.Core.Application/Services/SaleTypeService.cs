@@ -21,13 +21,16 @@ namespace RoyalState.Core.Application.Services
         {
             var saleTypeList = await GetAllViewModelWithInclude();
 
+#pragma warning disable CS8603 // Possible null reference return.
             return saleTypeList.FirstOrDefault(saleType => saleType.Id == id);
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<List<SaleTypeViewModel>> GetAllViewModelWithInclude()
         {
             var saleTypeList = await _saleTypeRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return saleTypeList.Select(saleType => new SaleTypeViewModel
             {
                 Id = saleType.Id,
@@ -35,6 +38,7 @@ namespace RoyalState.Core.Application.Services
                 Description = saleType.Description,
                 PropertiesQuantity = saleType.Properties.Count
             }).ToList();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
     }
 }

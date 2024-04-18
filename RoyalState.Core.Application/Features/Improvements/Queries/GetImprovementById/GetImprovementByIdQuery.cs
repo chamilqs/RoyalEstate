@@ -1,18 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.DTOs.TypeDTO;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Wrappers;
-using RoyalState.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Improvements.Queries.GetImprovementById
 {
@@ -47,7 +39,9 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetImproveme
         {
             var improvement = await _improvementRepository.GetByIdAsync(id);
 
+#pragma warning disable CS8603 // Possible null reference return.
             if (improvement == null) return null;
+#pragma warning restore CS8603 // Possible null reference return.
 
             var improvementDTO = _mapper.Map<TypeDTO>(improvement);
 

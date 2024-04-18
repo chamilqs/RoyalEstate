@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using RoyalState.Core.Application.DTOs.Agent;
 using RoyalState.Core.Application.DTOs.TypeDTO;
 using RoyalState.Core.Application.Exceptions;
-using RoyalState.Core.Application.Features.Agents.Queries.GetAgentById;
-using RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents;
 using RoyalState.Core.Application.Features.Improvements.Commands.CreateImprovement;
 using RoyalState.Core.Application.Features.Improvements.Commands.DeleteImprovementById;
 using RoyalState.Core.Application.Features.Improvements.Commands.UpdateImprovement;

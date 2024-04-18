@@ -71,7 +71,7 @@ namespace RoyalState.Core.Application.Services
             {
                 try
                 {
-                    File.Delete(fullPath);
+                    await Task.Run(() => File.Delete(fullPath));
                 }
                 catch (Exception ex)
                 {

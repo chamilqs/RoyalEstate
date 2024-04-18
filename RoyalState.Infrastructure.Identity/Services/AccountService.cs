@@ -7,7 +7,6 @@ using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.DTOs.Email;
 using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.Services;
 using RoyalState.Core.Domain.Settings;
 using RoyalState.Infrastructure.Identity.Entities;
 using System.IdentityModel.Tokens.Jwt;
@@ -52,7 +51,9 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             }
 
+#pragma warning disable CS8604 // Possible null reference argument.
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+#pragma warning restore CS8604 // Possible null reference argument.
             if (!result.Succeeded)
             {
                 response.HasError = true;
@@ -69,7 +70,9 @@ namespace RoyalState.Infrastructure.Identity.Services
             JwtSecurityToken jwtSecurityToken = await GenerateJWToken(user);
 
             response.Id = user.Id;
+#pragma warning disable CS8601 // Possible null reference assignment.
             response.Email = user.Email;
+#pragma warning restore CS8601 // Possible null reference assignment.
             response.UserName = user.UserName;
 
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
@@ -110,7 +113,9 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             }
 
+#pragma warning disable CS8604 // Possible null reference argument.
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+#pragma warning restore CS8604 // Possible null reference argument.
             if (!result.Succeeded)
             {
                 response.HasError = true;
@@ -125,7 +130,9 @@ namespace RoyalState.Infrastructure.Identity.Services
             }
 
             response.Id = user.Id;
+#pragma warning disable CS8601 // Possible null reference assignment.
             response.Email = user.Email;
+#pragma warning restore CS8601 // Possible null reference assignment.
             response.UserName = user.UserName;
 
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
@@ -287,7 +294,9 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             var user = await _userManager.FindByIdAsync(request.Id);
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             user.FirstName = request.FirstName;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             user.LastName = request.LastName;
             user.Email = request.Email;
             user.UserName = request.UserName;
@@ -404,15 +413,16 @@ namespace RoyalState.Infrastructure.Identity.Services
         #endregion
 
         #region Finders
-
         public async Task<List<UserDTO>> FindByNameAsync(string name)
         {
-            List<UserDTO> userDTOs = new List<UserDTO>();
+            List<UserDTO> userDTOs = new();
             var users = await _userManager.Users.Where(u => (u.FirstName.Contains(name) || (u.FirstName + " " + u.LastName).Contains(name))).ToListAsync();
 
             foreach (var user in users)
             {
-                UserDTO userDTO = new UserDTO
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
+                UserDTO userDTO = new()
                 {
                     Id = user.Id,
                     UserName = user.UserName,
@@ -422,6 +432,8 @@ namespace RoyalState.Infrastructure.Identity.Services
                     Phone = user.PhoneNumber,
                     EmailConfirmed = user.EmailConfirmed
                 };
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
 
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 if (rolesList.Any(r => r != Roles.Agent.ToString()))
@@ -445,10 +457,14 @@ namespace RoyalState.Infrastructure.Identity.Services
             if (user != null)
             {
                 userDTO.Id = user.Id;
+#pragma warning disable CS8601 // Possible null reference assignment.
                 userDTO.UserName = user.UserName;
+#pragma warning restore CS8601 // Possible null reference assignment.
                 userDTO.FirstName = user.FirstName;
                 userDTO.LastName = user.LastName;
+#pragma warning disable CS8601 // Possible null reference assignment.
                 userDTO.Email = user.Email;
+#pragma warning restore CS8601 // Possible null reference assignment.
                 userDTO.Phone = user.PhoneNumber;
                 userDTO.EmailConfirmed = user.EmailConfirmed;
 
@@ -458,7 +474,9 @@ namespace RoyalState.Infrastructure.Identity.Services
                 return userDTO;
             }
 
+#pragma warning disable CS8603 // Possible null reference return.
             return null;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<UserDTO> FindByIdAsync(string Id)
@@ -469,10 +487,14 @@ namespace RoyalState.Infrastructure.Identity.Services
             if (user != null)
             {
                 userDTO.Id = user.Id;
+#pragma warning disable CS8601 // Possible null reference assignment.
                 userDTO.UserName = user.UserName;
+#pragma warning restore CS8601 // Possible null reference assignment.
                 userDTO.FirstName = user.FirstName;
                 userDTO.LastName = user.LastName;
+#pragma warning disable CS8601 // Possible null reference assignment.
                 userDTO.Email = user.Email;
+#pragma warning restore CS8601 // Possible null reference assignment.
                 userDTO.Phone = user.PhoneNumber;
                 userDTO.EmailConfirmed = user.EmailConfirmed;
 
@@ -482,7 +504,9 @@ namespace RoyalState.Infrastructure.Identity.Services
                 return userDTO;
             }
 
+#pragma warning disable CS8603 // Possible null reference return.
             return null;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         #endregion
@@ -536,6 +560,8 @@ namespace RoyalState.Infrastructure.Identity.Services
                 roleClaims.Add(new Claim("roles", role));
             }
 
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8604 // Possible null reference argument.
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
@@ -545,6 +571,8 @@ namespace RoyalState.Infrastructure.Identity.Services
             }
             .Union(userClaims)
             .Union(roleClaims);
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8604 // Possible null reference argument.
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -593,17 +621,6 @@ namespace RoyalState.Infrastructure.Identity.Services
             return verificationUri;
         }
 
-        private async Task<string> SendForgotPasswordUri(ApplicationUser user, string origin)
-        {
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var route = "User/ResetPassword";
-            var Uri = new Uri(string.Concat($"{origin}/", route));
-            var verificationUri = QueryHelpers.AddQueryString(Uri.ToString(), "token", code);
-
-            return verificationUri;
-        }
-
         #endregion
 
         #region GetAllUserAsync
@@ -611,6 +628,8 @@ namespace RoyalState.Infrastructure.Identity.Services
         {
             var userList = await _userManager.Users.ToListAsync();
 
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
             var userDTOList = userList.Select(user => new UserDTO
             {
                 Id = user.Id,
@@ -619,13 +638,18 @@ namespace RoyalState.Infrastructure.Identity.Services
                 LastName = user.LastName,
                 Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed
+
             }).ToList();
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
 
             foreach (var userDTO in userDTOList)
             {
                 var user = await _userManager.FindByIdAsync(userDTO.Id);
 
+#pragma warning disable CS8604 // Possible null reference argument.
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+#pragma warning restore CS8604 // Possible null reference argument.
                 userDTO.Role = rolesList.ToList()[0];
             }
 

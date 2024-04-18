@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.PropertyTypes;
 
 namespace RoyalState.Presentation.WebApp.Controllers
@@ -11,14 +10,12 @@ namespace RoyalState.Presentation.WebApp.Controllers
     {
         private readonly IPropertyTypeService _propertyTypeService;
         private readonly IPropertyService _propertyService;
-        private readonly IPropertyImageService _propertyImageService;
         private readonly IFileService _fileService;
 
-        public PropertyTypeController(IPropertyTypeService propertyTypeService, IPropertyService propertyService, IPropertyImageService propertyImageService, IFileService fileService)
+        public PropertyTypeController(IPropertyTypeService propertyTypeService, IPropertyService propertyService, IFileService fileService)
         {
             _propertyTypeService = propertyTypeService;
             _propertyService = propertyService;
-            _propertyImageService = propertyImageService;
             _fileService = fileService;
         }
 
@@ -28,7 +25,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View("SavePropertyType", new SavePropertyTypeViewModel());
         }
@@ -82,11 +79,13 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
                 foreach (var property in properties)
                 {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     foreach (var propertyImage in property.PropertyImages)
                     {
                         await _fileService.DeleteFileAsync(propertyImage);
 
                     }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
                 }
 

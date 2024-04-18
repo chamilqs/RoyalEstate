@@ -1,17 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.DTOs.Property;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.ViewModels.Property;
 using RoyalState.Core.Application.Wrappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByCode
 {
@@ -48,9 +40,13 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByC
 
         private async Task<PropertyDTO> GetByCode(GetPropertyByCodeParameter filter)
         {
+#pragma warning disable CS8604 // Possible null reference argument.
             var property = await _propertyService.GetPropertyByCode(filter.Code);
+#pragma warning restore CS8604 // Possible null reference argument.
 
+#pragma warning disable CS8603 // Possible null reference return.
             if (property == null) return null;
+#pragma warning restore CS8603 // Possible null reference return.
 
             PropertyDTO propertyDTO = new PropertyDTO
             {

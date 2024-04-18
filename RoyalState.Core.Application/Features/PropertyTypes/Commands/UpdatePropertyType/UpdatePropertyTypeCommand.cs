@@ -5,12 +5,7 @@ using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Wrappers;
 using RoyalState.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.PropertyTypes.Commands.UpdatePropertyType
 {
@@ -25,12 +20,16 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Commands.UpdateProp
 
         /// <example>Apartment</example>
         [SwaggerParameter(Description = "New name of the property type")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public string Name { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 
         /// <example>An apartment in a small building or tower </example>
         [SwaggerParameter(Description = "New description of the property type")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public string Description { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 
 

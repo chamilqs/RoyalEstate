@@ -26,7 +26,9 @@ namespace WebAdmin.BankingApp.Controllers
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             _agentService = agentService;
             _clientService = clientService;
             _fileService = fileService;
@@ -34,7 +36,9 @@ namespace WebAdmin.BankingApp.Controllers
 
         #region Login & Logout
         [ServiceFilter(typeof(LoginAuthorize))]
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IActionResult> Index(bool hasError = false, string? message = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var login = new LoginViewModel();
 
@@ -64,7 +68,9 @@ namespace WebAdmin.BankingApp.Controllers
             }
             else
             {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 vm.HasError = userVm.HasError;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 vm.Error = userVm.Error;
                 return View(vm);
             }
@@ -103,15 +109,21 @@ namespace WebAdmin.BankingApp.Controllers
                 return View(vm);
             }
 
+#pragma warning disable CS8604 // Possible null reference argument.
             vm.ImageUrl = await _fileService.UploadFileAsync(vm.File, vm.Email);
+#pragma warning restore CS8604 // Possible null reference argument.
             var origin = Request.Headers["origin"];
 
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8604 // Possible null reference argument.
             RegisterResponse response = vm.Role switch
             {
                 (int)Roles.Agent => await _agentService.RegisterAsync(vm, origin),
                 (int)Roles.Client => await _clientService.RegisterAsync(vm, origin),
                 _ => new RegisterResponse()
             };
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8604 // Possible null reference argument.
 
             if (response.HasError)
             {
@@ -152,7 +164,9 @@ namespace WebAdmin.BankingApp.Controllers
         #endregion
 
         #region Authorization
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IActionResult> RedirectIndex(string? ReturnUrl)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             return RedirectToRoute(new { controller = "User", action = "Index", hasError = true, message = "You don't have access to this section!" });
         }

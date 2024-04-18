@@ -1,17 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.DTOs.Agent;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.ViewModels.Agent;
 using RoyalState.Core.Application.Wrappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents
 {
@@ -43,13 +35,17 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents
         {
             var agentList = await _agentRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
 
+#pragma warning disable CS8603 // Possible null reference return.
             if (agentList == null || agentList.Count == 0) return null;
+#pragma warning restore CS8603 // Possible null reference return.
 
             var agentDtos = new List<AgentDTO>();
 
             foreach (var agent in agentList)
             {
                 var agentUser = await _accountService.FindByIdAsync(agent.UserId);
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8601 // Possible null reference assignment.
                 var agentDTO = new AgentDTO
                 {
                     Id = agent.Id,
@@ -60,6 +56,8 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents
                     NumberOfProperties = agent.Properties.Count()
 
                 };
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8604 // Possible null reference argument.
 
                 agentDtos.Add(agentDTO);
 

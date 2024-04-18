@@ -1,7 +1,5 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 using RoyalState.Core.Application.DTOs.Agent;
 using RoyalState.Core.Application.DTOs.Property;
 using RoyalState.Core.Application.Exceptions;
@@ -9,7 +7,6 @@ using RoyalState.Core.Application.Features.Agents.Commands.ChangeAgentStatus;
 using RoyalState.Core.Application.Features.Agents.Queries.GetAgentById;
 using RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyById;
 using RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents;
-using RoyalState.Core.Application.Features.Properties.Queries.GetAllProperties;
 using RoyalState.WebApi.Controllers.v1;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;

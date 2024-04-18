@@ -26,7 +26,9 @@ namespace RoyalState.Core.Application.Services
         public async Task<ImprovementViewModel> GetByNameViewModel(string name)
         {
             var improvements = await GetAllViewModel();
+#pragma warning disable CS8603 // Possible null reference return.
             return improvements.Where(n => n.Name.Contains(name)).FirstOrDefault();
+#pragma warning restore CS8603 // Possible null reference return.
 
         }
         #endregion
@@ -35,7 +37,9 @@ namespace RoyalState.Core.Application.Services
         public async override Task<ImprovementViewModel> GetByIdViewModel(int id)
         {
             var improvement = await GetAllViewModel();
+#pragma warning disable CS8603 // Possible null reference return.
             return improvement.Where(i => i.Id == id).FirstOrDefault();
+#pragma warning restore CS8603 // Possible null reference return.
 
         }
         #endregion

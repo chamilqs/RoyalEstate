@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Repositories;
@@ -17,20 +16,20 @@ namespace RoyalState.Core.Application.Services
         private readonly IAgentRepository _agentRepository;
         private readonly IUserService _userService;
         private readonly IFileService _fileService;
-        private readonly IAccountService _accountService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
         public AgentService(IAgentRepository agentRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper,
-            IUserService userService, IAccountService accountService, IFileService fileService) : base(agentRepository, mapper)
+            IUserService userService, IFileService fileService) : base(agentRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _agentRepository = agentRepository;
             _mapper = mapper;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             _userService = userService;
-            _accountService = accountService;
             _fileService = fileService;
         }
 
@@ -46,18 +45,20 @@ namespace RoyalState.Core.Application.Services
 
             if (!response.HasError)
             {
+#pragma warning disable CS8604 // Possible null reference argument.
                 var agent = await GetByUserIdViewModel(vm.Id);
+#pragma warning restore CS8604 // Possible null reference argument.
                 if (vm.ImageUrl == null)
                 {
                     vm.ImageUrl = agent.ImageUrl;
                 }
-                else 
-                { 
+                else
+                {
                     if (agent.ImageUrl != null)
                     {
                         await _fileService.DeleteFileAsync(agent.ImageUrl);
-                    }              
-                
+                    }
+
                 }
 
                 Agent avm = new()
@@ -100,11 +101,13 @@ namespace RoyalState.Core.Application.Services
             {
                 var user = await _userService.GetByEmailAsync(vm.Email);
 
+#pragma warning disable CS8601 // Possible null reference assignment.
                 SaveAgentViewModel saveAgentViewModel = new()
                 {
                     UserId = user.Id,
                     ImageUrl = vm.ImageUrl,
                 };
+#pragma warning restore CS8601 // Possible null reference assignment.
 
                 await base.Add(saveAgentViewModel);
 
@@ -198,7 +201,9 @@ namespace RoyalState.Core.Application.Services
             var agents = await GetConfirmedAndUnconfirmedAgents();
             var agent = agents.FirstOrDefault(agent => agent.Id == id);
 
+#pragma warning disable CS8603 // Possible null reference return.
             return agent;
+#pragma warning restore CS8603 // Possible null reference return.
         }
         #endregion
 
@@ -214,7 +219,9 @@ namespace RoyalState.Core.Application.Services
 
             if (users == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
 
             var agentsViewModels = new List<AgentViewModel>();
@@ -252,9 +259,13 @@ namespace RoyalState.Core.Application.Services
         public async Task<AgentViewModel> GetByUserIdViewModel(string userId)
         {
             var agentList = await GetAllViewModel();
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             AgentViewModel agent = agentList.FirstOrDefault(agent => agent.UserId == userId);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
+#pragma warning disable CS8603 // Possible null reference return.
             return agent;
+#pragma warning restore CS8603 // Possible null reference return.
         }
         #endregion
 

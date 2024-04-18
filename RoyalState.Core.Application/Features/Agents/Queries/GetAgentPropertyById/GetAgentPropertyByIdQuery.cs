@@ -1,20 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using RoyalState.Core.Application.DTOs.Agent;
 using RoyalState.Core.Application.DTOs.Property;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
-using RoyalState.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyById
 {
@@ -31,12 +22,20 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyBy
     public class GetAgentPropertyByIdQueryHandler : IRequestHandler<GetAgentPropertyByIdQuery, Response<IList<PropertyDTO>>>
     {
         private readonly IAgentRepository _agentRepository;
+#pragma warning disable CS0169 // The field 'GetAgentPropertyByIdQueryHandler._propertyRepository' is never used
         private readonly IPropertyRepository _propertyRepository;
+#pragma warning restore CS0169 // The field 'GetAgentPropertyByIdQueryHandler._propertyRepository' is never used
         private readonly IPropertyService _propertyService;
         private readonly IMapper _mappper;
+#pragma warning disable CS0169 // The field 'GetAgentPropertyByIdQueryHandler._accountService' is never used
         private readonly IAccountService _accountService;
+#pragma warning restore CS0169 // The field 'GetAgentPropertyByIdQueryHandler._accountService' is never used
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public GetAgentPropertyByIdQueryHandler(IAgentRepository agentRepository, IPropertyService propertyService, IMapper mappper)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _agentRepository = agentRepository;
             _mappper = mappper;
@@ -54,7 +53,9 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyBy
         private async Task<List<PropertyDTO>> GetAllPropertiesByAgentId(int agentId)
         {
             var propertyList = await _propertyService.GetAllViewModel();
+#pragma warning disable CS8603 // Possible null reference return.
             if (propertyList == null || propertyList.Count == 0) return null;
+#pragma warning restore CS8603 // Possible null reference return.
 
             var propertiesDTOs = new List<PropertyDTO>();
 

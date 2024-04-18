@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.ClientProperties;
 using RoyalState.Core.Application.ViewModels.Property;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
@@ -14,17 +12,23 @@ namespace RoyalState.Presentation.WebApp.Controllers
     public class ClientController : Controller
     {
         private readonly IClientService _clientService;
+#pragma warning disable CS0169 // The field 'ClientController._accountService' is never used
         private readonly IAccountService _accountService;
+#pragma warning restore CS0169 // The field 'ClientController._accountService' is never used
         private readonly IPropertyTypeService _propertyTypeService;
         private readonly IPropertyService _propertyService;
         private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse authViewModel;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public ClientController(IClientService clientService, IHttpContextAccessor httpContextAccessor, IFileService fileService, IPropertyService propertyService, IPropertyTypeService propertyTypeService)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _clientService = clientService;
             _httpContextAccessor = httpContextAccessor;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             _fileService = fileService;
             _propertyService = propertyService;
             _propertyTypeService = propertyTypeService;
@@ -37,9 +41,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
             {
                 ViewBag.Error = error;
             }
-            if (propertiesHome != null && propertiesHome.Count() != 0)
+            if (propertiesHome != null && propertiesHome.Count != 0)
             {
-               return View(propertiesHome);
+                return View(propertiesHome);
             }
             if (isEmpty != null)
             {
@@ -92,10 +96,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 await _clientService.DeleteFavorite(propertyId);
 
                 var error = "Property deleted from your favorites.";
-                return RedirectToAction("Index", "Client", new { error = error });
+                return RedirectToAction("Index", "Client", new { error });
             }
 
-            return RedirectToAction("Index");
         }
         #endregion
 
@@ -123,19 +126,21 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public async Task<IActionResult> SearchFavoritesByFilters(int? propertyTypeId, double? maxPrice, double? minPrice, int? roomsNumber, int? bathsNumber)
         {
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
-            FilterPropertyViewModel filter = new FilterPropertyViewModel();
-            filter.PropertyTypeId = propertyTypeId;
-            filter.MaxPrice = maxPrice;
-            filter.MinPrice = minPrice;
-            filter.Bedrooms = roomsNumber;
-            filter.Bathrooms = bathsNumber;
+            FilterPropertyViewModel filter = new()
+            {
+                PropertyTypeId = propertyTypeId,
+                MaxPrice = maxPrice,
+                MinPrice = minPrice,
+                Bedrooms = roomsNumber,
+                Bathrooms = bathsNumber
+            };
 
             var properties = await _propertyService.GetAllViewModelWIthFilters(filter);
-            bool isEmpty = properties == null || properties.Count() == 0;
+            bool isEmpty = properties == null || properties.Count == 0;
 
             ViewBag.IsEmpty = isEmpty;
             ViewBag.PropertyTypes = propertyTypes;
-            return View("MyFavorites", properties != null ? properties : new List<PropertyViewModel>());
+            return View("MyFavorites", properties ?? new List<PropertyViewModel>());
         }
         #endregion
 
@@ -149,7 +154,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             bool isEmpty = property == null;
             ViewBag.IsEmpty = isEmpty;
+#pragma warning disable CS8604 // Possible null reference argument.
             List<PropertyViewModel> properties = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
+#pragma warning restore CS8604 // Possible null reference argument.
 
             return View("MyFavorites", properties);
         }

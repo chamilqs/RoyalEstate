@@ -2,11 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.TypeDTO;
 using RoyalState.Core.Application.Exceptions;
-using RoyalState.Core.Application.Features.PropertyTypes.Commands.CreatePropertyType;
-using RoyalState.Core.Application.Features.PropertyTypes.Commands.DeletePropertyTypeById;
-using RoyalState.Core.Application.Features.PropertyTypes.Commands.UpdatePropertyType;
-using RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPropertyTypes;
-using RoyalState.Core.Application.Features.PropertyTypes.Queries.GetPropertyTypeById;
 using RoyalState.Core.Application.Features.SaleTypes.Commands.CreateSaleType;
 using RoyalState.Core.Application.Features.SaleTypes.Commands.DeleteSaleType;
 using RoyalState.Core.Application.Features.SaleTypes.Commands.UpdateSaleType;

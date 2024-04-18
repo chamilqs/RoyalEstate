@@ -1,15 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.DTOs.TypeDTO;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Wrappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPropertyTypes
 {
@@ -40,7 +33,9 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPrope
         {
             var propertyTypesList = await _propertyTypeRepository.GetAllAsync();
 
+#pragma warning disable CS8603 // Possible null reference return.
             if (propertyTypesList == null || propertyTypesList.Count == 0) return null;
+#pragma warning restore CS8603 // Possible null reference return.
 
             var propertyTypesDtos = _mapper.Map<List<TypeDTO>>(propertyTypesList);
 

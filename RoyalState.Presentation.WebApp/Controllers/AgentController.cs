@@ -22,7 +22,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         {
             _agentService = agentService;
             _httpContextAccessor = httpContextAccessor;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             _fileService = fileService;
             _propertyService = propertyService;
             _propertyTypeService = propertyTypeService;
@@ -31,7 +33,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         #region Agent Index
         public async Task<IActionResult> Index(List<PropertyViewModel>? propertiesHome, bool? isEmpty)
         {
-            if (propertiesHome != null && propertiesHome.Count() != 0)
+            if (propertiesHome != null && propertiesHome.Count != 0)
             {
                 return View(propertiesHome);
             }
@@ -55,19 +57,21 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public async Task<IActionResult> SearchPropertyByFilters(int? propertyTypeId, double? maxPrice, double? minPrice, int? roomsNumber, int? bathsNumber)
         {
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
-            FilterPropertyViewModel filter = new FilterPropertyViewModel();
-            filter.PropertyTypeId = propertyTypeId;
-            filter.MaxPrice = maxPrice;
-            filter.MinPrice = minPrice;
-            filter.Bedrooms = roomsNumber;
-            filter.Bathrooms = bathsNumber;
+            FilterPropertyViewModel filter = new()
+            {
+                PropertyTypeId = propertyTypeId,
+                MaxPrice = maxPrice,
+                MinPrice = minPrice,
+                Bedrooms = roomsNumber,
+                Bathrooms = bathsNumber
+            };
 
             var properties = await _propertyService.GetAllViewModelWIthFilters(filter);
-            bool isEmpty = properties == null || properties.Count() == 0;
+            bool isEmpty = properties == null || properties.Count == 0;
 
             ViewBag.IsEmpty = isEmpty;
             ViewBag.PropertyTypes = propertyTypes;
-            return View("Index", properties != null ? properties : new List<PropertyViewModel>());
+            return View("Index", properties ?? new List<PropertyViewModel>());
         }
         #endregion
 
@@ -89,7 +93,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             if (vm.File != null)
             {
+#pragma warning disable CS8604 // Possible null reference argument.
                 vm.ImageUrl = await _fileService.UploadFileAsync(vm.File, authViewModel.Email, true, vm.ImageUrl);
+#pragma warning restore CS8604 // Possible null reference argument.
             }
 
             UpdateUserResponse response = new();

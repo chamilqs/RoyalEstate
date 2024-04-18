@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.Exceptions;
-using RoyalState.Core.Application.Features.PropertyTypes.Commands.UpdatePropertyType;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Wrappers;
 using RoyalState.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Improvements.Commands.UpdateImprovement
 {
@@ -26,11 +20,15 @@ namespace RoyalState.Core.Application.Features.Improvements.Commands.UpdateImpro
 
         /// <example>Elevator</example>
         [SwaggerParameter(Description = "New name of the improvement")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public string Name { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         /// <example>Moves people or goods between different levels of a building </example>
         [SwaggerParameter(Description = "New description of the improvement")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public string Description { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 
 

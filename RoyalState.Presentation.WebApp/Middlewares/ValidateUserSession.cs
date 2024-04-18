@@ -14,7 +14,9 @@ namespace RoyalState.Presentation.WebApp.Middlewares
 
         public bool HasUser()
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             AuthenticationResponse userViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             if (userViewModel == null)
             {

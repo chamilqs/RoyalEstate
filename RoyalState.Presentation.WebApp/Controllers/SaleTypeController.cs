@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.SaleTypes;
 
 namespace RoyalState.Presentation.WebApp.Controllers
@@ -9,16 +8,14 @@ namespace RoyalState.Presentation.WebApp.Controllers
     [Authorize(Roles = "Admin")]
     public class SaleTypeController : Controller
     {
-        private readonly ISaleTypeService _saleTypeService; 
+        private readonly ISaleTypeService _saleTypeService;
         private readonly IPropertyService _propertyService;
-        private readonly IPropertyImageService _propertyImageService;
         private readonly IFileService _fileService;
 
-        public SaleTypeController(ISaleTypeService saleTypeService, IPropertyService propertyService, IPropertyImageService propertyImageService, IFileService fileService)
+        public SaleTypeController(ISaleTypeService saleTypeService, IPropertyService propertyService, IFileService fileService)
         {
             _saleTypeService = saleTypeService;
             _propertyService = propertyService;
-            _propertyImageService = propertyImageService;
             _fileService = fileService;
         }
 
@@ -28,7 +25,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View("SaveSaleType", new SaveSaleTypeViewModel());
         }
@@ -81,11 +78,13 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
                 foreach (var property in properties)
                 {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     foreach (var propertyImage in property.PropertyImages)
                     {
                         await _fileService.DeleteFileAsync(propertyImage);
 
                     }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
             catch (Exception ex)

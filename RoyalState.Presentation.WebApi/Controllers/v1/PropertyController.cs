@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RoyalState.Core.Application.DTOs.Agent;
 using RoyalState.Core.Application.DTOs.Property;
 using RoyalState.Core.Application.Exceptions;
-using RoyalState.Core.Application.Features.Agents.Queries.GetAgentById;
-using RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyById;
-using RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents;
 using RoyalState.Core.Application.Features.Properties.Queries.GetAllProperties;
 using RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByCode;
 using RoyalState.Core.Application.Features.Properties.Queries.GetPropertyById;

@@ -2,12 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.TypeDTO;
 using RoyalState.Core.Application.Exceptions;
-using RoyalState.Core.Application.Features.Improvements.Commands.CreateImprovement;
-using RoyalState.Core.Application.Features.Improvements.Commands.DeleteImprovementById;
-using RoyalState.Core.Application.Features.Improvements.Commands.UpdateImprovement;
-using RoyalState.Core.Application.Features.Improvements.Queries.GetAllImprovements;
-using RoyalState.Core.Application.Features.Improvements.Queries.GetImprovementById;
-using RoyalState.Core.Application.Features.Properties.Queries.GetAllProperties;
 using RoyalState.Core.Application.Features.PropertyTypes.Commands.CreatePropertyType;
 using RoyalState.Core.Application.Features.PropertyTypes.Commands.DeletePropertyTypeById;
 using RoyalState.Core.Application.Features.PropertyTypes.Commands.UpdatePropertyType;
