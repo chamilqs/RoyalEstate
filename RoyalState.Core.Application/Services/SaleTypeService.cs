@@ -17,6 +17,13 @@ namespace RoyalState.Core.Application.Services
             _saleTypeRepository = saleTypeRepository;
         }
 
+        public override async Task<SaleTypeViewModel> GetByIdViewModel(int id)
+        {
+            var saleTypeList = await GetAllViewModelWithInclude();
+
+            return saleTypeList.FirstOrDefault(saleType => saleType.Id == id);
+        }
+
         public async Task<List<SaleTypeViewModel>> GetAllViewModelWithInclude()
         {
             var saleTypeList = await _saleTypeRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
