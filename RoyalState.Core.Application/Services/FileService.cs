@@ -53,5 +53,33 @@ namespace RoyalState.Core.Application.Services
             return $"{basePath}/{fileName}";
         }
         #endregion
+
+        #region DeleteFile
+        /// <summary>
+        /// Deletes a file asynchronously locally.
+        /// </summary>
+        /// <param name="imagePath">The path of the image.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task DeleteFileAsync(string imagePath)
+        {
+            if (string.IsNullOrWhiteSpace(imagePath))
+                return;
+
+            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", imagePath.TrimStart('/'));
+
+            if (File.Exists(fullPath))
+            {
+                try
+                {
+                    File.Delete(fullPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"an error ocured while trying to delete the file '{fullPath}': {ex.Message}");
+                }
+            }
+        }
+        #endregion
+
     }
 }

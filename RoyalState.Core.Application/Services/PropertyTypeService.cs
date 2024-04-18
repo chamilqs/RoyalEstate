@@ -18,6 +18,13 @@ namespace RoyalState.Core.Application.Services
             _propertyTypeRepository = propertyTypeRepository;
         }
 
+        public override async Task<PropertyTypeViewModel> GetByIdViewModel(int id)
+        {
+            var propertyTypeList = await GetAllViewModelWithInclude();
+
+            return propertyTypeList.FirstOrDefault(propertyType => propertyType.Id == id);
+        }
+
         public async Task<List<PropertyTypeViewModel>> GetAllViewModelWithInclude()
         {
             var propertyTypeList = await _propertyTypeRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });

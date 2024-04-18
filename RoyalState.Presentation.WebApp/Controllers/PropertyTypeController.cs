@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.Interfaces.Services;
+using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.PropertyTypes;
 
 namespace RoyalState.Presentation.WebApp.Controllers
@@ -9,10 +10,16 @@ namespace RoyalState.Presentation.WebApp.Controllers
     public class PropertyTypeController : Controller
     {
         private readonly IPropertyTypeService _propertyTypeService;
+        private readonly IPropertyService _propertyService;
+        private readonly IPropertyImageService _propertyImageService;
+        private readonly IFileService _fileService;
 
-        public PropertyTypeController(IPropertyTypeService propertyTypeService)
+        public PropertyTypeController(IPropertyTypeService propertyTypeService, IPropertyService propertyService, IPropertyImageService propertyImageService, IFileService fileService)
         {
             _propertyTypeService = propertyTypeService;
+            _propertyService = propertyService;
+            _propertyImageService = propertyImageService;
+            _fileService = fileService;
         }
 
         public async Task<IActionResult> Index()
@@ -68,6 +75,27 @@ namespace RoyalState.Presentation.WebApp.Controllers
         [ActionName("Delete")]
         public async Task<IActionResult> DeletePost(int id)
         {
+
+            try
+            {
+                var properties = await _propertyService.GetPropertiesByPropertyType(id);
+
+                foreach (var property in properties)
+                {
+                    foreach (var propertyImage in property.PropertyImages)
+                    {
+                        await _fileService.DeleteFileAsync(propertyImage);
+
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error ocurred while trying to delete the images of the properties: {ex.Message}");
+            }
+
             await _propertyTypeService.Delete(id);
 
             return RedirectToRoute(new { controller = "PropertyType", action = "Index" });
