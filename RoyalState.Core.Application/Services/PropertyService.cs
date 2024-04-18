@@ -437,11 +437,12 @@ namespace RoyalState.Core.Application.Services
         public async Task<List<int>> GetPropertyQuantities(List<int> agentIds)
         {
             var propertyQuantities = new List<int>();
+            var propertiesList = await GetAllViewModelApi();
 
             foreach (var agentId in agentIds)
-            {
-                var agentProperties = await GetAgentProperties(agentId);
-                propertyQuantities.Add(agentProperties.Count);
+            {                
+                propertiesList = propertiesList.Where(p => p.AgentId == agentId).ToList();
+                propertyQuantities.Add(propertiesList.Count);
             }
 
             return propertyQuantities;
