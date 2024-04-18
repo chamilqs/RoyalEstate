@@ -30,9 +30,9 @@ namespace RoyalState.Core.Application.Services
             _userService = userService;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
             _propertiesService = propertiesService;
         }
 

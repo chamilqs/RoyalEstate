@@ -27,9 +27,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
             _fileService = fileService;
             _agentService = agentService;
             _httpContextAccessor = httpContextAccessor;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
             _improvmentService = improvmentService;
             _saleTypeService = saleTypeService;
             _propertyTypeService = propertyTypeService;
@@ -111,14 +111,14 @@ namespace RoyalState.Presentation.WebApp.Controllers
             var property = await _propertyService.GetByIdViewModel(id);
 
             List<int> propertyImprovements = new();
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             foreach (var improvement in property.Improvements)
             {
                 var getImprovement = await _improvmentService.GetByNameViewModel(improvement);
                 propertyImprovements.Add(getImprovement.Id);
 
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
 
             SavePropertyViewModel vm = new()
             {
@@ -183,7 +183,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             vm.PropertyImages?.RemoveAll(image => image == null);
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             if (vm.PropertyImages.Count > 4)
             {
                 error = "The maximum number of property images allowed is 4.";
@@ -191,7 +191,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 ViewBag.Error = error;
                 return View("EditProperty", vm);
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
 
             await _propertyService.Update(vm, vm.Id);
             return RedirectToAction("Maintenance");

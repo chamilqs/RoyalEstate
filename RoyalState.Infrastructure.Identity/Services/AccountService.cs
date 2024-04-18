@@ -294,9 +294,9 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             var user = await _userManager.FindByIdAsync(request.Id);
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             user.FirstName = request.FirstName;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
             user.LastName = request.LastName;
             user.Email = request.Email;
             user.UserName = request.UserName;

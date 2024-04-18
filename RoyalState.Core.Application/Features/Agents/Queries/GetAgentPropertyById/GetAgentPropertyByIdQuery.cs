@@ -31,11 +31,11 @@ namespace RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyBy
         private readonly IAccountService _accountService;
 #pragma warning restore CS0169 // The field 'GetAgentPropertyByIdQueryHandler._accountService' is never used
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+
         public GetAgentPropertyByIdQueryHandler(IAgentRepository agentRepository, IPropertyService propertyService, IMapper mappper)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+
         {
             _agentRepository = agentRepository;
             _mappper = mappper;

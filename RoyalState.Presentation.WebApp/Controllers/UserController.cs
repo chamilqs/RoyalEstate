@@ -26,9 +26,9 @@ namespace WebAdmin.BankingApp.Controllers
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
             _agentService = agentService;
             _clientService = clientService;
             _fileService = fileService;
@@ -68,9 +68,9 @@ namespace WebAdmin.BankingApp.Controllers
             }
             else
             {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
                 vm.HasError = userVm.HasError;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
                 vm.Error = userVm.Error;
                 return View(vm);
             }

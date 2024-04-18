@@ -31,9 +31,9 @@ namespace RoyalState.Core.Application.Services
             _propertyRepository = propertyRepository;
             _mapper = mapper;
             _improvementService = improvementService;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
             _propertyImageService = propertyImageService;
             _propertyImprovementService = propertyImprovementService;
             _agentService = agentService;
@@ -55,7 +55,7 @@ namespace RoyalState.Core.Application.Services
             // search for the property by code to get the id
             var findProperty = await GetPropertyByCode(vm.Code);
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             foreach (var improvementId in vm.Improvements)
             {
                 var improvement = await _improvementService.GetByIdViewModel(improvementId);
@@ -68,9 +68,9 @@ namespace RoyalState.Core.Application.Services
                 await _propertyImprovementService.Add(propertyImprovement);
 
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
+
             foreach (var image in vm.PropertyImages)
             {
                 var propertyImage = new SavePropertyImageViewModel
@@ -81,7 +81,7 @@ namespace RoyalState.Core.Application.Services
 
                 await _propertyImageService.Add(propertyImage);
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
 
             return saveProperty;
 
@@ -134,7 +134,7 @@ namespace RoyalState.Core.Application.Services
             await _propertyImprovementService.DeleteImprovementsByPropertyId(id);
             await _propertyImageService.DeleteImagesByPropertyId(id);
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             foreach (var improvementId in vm.Improvements)
             {
                 var improvement = await _improvementService.GetByIdViewModel(improvementId);
@@ -147,9 +147,9 @@ namespace RoyalState.Core.Application.Services
                 await _propertyImprovementService.Add(propertyImprovement);
 
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
+
             foreach (var image in vm.PropertyImages)
             {
                 var propertyImage = new SavePropertyImageViewModel
@@ -160,7 +160,7 @@ namespace RoyalState.Core.Application.Services
 
                 await _propertyImageService.Add(propertyImage);
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
 
             return vm;
         }
@@ -361,14 +361,14 @@ namespace RoyalState.Core.Application.Services
             var property = await GetByIdViewModel(id);
 
             List<int> propertyImprovements = new();
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             foreach (var improvement in property.Improvements)
             {
                 var getImprovement = await _improvementService.GetByNameViewModel(improvement);
                 propertyImprovements.Add(getImprovement.Id);
 
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
 
             SavePropertyViewModel vm = new()
             {

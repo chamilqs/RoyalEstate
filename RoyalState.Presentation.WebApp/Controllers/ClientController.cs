@@ -20,15 +20,15 @@ namespace RoyalState.Presentation.WebApp.Controllers
         private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse authViewModel;
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         public ClientController(IClientService clientService, IHttpContextAccessor httpContextAccessor, IFileService fileService, IPropertyService propertyService, IPropertyTypeService propertyTypeService)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         {
             _clientService = clientService;
             _httpContextAccessor = httpContextAccessor;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
             _fileService = fileService;
             _propertyService = propertyService;
             _propertyTypeService = propertyTypeService;

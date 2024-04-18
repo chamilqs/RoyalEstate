@@ -19,9 +19,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public DeveloperController(IHttpContextAccessor httpContextAccessor, IDeveloperService developerService)
         {
             _httpContextAccessor = httpContextAccessor;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             _authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
             _developerService = developerService;
         }
 

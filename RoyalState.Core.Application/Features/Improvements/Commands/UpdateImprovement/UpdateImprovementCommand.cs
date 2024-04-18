@@ -20,15 +20,15 @@ namespace RoyalState.Core.Application.Features.Improvements.Commands.UpdateImpro
 
         /// <example>Elevator</example>
         [SwaggerParameter(Description = "New name of the improvement")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         public string Name { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
 
         /// <example>Moves people or goods between different levels of a building </example>
         [SwaggerParameter(Description = "New description of the improvement")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         public string Description { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
 
 
 

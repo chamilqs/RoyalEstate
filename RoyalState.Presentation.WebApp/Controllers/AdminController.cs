@@ -21,9 +21,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public AdminController(IHttpContextAccessor httpContextAccessor, IAdminService adminService, IAgentService agentService, IPropertyService propertyService)
         {
             _httpContextAccessor = httpContextAccessor;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             _authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
             _adminService = adminService;
             _agentService = agentService;
             _propertyService = propertyService;

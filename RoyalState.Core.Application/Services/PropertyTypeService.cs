@@ -30,7 +30,7 @@ namespace RoyalState.Core.Application.Services
         {
             var propertyTypeList = await _propertyTypeRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
             return propertyTypeList.Select(propertyType => new PropertyTypeViewModel
             {
                 Id = propertyType.Id,
@@ -38,7 +38,7 @@ namespace RoyalState.Core.Application.Services
                 Description = propertyType.Description,
                 PropertiesQuantity = propertyType.Properties.Count
             }).ToList();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
         }
     }
 }

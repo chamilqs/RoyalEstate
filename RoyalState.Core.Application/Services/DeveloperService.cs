@@ -71,9 +71,9 @@ namespace RoyalState.Core.Application.Services
                 var admiList = await base.GetAllViewModel();
                 var developer = admiList.Find(developer => developer.UserId == vm.Id);
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
                 SaveDeveloperViewModel saveDeveloperViewModel = await base.GetByIdSaveViewModel(developer.Id);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
 #pragma warning disable CS8601 // Possible null reference assignment.
                 saveDeveloperViewModel.Identification = vm.Identification;
 #pragma warning restore CS8601 // Possible null reference assignment.
@@ -95,9 +95,9 @@ namespace RoyalState.Core.Application.Services
             {
                 var user = userDeveloperList.Find(user => user.Id == developer.UserId);
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
                 developer.FirstName = user.FirstName;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
                 developer.LastName = user.LastName;
                 developer.Username = user.UserName;
                 developer.Email = user.Email;

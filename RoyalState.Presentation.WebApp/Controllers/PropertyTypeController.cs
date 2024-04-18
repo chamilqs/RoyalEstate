@@ -79,13 +79,13 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
                 foreach (var property in properties)
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
                     foreach (var propertyImage in property.PropertyImages)
                     {
                         await _fileService.DeleteFileAsync(propertyImage);
 
                     }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
 
                 }
 
