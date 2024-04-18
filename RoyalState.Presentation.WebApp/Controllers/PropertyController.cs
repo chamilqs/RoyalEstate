@@ -42,6 +42,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         {
             var agent = await _agentService.GetByUserIdViewModel(authViewModel.Id);
             var properties = await _propertyService.GetAgentProperties(agent.Id);
+
+            ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
+
             return View(properties);
         }
         #endregion
@@ -200,6 +203,47 @@ namespace RoyalState.Presentation.WebApp.Controllers
             await _propertyService.Delete(id);
             return RedirectToAction("Maintenance");
         }
+        #endregion
+
+        #region Search
+
+        #region SearchPropertyByFilters
+        [HttpPost]
+        public async Task<IActionResult> SearchPropertyByFilters(int? propertyTypeId, double? maxPrice, double? minPrice, int? roomsNumber, int? bathsNumber)
+        {
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            FilterPropertyViewModel filter = new FilterPropertyViewModel();
+            filter.PropertyTypeId = propertyTypeId;
+            filter.MaxPrice = maxPrice;
+            filter.MinPrice = minPrice;
+            filter.Bedrooms = roomsNumber;
+            filter.Bathrooms = bathsNumber;
+
+            var properties = await _propertyService.GetAllViewModelWIthFilters(filter);
+            bool isEmpty = properties == null || properties.Count() == 0;
+
+            ViewBag.IsEmpty = isEmpty;
+            ViewBag.PropertyTypes = propertyTypes;
+            return View("Maintenance", properties != null ? properties : new List<PropertyViewModel>());
+        }
+        #endregion
+
+        #region SearchPropertyByCode
+        public async Task<IActionResult> SearchProperty(string code)
+        {
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            var property = await _propertyService.GetPropertyByCode(code);
+
+            ViewBag.PropertyTypes = propertyTypes;
+
+            bool isEmpty = property == null;
+            ViewBag.IsEmpty = isEmpty;
+            List<PropertyViewModel> properties = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
+
+            return View("Maintenance", properties);
+        }
+        #endregion
+
         #endregion
 
         #endregion

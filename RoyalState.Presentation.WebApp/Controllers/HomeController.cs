@@ -63,7 +63,13 @@ namespace RoyalState.Presentation.WebApp.Controllers
             return View(properties);
         }
 
-        #region SearchProperty
+
+
+        #endregion
+
+        #region Search
+
+        #region SearchPropertyByCode
         public async Task<IActionResult> SearchProperty(string code)
         {
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
@@ -84,10 +90,6 @@ namespace RoyalState.Presentation.WebApp.Controllers
             return RedirectToAction("Index", new { propertiesHome = propertiesHome, isEmpty = isEmpty });
         }
         #endregion
-
-        #endregion
-
-        #region Search
 
         #region SearchPropertyByFilters
         [HttpPost]
