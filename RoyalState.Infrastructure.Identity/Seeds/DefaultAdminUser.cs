@@ -10,6 +10,7 @@ namespace RoyalState.Infrastructure.Identity.Seeds
         {
             ApplicationUser defaultUser = new()
             {
+                Id = "9e29339b-a30c-4478-bab4-fe745c4d5e75",
                 UserName = "adminuser",
                 Email = "adminuser@email.com",
                 FirstName = "Jake",

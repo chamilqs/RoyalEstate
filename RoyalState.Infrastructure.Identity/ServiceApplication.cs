@@ -22,10 +22,10 @@ namespace RoyalState.Infrastructure.Identity
 
                     await DefaultRoles.SeedAsync(roleManager);
                     // await DefaulSuperAdminUser.SeedAsync(userManager);
-                    // await DefaulDeveloperUser.SeedAsync(userManager);
+                    await DefaulDeveloperUser.SeedAsync(userManager);
                     await DefaulAdminUser.SeedAsync(userManager);
-                    // await DefaulAgentUser.SeedAsync(userManager);
-                    // await DefaulClientUser.SeedAsync(userManager);
+                    await DefaulAgentUser.SeedAsync(userManager);
+                    await DefaulClientUser.SeedAsync(userManager);
 
                 }
                 catch (Exception ex)
