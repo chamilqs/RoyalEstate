@@ -99,5 +99,25 @@ namespace RoyalState.Core.Application.Services
         }
         #endregion
 
+        #region DeleteImagesUrlsByPropertyId
+        /// <summary>
+        /// Deletes the property images by property ID.
+        /// </summary>
+        /// <param name="propertyId">The ID of the property.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task DeleteImagesUrlsByPropertyId(int propertyId)
+        {
+            var propertyImages = await GetPropertyImagesByPropertyId(propertyId);
+            var imagesToDelete = new List<string>();
+
+            foreach (var image in propertyImages)
+            {
+                await Delete(image.Id);
+
+            }
+
+        }
+        #endregion
+
     }
 }

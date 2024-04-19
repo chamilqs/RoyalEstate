@@ -119,7 +119,6 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             }
 
-
             SavePropertyViewModel vm = new()
             {
                 Id = property.Id,
@@ -143,9 +142,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> EditPropertyPost(SavePropertyViewModel vm, IFormFileCollection files)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             string error = null;
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             if (!ModelState.IsValid)
             {
@@ -183,7 +180,6 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             vm.PropertyImages?.RemoveAll(image => image == null);
 
-
             if (vm.PropertyImages.Count > 4)
             {
                 error = "The maximum number of property images allowed is 4.";
@@ -191,7 +187,6 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 ViewBag.Error = error;
                 return View("EditProperty", vm);
             }
-
 
             await _propertyService.Update(vm, vm.Id);
             return RedirectToAction("Maintenance");

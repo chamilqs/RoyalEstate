@@ -21,24 +21,24 @@ namespace RoyalState.Core.Application.Services
         private readonly ISaleTypeService _saleTypeService;
         private readonly IPropertyImprovementService _propertyImprovementService;
         private readonly IAgentService _agentService;
+        private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
-        public PropertyService(IPropertyRepository propertyRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IImprovementService improvementService, IPropertyImageService propertyImageService, IPropertyImprovementService propertyImprovementService, IAgentService agentService, IPropertyTypeService propertyTypeService, ISaleTypeService saleTypeService) : base(propertyRepository, mapper)
+        public PropertyService(IPropertyRepository propertyRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IImprovementService improvementService, IPropertyImageService propertyImageService, IPropertyImprovementService propertyImprovementService, IAgentService agentService, IPropertyTypeService propertyTypeService, ISaleTypeService saleTypeService, IFileService fileService) : base(propertyRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _propertyRepository = propertyRepository;
             _mapper = mapper;
             _improvementService = improvementService;
-
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-
             _propertyImageService = propertyImageService;
             _propertyImprovementService = propertyImprovementService;
             _agentService = agentService;
             _propertyTypeService = propertyTypeService;
             _saleTypeService = saleTypeService;
+            _fileService = fileService;
         }
 
         #region Add Overriden
@@ -106,8 +106,6 @@ namespace RoyalState.Core.Application.Services
 
             }
 
-
-#pragma warning disable CS8629 // Nullable value type may be null.
             Property propertyUpdate = new()
             {
                 Id = id,
@@ -125,14 +123,12 @@ namespace RoyalState.Core.Application.Services
                 LastModifiedBy = user.UserName,
                 LastModifiedDate = DateTime.UtcNow
             };
-#pragma warning restore CS8629 // Nullable value type may be null.
-
 
             await _propertyRepository.UpdateAsync(propertyUpdate, id);
 
             // Delete all improvements and images associated with the property
             await _propertyImprovementService.DeleteImprovementsByPropertyId(id);
-            await _propertyImageService.DeleteImagesByPropertyId(id);
+            await _propertyImageService.DeleteImagesUrlsByPropertyId(id);
 
 
             foreach (var improvementId in vm.Improvements)
@@ -147,8 +143,6 @@ namespace RoyalState.Core.Application.Services
                 await _propertyImprovementService.Add(propertyImprovement);
 
             }
-
-
 
             foreach (var image in vm.PropertyImages)
             {
@@ -402,9 +396,7 @@ namespace RoyalState.Core.Application.Services
             var propertiesList = await GetAllViewModel();
             var thisProperty = propertiesList.FirstOrDefault(sa => sa.Code == code);
 
-
             return thisProperty;
-
 
         }
         #endregion
