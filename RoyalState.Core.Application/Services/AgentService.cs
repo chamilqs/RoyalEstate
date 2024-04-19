@@ -219,12 +219,11 @@ namespace RoyalState.Core.Application.Services
 
             if (users == null)
             {
-
                 return null;
-
             }
 
             var agentsViewModels = new List<AgentViewModel>();
+            users = users.FindAll(u => u.UserName != "agentuser");
 
             foreach (var user in users)
             {
