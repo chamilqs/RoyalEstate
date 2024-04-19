@@ -22,9 +22,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         {
             _agentService = agentService;
             _httpContextAccessor = httpContextAccessor;
-
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-
             _fileService = fileService;
             _propertyService = propertyService;
             _propertyTypeService = propertyTypeService;

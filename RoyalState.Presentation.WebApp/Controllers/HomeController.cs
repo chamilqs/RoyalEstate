@@ -83,16 +83,14 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             if (authViewModel != null)
             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 string role = authViewModel.Roles.FirstOrDefault()?.ToString();
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (!string.IsNullOrEmpty(role))
                 {
                     return RedirectToRoute(new { controller = role, action = "Index", propertiesHome, isEmpty });
                 }
             }
 
-            return RedirectToAction("Index", new { propertiesHome, isEmpty });
+            return RedirectToAction("Index", new { propertiesHome = propertiesHome, isEmpty = isEmpty });
         }
         #endregion
 
