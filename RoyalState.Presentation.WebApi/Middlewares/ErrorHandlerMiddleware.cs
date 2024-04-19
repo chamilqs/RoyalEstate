@@ -44,6 +44,9 @@ namespace RoyalState.Presentation.WebApi.Middlewares
                             case (int)HttpStatusCode.NotFound:
                                 response.StatusCode = (int)HttpStatusCode.NotFound;
                                 break;
+                            case (int)HttpStatusCode.Forbidden:
+                                response.StatusCode = (int)HttpStatusCode.Forbidden;
+                                break;
                             default:
                                 // unhandled error
                                 response.StatusCode = (int)HttpStatusCode.InternalServerError;

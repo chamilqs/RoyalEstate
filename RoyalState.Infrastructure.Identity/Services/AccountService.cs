@@ -6,10 +6,12 @@ using Microsoft.IdentityModel.Tokens;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.DTOs.Email;
 using RoyalState.Core.Application.Enums;
+using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Domain.Settings;
 using RoyalState.Infrastructure.Identity.Entities;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -81,9 +83,11 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             if (response.Roles.Any(role => role == "Agent" || role == "Client"))
             {
-                response.HasError = true;
-                response.Error = $"Account not authorize for this resource.";
-                return response;
+                throw new ApiException($"Account not authorize for this resource.", (int)HttpStatusCode.Forbidden);
+
+                //response.HasError = true;
+                //response.Error = $"Account not authorize for this resource.";
+                //return response;
             }
 
             response.IsVerified = user.EmailConfirmed;
