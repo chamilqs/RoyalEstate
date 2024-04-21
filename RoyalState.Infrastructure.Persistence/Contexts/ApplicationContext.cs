@@ -294,6 +294,48 @@ namespace RoyalState.Infrastructure.Persistence.Contexts
             #endregion
 
             #endregion
+
+            #region HasData
+            modelBuilder.Entity<Admin>().HasData(
+                new Admin
+                {
+                    Id = 1,
+                    UserId = "2d124d85-4239-4c56-b1a8-b5a59c2c7d12",
+                    Identification = "402-3698447-8",
+                    CreatedBy = "DefaultAppUser",
+                    CreatedDate = DateTime.Now,
+                });
+
+            modelBuilder.Entity<Developer>().HasData(
+                new Developer
+                {
+                    Id = 1,
+                    UserId = "0267618d-1d2b-41ae-b467-cbf9cd3fe956",
+                    Identification = "402-6328445-9",
+                    CreatedBy = "DefaultAppUser",
+                    CreatedDate = DateTime.Now,
+                });
+
+            modelBuilder.Entity<Client>().HasData(
+                new Client
+                {
+                    Id = 1,
+                    UserId = "9a0c2574-2bfb-47cf-a311-a9442fa83a0c",
+                    ImageUrl = "https://img.freepik.com/free-photo/handsome-bearded-guy-posing-against-white-wall_273609-20597.jpg",
+                    CreatedBy = "DefaultAppUser",
+                    CreatedDate = DateTime.Now,
+                });
+
+            modelBuilder.Entity<Agent>().HasData(
+                new Agent
+                {
+                    Id = 1,
+                    UserId = "34796422-cda8-4aa2-bc8a-cdc567efae06",
+                    ImageUrl = "https://mission.org/wp-content/uploads/2019/07/0-AfrrZIuFCim8RNNb.jpg",
+                    CreatedBy = "DefaultAppUser",
+                    CreatedDate = DateTime.Now,
+                });
+            #endregion
         }
     }
 }
