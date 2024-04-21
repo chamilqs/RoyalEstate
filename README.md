@@ -12,8 +12,8 @@ RealEstateApp es una aplicación web diseñada para la gestión de propiedades i
 - **Panel de Administrador**: Los administradores pueden gestionar agentes, desarrolladores, tipos de propiedades, tipos de ventas y mejoras.
 
 ## Herramientas y Tecnologías
-- **ASP.NET MVC 7**: Para la construcción de la aplicación web[^1^][1].
-- **Entity Framework**: Para la persistencia de datos con el enfoque Code First[^2^][2].
+- **ASP.NET MVC 7**: Para la construcción de la aplicación web.
+- **Entity Framework**: Para la persistencia de datos con el enfoque Code First.
 - **Bootstrap**: Para un diseño responsivo y atractivo.
 - **Arquitectura ONION**: Asegurando una separación clara de responsabilidades.
 - **Identity**: Para la gestión de usuarios y roles.
@@ -22,9 +22,9 @@ RealEstateApp es una aplicación web diseñada para la gestión de propiedades i
 - **Swagger**: Para la documentación de la API.
 
 ## También utilizado
-- Uso de viewmodels y validaciones desde los mismos[^3^][3].
+- Uso de viewmodels y validaciones desde los mismos.
 - Implementación de la arquitectura ONION.
-- Repositorio y servicio genéricos[^4^][4].
+- Repositorio y servicio genéricos.
 - Automapper para el mapeo de objetos de datos.
 - Documentación clara y completa de la API.
 
