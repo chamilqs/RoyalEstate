@@ -1,19 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using RoyalState.Core.Application.DTOs.Agent;
 using RoyalState.Core.Application.DTOs.Property;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyById
 {
@@ -60,7 +52,9 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByI
         {
             var property = await _propertyService.GetByIdViewModel(id);
 
+
             if (property == null) return null;
+
             PropertyDTO propertyDTO = new PropertyDTO
             {
                 Id = property.Id,

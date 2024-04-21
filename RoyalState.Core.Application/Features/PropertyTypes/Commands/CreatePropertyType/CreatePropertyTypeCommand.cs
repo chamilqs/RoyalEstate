@@ -5,11 +5,6 @@ using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
 using RoyalState.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.PropertyTypes.Commands.CreatePropertyType
 {
@@ -20,11 +15,15 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Commands.CreateProp
     {
         /// <example>Apartment</example>
         [SwaggerParameter(Description = "Name of the property type")]
+
         public string Name { get; set; }
+
 
         /// <example>An apartment in a small building or tower </example>
         [SwaggerParameter(Description = "Description of the property type")]
+
         public string Description { get; set; }
+
     }
     public class CreatePropertyTypeCommandHandler : IRequestHandler<CreatePropertyTypeCommand, Response<int>>
     {

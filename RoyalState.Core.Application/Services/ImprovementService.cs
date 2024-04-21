@@ -26,9 +26,24 @@ namespace RoyalState.Core.Application.Services
         public async Task<ImprovementViewModel> GetByNameViewModel(string name)
         {
             var improvements = await GetAllViewModel();
+
             return improvements.Where(n => n.Name.Contains(name)).FirstOrDefault();
+
 
         }
         #endregion
+
+        #region GetViewModel
+        public async override Task<ImprovementViewModel> GetByIdViewModel(int id)
+        {
+            var improvement = await GetAllViewModel();
+
+            return improvement.Where(i => i.Id == id).FirstOrDefault();
+
+
+        }
+        #endregion
+
+
     }
 }

@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.TypeDTO;
-using RoyalState.Core.Application.Features.Improvements.Commands.CreateImprovement;
-using RoyalState.Core.Application.Features.Improvements.Commands.DeleteImprovementById;
-using RoyalState.Core.Application.Features.Improvements.Commands.UpdateImprovement;
-using RoyalState.Core.Application.Features.Improvements.Queries.GetAllImprovements;
-using RoyalState.Core.Application.Features.Improvements.Queries.GetImprovementById;
-using RoyalState.Core.Application.Features.Properties.Queries.GetAllProperties;
+using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Features.PropertyTypes.Commands.CreatePropertyType;
 using RoyalState.Core.Application.Features.PropertyTypes.Commands.DeletePropertyTypeById;
 using RoyalState.Core.Application.Features.PropertyTypes.Commands.UpdatePropertyType;
@@ -14,6 +9,7 @@ using RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPropertyT
 using RoyalState.Core.Application.Features.PropertyTypes.Queries.GetPropertyTypeById;
 using RoyalState.WebApi.Controllers.v1;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 using System.Net.Mime;
 
 namespace RoyalState.Presentation.WebApi.Controllers.v1
@@ -35,7 +31,19 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            return Ok(await Mediator.Send(new GetAllPropertyTypeQuery()));
+            var propertyTypes = await Mediator.Send(new GetAllPropertyTypeQuery());
+
+            if (propertyTypes.Data == null || propertyTypes.Data.Count == 0)
+            {
+                return NoContent();
+            }
+
+            if (!propertyTypes.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
+            }
+
+            return Ok(propertyTypes);
         }
 
         [HttpGet("{id}")]
@@ -49,7 +57,21 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
-            return Ok(await Mediator.Send(new GetPropertyTypeByIdQuery { Id = id }));
+
+            var propertyType = await Mediator.Send(new GetPropertyTypeByIdQuery { Id = id });
+
+            if (propertyType.Data == null)
+            {
+                return NoContent();
+            }
+
+            if (!propertyType.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
+            }
+
+            return Ok(propertyType);
+
         }
 
         [Authorize(Roles = "Admin")]

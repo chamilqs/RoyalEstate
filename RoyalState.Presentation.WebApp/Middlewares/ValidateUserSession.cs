@@ -14,7 +14,9 @@ namespace RoyalState.Presentation.WebApp.Middlewares
 
         public bool HasUser()
         {
+
             AuthenticationResponse userViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
 
             if (userViewModel == null)
             {

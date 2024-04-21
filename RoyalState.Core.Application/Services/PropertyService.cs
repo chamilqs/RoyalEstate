@@ -21,11 +21,12 @@ namespace RoyalState.Core.Application.Services
         private readonly ISaleTypeService _saleTypeService;
         private readonly IPropertyImprovementService _propertyImprovementService;
         private readonly IAgentService _agentService;
+        private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
-        public PropertyService(IPropertyRepository propertyRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IImprovementService improvementService, IPropertyImageService propertyImageService, IPropertyImprovementService propertyImprovementService, IAgentService agentService, IPropertyTypeService propertyTypeService, ISaleTypeService saleTypeService) : base(propertyRepository, mapper)
+        public PropertyService(IPropertyRepository propertyRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IImprovementService improvementService, IPropertyImageService propertyImageService, IPropertyImprovementService propertyImprovementService, IAgentService agentService, IPropertyTypeService propertyTypeService, ISaleTypeService saleTypeService, IFileService fileService) : base(propertyRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _propertyRepository = propertyRepository;
@@ -37,6 +38,7 @@ namespace RoyalState.Core.Application.Services
             _agentService = agentService;
             _propertyTypeService = propertyTypeService;
             _saleTypeService = saleTypeService;
+            _fileService = fileService;
         }
 
         #region Add Overriden
@@ -53,6 +55,7 @@ namespace RoyalState.Core.Application.Services
             // search for the property by code to get the id
             var findProperty = await GetPropertyByCode(vm.Code);
 
+
             foreach (var improvementId in vm.Improvements)
             {
                 var improvement = await _improvementService.GetByIdViewModel(improvementId);
@@ -66,6 +69,8 @@ namespace RoyalState.Core.Application.Services
 
             }
 
+
+
             foreach (var image in vm.PropertyImages)
             {
                 var propertyImage = new SavePropertyImageViewModel
@@ -76,6 +81,7 @@ namespace RoyalState.Core.Application.Services
 
                 await _propertyImageService.Add(propertyImage);
             }
+
 
             return saveProperty;
 
@@ -95,7 +101,9 @@ namespace RoyalState.Core.Application.Services
 
             if (property == null)
             {
+
                 return null;
+
             }
 
             Property propertyUpdate = new()
@@ -120,7 +128,8 @@ namespace RoyalState.Core.Application.Services
 
             // Delete all improvements and images associated with the property
             await _propertyImprovementService.DeleteImprovementsByPropertyId(id);
-            await _propertyImageService.DeleteImagesByPropertyId(id);
+            await _propertyImageService.DeleteImagesUrlsByPropertyId(id);
+
 
             foreach (var improvementId in vm.Improvements)
             {
@@ -146,6 +155,7 @@ namespace RoyalState.Core.Application.Services
                 await _propertyImageService.Add(propertyImage);
             }
 
+
             return vm;
         }
         #endregion
@@ -160,6 +170,7 @@ namespace RoyalState.Core.Application.Services
         {
             await _propertyImprovementService.DeleteImprovementsByPropertyId(id);
             await _propertyImageService.DeleteImagesByPropertyId(id);
+
             await base.Delete(id);
         }
         #endregion
@@ -172,7 +183,7 @@ namespace RoyalState.Core.Application.Services
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task<GenericResponse> DeleteByAgentId(int id)
         {
-            GenericResponse response = new ();
+            GenericResponse response = new();
 
             try
             {
@@ -222,6 +233,7 @@ namespace RoyalState.Core.Application.Services
                 var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
                 var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
 
+
                 PropertyViewModel propertyViewModel = new()
                 {
                     Id = property.Id,
@@ -247,6 +259,7 @@ namespace RoyalState.Core.Application.Services
                     AgentEmail = agent.Email,
                     AgentImage = agent.ImageUrl
                 };
+
 
                 if (agent.EmailConfirmed)
                 {
@@ -279,6 +292,7 @@ namespace RoyalState.Core.Application.Services
                 var propertyType = await _propertyTypeService.GetByIdViewModel(property.PropertyTypeId);
                 var saleType = await _saleTypeService.GetByIdViewModel(property.SaleTypeId);
 
+
                 PropertyViewModel propertyViewModel = new()
                 {
                     Id = property.Id,
@@ -305,8 +319,9 @@ namespace RoyalState.Core.Application.Services
                     AgentImage = agent.ImageUrl
                 };
 
+
                 propertiesViewModel.Add(propertyViewModel);
-   
+
             }
 
             return propertiesViewModel;
@@ -322,7 +337,9 @@ namespace RoyalState.Core.Application.Services
         public async override Task<PropertyViewModel> GetByIdViewModel(int id)
         {
             var properties = await GetAllViewModel();
+
             return properties.Where(p => p.Id == id).FirstOrDefault();
+
 
         }
         #endregion
@@ -338,12 +355,14 @@ namespace RoyalState.Core.Application.Services
             var property = await GetByIdViewModel(id);
 
             List<int> propertyImprovements = new();
+
             foreach (var improvement in property.Improvements)
             {
                 var getImprovement = await _improvementService.GetByNameViewModel(improvement);
                 propertyImprovements.Add(getImprovement.Id);
 
             }
+
 
             SavePropertyViewModel vm = new()
             {
@@ -436,11 +455,12 @@ namespace RoyalState.Core.Application.Services
         public async Task<List<int>> GetPropertyQuantities(List<int> agentIds)
         {
             var propertyQuantities = new List<int>();
+            var propertiesList = await GetAllViewModelApi();
 
             foreach (var agentId in agentIds)
             {
-                var agentProperties = await GetAgentProperties(agentId);
-                propertyQuantities.Add(agentProperties.Count);
+                propertiesList = propertiesList.Where(p => p.AgentId == agentId).ToList();
+                propertyQuantities.Add(propertiesList.Count);
             }
 
             return propertyQuantities;
@@ -465,6 +485,34 @@ namespace RoyalState.Core.Application.Services
             }
 
             return agentList;
+        }
+        #endregion
+
+        #region GetPropertiesBySaleType
+        /// <summary>
+        /// Retrieves the list of property view models with the specified sale type ID.
+        /// </summary>
+        /// <param name="saleTypeId">The ID of the sale type.</param>
+        /// <returns>The list of property view models.</returns>
+        public async Task<List<PropertyViewModel>> GetPropertiesBySaleType(int saleTypeId)
+        {
+            var propertiesList = await GetAllViewModel();
+            propertiesList = propertiesList.Where(p => p.SaleTypeId == saleTypeId).ToList();
+            return propertiesList;
+        }
+        #endregion
+
+        #region GetPropertiesByPropertyType
+        /// <summary>
+        /// Retrieves the list of property view models with the specified property type ID.
+        /// </summary>
+        /// <param name="propertyTypeId">The ID of the property type.</param>
+        /// <returns>The list of property view models.</returns>
+        public async Task<List<PropertyViewModel>> GetPropertiesByPropertyType(int propertyTypeId)
+        {
+            var propertiesList = await GetAllViewModel();
+            propertiesList = propertiesList.Where(p => p.PropertyTypeId == propertyTypeId).ToList();
+            return propertiesList;
         }
         #endregion
 

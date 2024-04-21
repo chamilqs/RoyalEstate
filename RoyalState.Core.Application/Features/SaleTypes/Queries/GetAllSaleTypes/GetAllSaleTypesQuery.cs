@@ -1,19 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using RoyalState.Core.Application.DTOs.Property;
 using RoyalState.Core.Application.DTOs.TypeDTO;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
-using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
-using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetAllSaleTypes
 {
@@ -36,7 +25,7 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetAllSaleTypes
         public async Task<Response<IList<TypeDTO>>> Handle(GetAllSaleTypesQuery request, CancellationToken cancellationToken)
         {
             var saleTypes = await GetAllSaleTypes();
-            if (saleTypes == null) throw new ApiException($"Sale Types not found", (int)HttpStatusCode.NoContent);
+            if (saleTypes == null) return new Response<IList<TypeDTO>>("Sale type not found");
             return new Response<IList<TypeDTO>>(saleTypes);
         }
 
@@ -44,8 +33,9 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetAllSaleTypes
         {
             var saleTypesList = await _saleTypeRepository.GetAllAsync();
 
-            if (saleTypesList == null || saleTypesList.Count == 0) throw new ApiException($"Sale types not found."
-               , (int)HttpStatusCode.NoContent);
+
+            if (saleTypesList == null || saleTypesList.Count == 0) return null;
+
 
             var propertyDtos = _mapper.Map<List<TypeDTO>>(saleTypesList);
 

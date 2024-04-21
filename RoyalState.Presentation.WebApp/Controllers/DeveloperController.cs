@@ -4,7 +4,6 @@ using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Enums;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.Developers;
 using RoyalState.Core.Application.ViewModels.Users;
 
@@ -20,7 +19,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public DeveloperController(IHttpContextAccessor httpContextAccessor, IDeveloperService developerService)
         {
             _httpContextAccessor = httpContextAccessor;
+
             _authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
             _developerService = developerService;
         }
 
@@ -31,7 +32,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View("RegisterDeveloper", new SaveUserViewModel());
         }
@@ -43,7 +44,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 return View("RegisterDeveloper", vm);
 
             var origin = Request.Headers["origin"];
+
             RegisterResponse response = await _developerService.Add(vm, origin);
+
 
             if (response.HasError)
             {

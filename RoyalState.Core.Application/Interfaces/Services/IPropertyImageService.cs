@@ -7,6 +7,7 @@ namespace RoyalState.Core.Application.Interfaces.Services
     {
         Task<List<string>> GetImagesUrlByPropertyId(int propertyId);
         Task DeleteImagesByPropertyId(int propertyId);
+        Task DeleteImagesUrlsByPropertyId(int propertyId);
         Task<List<PropertyImageViewModel>> GetPropertyImagesByPropertyId(int propertyId);
 
     }

@@ -1,11 +1,8 @@
 ﻿
 using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Wrappers;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace RoyalState.Presentation.WebApi.Middlewares
 {
@@ -28,7 +25,9 @@ namespace RoyalState.Presentation.WebApi.Middlewares
             {
                 var response = context.Response;
                 response.ContentType = "application/json";
+
                 var responseModel = new Response<string>() { Succeeded = false, Message = error?.Message };
+
 
                 switch (error)
                 {
@@ -44,6 +43,9 @@ namespace RoyalState.Presentation.WebApi.Middlewares
                                 break;
                             case (int)HttpStatusCode.NotFound:
                                 response.StatusCode = (int)HttpStatusCode.NotFound;
+                                break;
+                            case (int)HttpStatusCode.Forbidden:
+                                response.StatusCode = (int)HttpStatusCode.Forbidden;
                                 break;
                             default:
                                 // unhandled error

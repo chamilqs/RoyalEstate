@@ -1,15 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.DTOs.TypeDTO;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Wrappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPropertyTypes
 {
@@ -32,7 +25,7 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPrope
         public async Task<Response<IList<TypeDTO>>> Handle(GetAllPropertyTypeQuery request, CancellationToken cancellationToken)
         {
             var propertyTypes = await GetAllPropertyTypes();
-            if (propertyTypes == null) throw new ApiException($"Property Types not found", (int)HttpStatusCode.NoContent);
+            if (propertyTypes == null) return new Response<IList<TypeDTO>>("Property types not found");
             return new Response<IList<TypeDTO>>(propertyTypes);
         }
 
@@ -40,8 +33,9 @@ namespace RoyalState.Core.Application.Features.PropertyTypes.Queries.GetAllPrope
         {
             var propertyTypesList = await _propertyTypeRepository.GetAllAsync();
 
-            if (propertyTypesList == null || propertyTypesList.Count == 0) throw new ApiException($"Property types not found."
-               , (int)HttpStatusCode.NoContent);
+
+            if (propertyTypesList == null || propertyTypesList.Count == 0) return null;
+
 
             var propertyTypesDtos = _mapper.Map<List<TypeDTO>>(propertyTypesList);
 

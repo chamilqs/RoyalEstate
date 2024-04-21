@@ -4,14 +4,18 @@ namespace RoyalState.Core.Domain.Entities
 {
     public class Property : BaseEntity
     {
+
         public string Code { get; set; }
+
         public int PropertyTypeId { get; set; }
         public int SaleTypeId { get; set; }
         public double Price { get; set; }
         public double Meters { get; set; }
         public int Bedrooms { get; set; }
         public int Bathrooms { get; set; }
+
         public string Description { get; set; }
+
         public int AgentId { get; set; }
 
         // Navigation Properties

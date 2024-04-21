@@ -6,11 +6,12 @@ using Microsoft.IdentityModel.Tokens;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.DTOs.Email;
 using RoyalState.Core.Application.Enums;
+using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.Services;
 using RoyalState.Core.Domain.Settings;
 using RoyalState.Infrastructure.Identity.Entities;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -52,7 +53,9 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             }
 
+
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+
             if (!result.Succeeded)
             {
                 response.HasError = true;
@@ -69,12 +72,24 @@ namespace RoyalState.Infrastructure.Identity.Services
             JwtSecurityToken jwtSecurityToken = await GenerateJWToken(user);
 
             response.Id = user.Id;
+
             response.Email = user.Email;
+
             response.UserName = user.UserName;
 
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
             response.Roles = rolesList.ToList();
+
+            if (response.Roles.Any(role => role == "Agent" || role == "Client"))
+            {
+                throw new ApiException($"Account not authorize for this resource.", (int)HttpStatusCode.Forbidden);
+
+                //response.HasError = true;
+                //response.Error = $"Account not authorize for this resource.";
+                //return response;
+            }
+
             response.IsVerified = user.EmailConfirmed;
             response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             var refreshToken = GenerateRefreshToken();
@@ -102,7 +117,9 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             }
 
+
             var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+
             if (!result.Succeeded)
             {
                 response.HasError = true;
@@ -117,12 +134,22 @@ namespace RoyalState.Infrastructure.Identity.Services
             }
 
             response.Id = user.Id;
+
             response.Email = user.Email;
+
             response.UserName = user.UserName;
 
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
             response.Roles = rolesList.ToList();
+
+            if (response.Roles.Any(role => role == "Developer"))
+            {
+                response.HasError = true;
+                response.Error = $"Account not authorize for this resource.";
+                return response;
+            }
+
             response.IsVerified = user.EmailConfirmed;
 
 
@@ -271,7 +298,9 @@ namespace RoyalState.Infrastructure.Identity.Services
 
             var user = await _userManager.FindByIdAsync(request.Id);
 
+
             user.FirstName = request.FirstName;
+
             user.LastName = request.LastName;
             user.Email = request.Email;
             user.UserName = request.UserName;
@@ -388,15 +417,16 @@ namespace RoyalState.Infrastructure.Identity.Services
         #endregion
 
         #region Finders
-
         public async Task<List<UserDTO>> FindByNameAsync(string name)
         {
-            List<UserDTO> userDTOs = new List<UserDTO>();
+            List<UserDTO> userDTOs = new();
             var users = await _userManager.Users.Where(u => (u.FirstName.Contains(name) || (u.FirstName + " " + u.LastName).Contains(name))).ToListAsync();
 
             foreach (var user in users)
             {
-                UserDTO userDTO = new UserDTO
+
+
+                UserDTO userDTO = new()
                 {
                     Id = user.Id,
                     UserName = user.UserName,
@@ -406,6 +436,8 @@ namespace RoyalState.Infrastructure.Identity.Services
                     Phone = user.PhoneNumber,
                     EmailConfirmed = user.EmailConfirmed
                 };
+
+
 
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 if (rolesList.Any(r => r != Roles.Agent.ToString()))
@@ -429,10 +461,14 @@ namespace RoyalState.Infrastructure.Identity.Services
             if (user != null)
             {
                 userDTO.Id = user.Id;
+
                 userDTO.UserName = user.UserName;
+
                 userDTO.FirstName = user.FirstName;
                 userDTO.LastName = user.LastName;
+
                 userDTO.Email = user.Email;
+
                 userDTO.Phone = user.PhoneNumber;
                 userDTO.EmailConfirmed = user.EmailConfirmed;
 
@@ -442,7 +478,9 @@ namespace RoyalState.Infrastructure.Identity.Services
                 return userDTO;
             }
 
+
             return null;
+
         }
 
         public async Task<UserDTO> FindByIdAsync(string Id)
@@ -453,10 +491,14 @@ namespace RoyalState.Infrastructure.Identity.Services
             if (user != null)
             {
                 userDTO.Id = user.Id;
+
                 userDTO.UserName = user.UserName;
+
                 userDTO.FirstName = user.FirstName;
                 userDTO.LastName = user.LastName;
+
                 userDTO.Email = user.Email;
+
                 userDTO.Phone = user.PhoneNumber;
                 userDTO.EmailConfirmed = user.EmailConfirmed;
 
@@ -466,7 +508,9 @@ namespace RoyalState.Infrastructure.Identity.Services
                 return userDTO;
             }
 
+
             return null;
+
         }
 
         #endregion
@@ -520,6 +564,8 @@ namespace RoyalState.Infrastructure.Identity.Services
                 roleClaims.Add(new Claim("roles", role));
             }
 
+
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
@@ -529,6 +575,8 @@ namespace RoyalState.Infrastructure.Identity.Services
             }
             .Union(userClaims)
             .Union(roleClaims);
+
+
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -577,23 +625,14 @@ namespace RoyalState.Infrastructure.Identity.Services
             return verificationUri;
         }
 
-        private async Task<string> SendForgotPasswordUri(ApplicationUser user, string origin)
-        {
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var route = "User/ResetPassword";
-            var Uri = new Uri(string.Concat($"{origin}/", route));
-            var verificationUri = QueryHelpers.AddQueryString(Uri.ToString(), "token", code);
-
-            return verificationUri;
-        }
-
         #endregion
 
         #region GetAllUserAsync
         private async Task<List<UserDTO>> GetAllUserAsync()
         {
             var userList = await _userManager.Users.ToListAsync();
+
+
 
             var userDTOList = userList.Select(user => new UserDTO
             {
@@ -603,13 +642,18 @@ namespace RoyalState.Infrastructure.Identity.Services
                 LastName = user.LastName,
                 Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed
+
             }).ToList();
+
+
 
             foreach (var userDTO in userDTOList)
             {
                 var user = await _userManager.FindByIdAsync(userDTO.Id);
 
+
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+
                 userDTO.Role = rolesList.ToList()[0];
             }
 

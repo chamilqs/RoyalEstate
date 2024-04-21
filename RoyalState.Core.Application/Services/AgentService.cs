@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Repositories;
@@ -16,20 +15,22 @@ namespace RoyalState.Core.Application.Services
     {
         private readonly IAgentRepository _agentRepository;
         private readonly IUserService _userService;
-        private readonly IAccountService _accountService;
+        private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse user;
         private readonly IMapper _mapper;
 
         public AgentService(IAgentRepository agentRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper,
-            IUserService userService, IAccountService accountService) : base(agentRepository, mapper)
+            IUserService userService, IFileService fileService) : base(agentRepository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _agentRepository = agentRepository;
             _mapper = mapper;
+
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
             _userService = userService;
-            _accountService = accountService;
+            _fileService = fileService;
         }
 
         #region Update
@@ -44,10 +45,20 @@ namespace RoyalState.Core.Application.Services
 
             if (!response.HasError)
             {
+
                 var agent = await GetByUserIdViewModel(vm.Id);
+
                 if (vm.ImageUrl == null)
                 {
                     vm.ImageUrl = agent.ImageUrl;
+                }
+                else
+                {
+                    if (agent.ImageUrl != null)
+                    {
+                        await _fileService.DeleteFileAsync(agent.ImageUrl);
+                    }
+
                 }
 
                 Agent avm = new()
@@ -90,11 +101,13 @@ namespace RoyalState.Core.Application.Services
             {
                 var user = await _userService.GetByEmailAsync(vm.Email);
 
+
                 SaveAgentViewModel saveAgentViewModel = new()
                 {
                     UserId = user.Id,
                     ImageUrl = vm.ImageUrl,
                 };
+
 
                 await base.Add(saveAgentViewModel);
 
@@ -188,7 +201,9 @@ namespace RoyalState.Core.Application.Services
             var agents = await GetConfirmedAndUnconfirmedAgents();
             var agent = agents.FirstOrDefault(agent => agent.Id == id);
 
+
             return agent;
+
         }
         #endregion
 
@@ -208,6 +223,7 @@ namespace RoyalState.Core.Application.Services
             }
 
             var agentsViewModels = new List<AgentViewModel>();
+            users = users.FindAll(u => u.UserName != "agentuser");
 
             foreach (var user in users)
             {
@@ -242,9 +258,13 @@ namespace RoyalState.Core.Application.Services
         public async Task<AgentViewModel> GetByUserIdViewModel(string userId)
         {
             var agentList = await GetAllViewModel();
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             AgentViewModel agent = agentList.FirstOrDefault(agent => agent.UserId == userId);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
 
             return agent;
+
         }
         #endregion
 
@@ -270,6 +290,27 @@ namespace RoyalState.Core.Application.Services
 
         #endregion
 
+        #region DeleteAgent
+        /// <summary>
+        /// Deletes an agent by ID.
+        /// </summary>
+        /// <param name="id">The ID of the agent to delete.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public override async Task Delete(int id)
+        {
+            var agent = await GetByIdViewModel(id);
+            if (agent != null)
+            {
+                if (agent.ImageUrl != null)
+                {
+                    await _fileService.DeleteFileAsync(agent.ImageUrl);
+                }
+
+            }
+
+            await base.Delete(id);
+        }
+        #endregion
 
     }
 }

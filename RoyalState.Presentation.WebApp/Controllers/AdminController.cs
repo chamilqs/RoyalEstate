@@ -21,7 +21,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public AdminController(IHttpContextAccessor httpContextAccessor, IAdminService adminService, IAgentService agentService, IPropertyService propertyService)
         {
             _httpContextAccessor = httpContextAccessor;
+
             _authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
             _adminService = adminService;
             _agentService = agentService;
             _propertyService = propertyService;
@@ -41,7 +43,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         #endregion
 
         #region Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View("RegisterAdmin", new SaveUserViewModel());
         }
@@ -53,7 +55,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 return View("RegisterAdmin", vm);
 
             var origin = Request.Headers["origin"];
+
             RegisterResponse response = await _adminService.Add(vm, origin);
+
 
             if (response.HasError)
             {

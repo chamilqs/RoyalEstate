@@ -4,6 +4,7 @@
     ViewData["Title"] = "Home";
     bool? searchResult = ViewBag.isEmpty;
     string? error = ViewBag.Error;
+    bool? newFavorite = ViewBag.NewFavorite;
 }
 
 <div class="row">
@@ -48,6 +49,18 @@
             </form>
         </div>
     </nav>
+</div>
+
+<div class="row justify-content-center mt-3">
+    <div class="col-md-7">
+        @if (newFavorite == true)
+        {
+            <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                <p class="mb-0">Property added to your favorites!</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
 </div>
 
 <div class="row justify-content-center mt-3">

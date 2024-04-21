@@ -12,6 +12,8 @@ namespace RoyalState.Core.Application.Interfaces.Services
         Task<List<PropertyViewModel>> GetAgentProperties(int id);
         Task<List<int>> GetPropertyQuantities(List<int> agentIds);
         Task<List<AgentViewModel>> GetAgentsWithPropertyQuantity();
+        Task<List<PropertyViewModel>> GetPropertiesBySaleType(int saleTypeId);
+        Task<List<PropertyViewModel>> GetPropertiesByPropertyType(int propertyTypeId);
         Task<GenericResponse> DeleteByAgentId(int id);
         Task<PropertyViewModel> GetPropertyByCode(string code);
     }

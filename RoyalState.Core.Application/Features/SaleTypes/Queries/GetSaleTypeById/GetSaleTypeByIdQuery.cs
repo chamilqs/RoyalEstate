@@ -1,19 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
-using RoyalState.Core.Application.DTOs.Property;
 using RoyalState.Core.Application.DTOs.TypeDTO;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
-using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetSaleTypeById
 {
@@ -41,15 +32,16 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Queries.GetSaleTypeById
         public async Task<Response<TypeDTO>> Handle(GetSaleTypeByIdQuery request, CancellationToken cancellationToken)
         {
             var saleType = await GetById(request.Id);
-            if (saleType == null) throw new ApiException($"Sale type not found.", (int)HttpStatusCode.NoContent);
+            if (saleType == null) return new Response<TypeDTO>("Sale type not found");
             return new Response<TypeDTO>(saleType);
         }
         private async Task<TypeDTO> GetById(int id)
         {
             var saleType = await _saleTypeRepository.GetByIdAsync(id);
 
-            if (saleType == null) throw new ApiException($"Sale type not found."
-               , (int)HttpStatusCode.NoContent);
+
+            if (saleType == null) return null;
+
 
             var propertyDTO = _mapper.Map<TypeDTO>(saleType);
 

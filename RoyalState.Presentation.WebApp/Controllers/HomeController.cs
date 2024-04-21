@@ -21,7 +21,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
             _httpContextAccessor = httpContextAccessor;
             _propertyTypeService = propertyTypeService;
             _propertyService = propertyService;
+
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
             _agentService = agentService;
         }
 
@@ -63,21 +65,28 @@ namespace RoyalState.Presentation.WebApp.Controllers
             return View(properties);
         }
 
-        #region SearchProperty
+
+
+        #endregion
+
+        #region Search
+
+        #region SearchPropertyByCode
         public async Task<IActionResult> SearchProperty(string code)
         {
-            var propertyTypes = await _propertyTypeService.GetAllViewModel();
             var property = await _propertyService.GetPropertyByCode(code);
 
             bool isEmpty = property == null;
+
             List<PropertyViewModel> propertiesHome = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
+
 
             if (authViewModel != null)
             {
                 string role = authViewModel.Roles.FirstOrDefault()?.ToString();
                 if (!string.IsNullOrEmpty(role))
                 {
-                    return RedirectToRoute(new { controller = role, action = "Index", propertiesHome = propertiesHome, isEmpty = isEmpty });
+                    return RedirectToRoute(new { controller = role, action = "Index", propertiesHome, isEmpty });
                 }
             }
 
@@ -85,28 +94,26 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
         #endregion
 
-        #endregion
-
-        #region Search
-
         #region SearchPropertyByFilters
         [HttpPost]
         public async Task<IActionResult> SearchPropertyByFilters(int? propertyTypeId, double? maxPrice, double? minPrice, int? roomsNumber, int? bathsNumber)
         {
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
-            FilterPropertyViewModel filter = new FilterPropertyViewModel();
-            filter.PropertyTypeId = propertyTypeId;
-            filter.MaxPrice = maxPrice;
-            filter.MinPrice = minPrice;
-            filter.Bedrooms = roomsNumber;
-            filter.Bathrooms = bathsNumber;
+            FilterPropertyViewModel filter = new()
+            {
+                PropertyTypeId = propertyTypeId,
+                MaxPrice = maxPrice,
+                MinPrice = minPrice,
+                Bedrooms = roomsNumber,
+                Bathrooms = bathsNumber
+            };
 
             var properties = await _propertyService.GetAllViewModelWIthFilters(filter);
-            bool isEmpty = properties == null || properties.Count() == 0;
+            bool isEmpty = properties == null || properties.Count == 0;
 
             ViewBag.IsEmpty = isEmpty;
             ViewBag.PropertyTypes = propertyTypes;
-            return View("Index", properties != null ? properties : new List<PropertyViewModel>());
+            return View("Index", properties ?? new List<PropertyViewModel>());
         }
         #endregion
 
@@ -117,7 +124,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
             bool isEmpty = agents == null;
 
             ViewBag.IsEmpty = isEmpty;
-            return View("AllAgents", agents != null ? agents : new List<AgentViewModel>());
+            return View("AllAgents", agents ?? new List<AgentViewModel>());
         }
         #endregion        
 

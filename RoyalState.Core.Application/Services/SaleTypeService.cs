@@ -21,12 +21,15 @@ namespace RoyalState.Core.Application.Services
         {
             var saleTypeList = await GetAllViewModelWithInclude();
 
+
             return saleTypeList.FirstOrDefault(saleType => saleType.Id == id);
+
         }
 
         public async Task<List<SaleTypeViewModel>> GetAllViewModelWithInclude()
         {
             var saleTypeList = await _saleTypeRepository.GetAllWithIncludeAsync(new List<string> { "Properties" });
+
 
             return saleTypeList.Select(saleType => new SaleTypeViewModel
             {
@@ -35,6 +38,7 @@ namespace RoyalState.Core.Application.Services
                 Description = saleType.Description,
                 PropertiesQuantity = saleType.Properties.Count
             }).ToList();
+
         }
     }
 }

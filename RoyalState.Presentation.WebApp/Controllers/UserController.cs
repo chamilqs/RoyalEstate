@@ -26,7 +26,9 @@ namespace WebAdmin.BankingApp.Controllers
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
+
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
             _agentService = agentService;
             _clientService = clientService;
             _fileService = fileService;
@@ -34,7 +36,9 @@ namespace WebAdmin.BankingApp.Controllers
 
         #region Login & Logout
         [ServiceFilter(typeof(LoginAuthorize))]
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IActionResult> Index(bool hasError = false, string? message = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var login = new LoginViewModel();
 
@@ -64,7 +68,9 @@ namespace WebAdmin.BankingApp.Controllers
             }
             else
             {
+
                 vm.HasError = userVm.HasError;
+
                 vm.Error = userVm.Error;
                 return View(vm);
             }
@@ -103,8 +109,12 @@ namespace WebAdmin.BankingApp.Controllers
                 return View(vm);
             }
 
+
             vm.ImageUrl = await _fileService.UploadFileAsync(vm.File, vm.Email);
+
             var origin = Request.Headers["origin"];
+
+
 
             RegisterResponse response = vm.Role switch
             {
@@ -112,6 +122,8 @@ namespace WebAdmin.BankingApp.Controllers
                 (int)Roles.Client => await _clientService.RegisterAsync(vm, origin),
                 _ => new RegisterResponse()
             };
+
+
 
             if (response.HasError)
             {
@@ -152,7 +164,9 @@ namespace WebAdmin.BankingApp.Controllers
         #endregion
 
         #region Authorization
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IActionResult> RedirectIndex(string? ReturnUrl)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             return RedirectToRoute(new { controller = "User", action = "Index", hasError = true, message = "You don't have access to this section!" });
         }

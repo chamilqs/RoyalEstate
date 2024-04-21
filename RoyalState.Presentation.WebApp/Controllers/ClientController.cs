@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
-using RoyalState.Core.Application.Services;
 using RoyalState.Core.Application.ViewModels.ClientProperties;
 using RoyalState.Core.Application.ViewModels.Property;
 
@@ -19,30 +18,38 @@ namespace RoyalState.Presentation.WebApp.Controllers
         private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse authViewModel;
+
         public ClientController(IClientService clientService, IHttpContextAccessor httpContextAccessor, IFileService fileService, IPropertyService propertyService, IPropertyTypeService propertyTypeService)
+
         {
             _clientService = clientService;
             _httpContextAccessor = httpContextAccessor;
+
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
             _fileService = fileService;
             _propertyService = propertyService;
             _propertyTypeService = propertyTypeService;
         }
 
         #region Client Index
-        public async Task<IActionResult> Index(string? error, List<PropertyViewModel>? propertiesHome, bool? isEmpty)
+        public async Task<IActionResult> Index(string? error, List<PropertyViewModel>? propertiesHome, bool? isEmpty, bool? favorite)
         {
             if (error != null)
             {
                 ViewBag.Error = error;
             }
-            if (propertiesHome != null && propertiesHome.Count() != 0)
+            if (propertiesHome != null && propertiesHome.Count != 0)
             {
-               return View(propertiesHome);
+                return View(propertiesHome);
             }
             if (isEmpty != null)
             {
                 ViewBag.isEmpty = isEmpty;
+            }
+            if (favorite != null)
+            {
+                ViewBag.NewFavorite = favorite;
             }
 
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
@@ -58,6 +65,8 @@ namespace RoyalState.Presentation.WebApp.Controllers
         {
             var client = await _clientService.GetByUserIdViewModel(authViewModel.Id);
             var properties = await _clientService.GetFavoritePropertiesViewModel(client.Id);
+
+            ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
             return View(properties);
         }
         #endregion
@@ -78,16 +87,16 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 };
 
                 await _clientService.MarkPropertyAsFavorite(clientProperty);
+                return RedirectToAction("Index", "Client", new { favorite = true });
             }
             else
             {
                 await _clientService.DeleteFavorite(propertyId);
 
-                var error = "Property deleted from your favorites";
-                return RedirectToAction("Index", "Client", new { error = error });
+                var error = "Property deleted from your favorites.";
+                return RedirectToAction("Index", "Client", new { error });
             }
 
-            return RedirectToAction("Index");
         }
         #endregion
 
@@ -108,6 +117,49 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
         #endregion
 
+        #region Search
 
+        #region SearchPropertyByFilters
+        [HttpPost]
+        public async Task<IActionResult> SearchFavoritesByFilters(int? propertyTypeId, double? maxPrice, double? minPrice, int? roomsNumber, int? bathsNumber)
+        {
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            FilterPropertyViewModel filter = new()
+            {
+                PropertyTypeId = propertyTypeId,
+                MaxPrice = maxPrice,
+                MinPrice = minPrice,
+                Bedrooms = roomsNumber,
+                Bathrooms = bathsNumber
+            };
+
+            var properties = await _propertyService.GetAllViewModelWIthFilters(filter);
+            bool isEmpty = properties == null || properties.Count == 0;
+
+            ViewBag.IsEmpty = isEmpty;
+            ViewBag.PropertyTypes = propertyTypes;
+            return View("MyFavorites", properties ?? new List<PropertyViewModel>());
+        }
+        #endregion
+
+        #region SearchPropertyByCode
+        public async Task<IActionResult> SearchProperty(string code)
+        {
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            var property = await _propertyService.GetPropertyByCode(code);
+
+            ViewBag.PropertyTypes = propertyTypes;
+
+            bool isEmpty = property == null;
+            ViewBag.IsEmpty = isEmpty;
+
+            List<PropertyViewModel> properties = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
+
+
+            return View("MyFavorites", properties);
+        }
+        #endregion
+
+        #endregion
     }
 }

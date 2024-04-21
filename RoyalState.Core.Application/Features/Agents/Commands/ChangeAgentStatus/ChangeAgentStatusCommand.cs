@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using RoyalState.Core.Application.DTOs.Account;
 using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
-using RoyalState.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Agents.Commands.ChangeAgentStatus
 {
@@ -44,7 +37,7 @@ namespace RoyalState.Core.Application.Features.Agents.Commands.ChangeAgentStatus
         public async Task<Response<int>> Handle(ChangeAgentStatusCommand command, CancellationToken cancellationToken)
         {
             var agent = await _agentRepository.GetByIdAsync(command.Id);
-            if (agent == null) throw new ApiException($"Agent not found.", (int)HttpStatusCode.NotFound);
+            if (agent == null) throw new ApiException($"Agent not found.", (int)HttpStatusCode.InternalServerError);
             await _accountService.ChangeUserStatus(agent.UserId, command.Status);
             return new Response<int>(command.Id);
         }

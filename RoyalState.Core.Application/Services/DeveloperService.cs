@@ -5,7 +5,6 @@ using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.Developers;
 using RoyalState.Core.Application.ViewModels.Users;
 using RoyalState.Core.Domain.Entities;
-using System.Collections.Generic;
 
 namespace RoyalState.Core.Application.Services
 {
@@ -36,9 +35,10 @@ namespace RoyalState.Core.Application.Services
 
                 var user = await _userService.GetByEmailAsync(vm.Email);
                 var activeUser = await UpdateUserStatus(user.UserName);
-                
+
                 if (!activeUser.HasError)
                 {
+
                     SaveDeveloperViewModel saveDeveloperViewModel = new()
                     {
                         UserId = user.Id,
@@ -46,6 +46,7 @@ namespace RoyalState.Core.Application.Services
                         CreatedBy = "DefaultAppUser",
                         CreatedDate = DateTime.Now
                     };
+
 
                     await base.Add(saveDeveloperViewModel);
                 }
@@ -70,8 +71,12 @@ namespace RoyalState.Core.Application.Services
                 var admiList = await base.GetAllViewModel();
                 var developer = admiList.Find(developer => developer.UserId == vm.Id);
 
+
                 SaveDeveloperViewModel saveDeveloperViewModel = await base.GetByIdSaveViewModel(developer.Id);
+
+
                 saveDeveloperViewModel.Identification = vm.Identification;
+
 
                 await base.Update(saveDeveloperViewModel, developer.Id);
             }
@@ -90,7 +95,9 @@ namespace RoyalState.Core.Application.Services
             {
                 var user = userDeveloperList.Find(user => user.Id == developer.UserId);
 
+
                 developer.FirstName = user.FirstName;
+
                 developer.LastName = user.LastName;
                 developer.Username = user.UserName;
                 developer.Email = user.Email;
@@ -106,7 +113,9 @@ namespace RoyalState.Core.Application.Services
         {
             List<DeveloperViewModel> developerList = await GetAllViewModel();
 
+
             return developerList.Find(developer => developer.Id == id);
+
         }
         #endregion
 

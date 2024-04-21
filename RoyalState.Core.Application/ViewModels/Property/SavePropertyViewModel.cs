@@ -34,7 +34,9 @@ namespace RoyalState.Core.Application.ViewModels.Property
         [DataType(DataType.Text)]
         [StringLength(2000, MinimumLength = 10, ErrorMessage = "The description must have at least 10 characters.")]
         [Required(ErrorMessage = "You can't leave the description empty.")]
+
         public string Description { get; set; }
+
 
         public int? AgentId { get; set; }
         public List<string>? PropertyImages { get; set; }

@@ -1,17 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.DTOs.TypeDTO;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Wrappers;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Improvements.Queries.GetImprovementById
 {
@@ -39,15 +32,16 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetImproveme
         public async Task<Response<TypeDTO>> Handle(GetImprovementByIdQuery request, CancellationToken cancellationToken)
         {
             var improvement = await GetById(request.Id);
-            if (improvement == null) throw new ApiException($"Improvement not found.", (int)HttpStatusCode.NoContent);
+            if (improvement == null) return new Response<TypeDTO>("Improvement not Found");
             return new Response<TypeDTO>(improvement);
         }
         private async Task<TypeDTO> GetById(int id)
         {
             var improvement = await _improvementRepository.GetByIdAsync(id);
 
-            if (improvement == null) throw new ApiException($"Improvement not found."
-               , (int)HttpStatusCode.NoContent);
+
+            if (improvement == null) return null;
+
 
             var improvementDTO = _mapper.Map<TypeDTO>(improvement);
 

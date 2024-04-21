@@ -1,5 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 namespace RoyalState.WebApi.Extensions
 {

@@ -5,11 +5,6 @@ using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
 using RoyalState.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.SaleTypes.Commands.CreateSaleType
 {
@@ -20,11 +15,15 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Commands.CreateSaleType
     {
         /// <example>Rent</example>
         [SwaggerParameter(Description = "Name of the sale type")]
+
         public string Name { get; set; }
+
 
         /// <example>Temporary use or occupation of property</example>
         [SwaggerParameter(Description = "Description of the sale type")]
+
         public string Description { get; set; }
+
     }
     public class CreateSaleTypeCommandHandler : IRequestHandler<CreateSaleTypeCommand, Response<int>>
     {

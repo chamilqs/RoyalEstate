@@ -1,15 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.DTOs.TypeDTO;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Wrappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Improvements.Queries.GetAllImprovements
 {
@@ -32,7 +25,7 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetAllImprov
         public async Task<Response<IList<TypeDTO>>> Handle(GetAllImprovementsQuery request, CancellationToken cancellationToken)
         {
             var improvements = await GetAllPropertyTypes();
-            if (improvements == null) throw new ApiException($"Improvement not found", (int)HttpStatusCode.NoContent);
+            if (improvements == null) return new Response<IList<TypeDTO>>("Improvements Not Found"); ;
             return new Response<IList<TypeDTO>>(improvements);
         }
 
@@ -40,8 +33,9 @@ namespace RoyalState.Core.Application.Features.Improvements.Queries.GetAllImprov
         {
             var improvementsList = await _improvementRepository.GetAllAsync();
 
-            if (improvementsList == null || improvementsList.Count == 0) throw new ApiException($"Improvement not found."
-               , (int)HttpStatusCode.NoContent);
+
+            if (improvementsList == null || improvementsList.Count == 0) return null;
+
 
             var improvementDTOS = _mapper.Map<List<TypeDTO>>(improvementsList);
 

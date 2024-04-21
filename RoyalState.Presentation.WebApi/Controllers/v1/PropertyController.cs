@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RoyalState.Core.Application.DTOs.Agent;
 using RoyalState.Core.Application.DTOs.Property;
-using RoyalState.Core.Application.Features.Agents.Queries.GetAgentById;
-using RoyalState.Core.Application.Features.Agents.Queries.GetAgentPropertyById;
-using RoyalState.Core.Application.Features.Agents.Queries.GetAllAgents;
+using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Features.Properties.Queries.GetAllProperties;
 using RoyalState.Core.Application.Features.Properties.Queries.GetPropertyByCode;
 using RoyalState.Core.Application.Features.Properties.Queries.GetPropertyById;
 using RoyalState.WebApi.Controllers.v1;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 using System.Net.Mime;
 
 namespace RoyalState.Presentation.WebApi.Controllers.v1
@@ -37,7 +35,13 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
                 return NoContent();
             }
 
+            if (!properties.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
+            }
+
             return Ok(properties);
+
         }
 
         [HttpGet("{id}")]
@@ -51,6 +55,7 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
+
             if (id <= 0)
             {
                 return NoContent();
@@ -58,19 +63,30 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
 
             var property = await Mediator.Send(new GetPropertyByIdQuery { Id = id });
 
-            if (!property.Succeeded)
+            if (property.Data == null)
             {
                 return NoContent();
             }
 
+            if (!property.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
+            }
+
+
+
+
             return Ok(property);
         }
+
+
+
 
         [HttpGet("Code/{code}")]
         [SwaggerOperation(
            Summary = "Property by code",
            Description = "Returns a property using the code as a filter"
-       )]
+        )]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PropertyDTO))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -79,9 +95,14 @@ namespace RoyalState.Presentation.WebApi.Controllers.v1
         {
 
             var property = await Mediator.Send(new GetPropertyByCodeQuery() { Code = filter.Code });
-            if (!property.Succeeded)
+            if (property.Data == null)
             {
                 return NoContent();
+            }
+
+            if (!property.Succeeded)
+            {
+                throw new ApiException("Server Error", (int)HttpStatusCode.InternalServerError);
             }
 
             return Ok(property);

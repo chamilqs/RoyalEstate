@@ -1,16 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.DTOs.Property;
-using RoyalState.Core.Application.Exceptions;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Properties.Queries.GetAllProperties
 {
@@ -43,7 +36,9 @@ namespace RoyalState.Core.Application.Features.Properties.Queries.GetAllProperti
         {
             var propertyList = await _propertyService.GetAllViewModelApi();
 
+
             if (propertyList == null || propertyList.Count == 0) return null;
+
             var propertyDtos = new List<PropertyDTO>();
 
             foreach (var prop in propertyList)

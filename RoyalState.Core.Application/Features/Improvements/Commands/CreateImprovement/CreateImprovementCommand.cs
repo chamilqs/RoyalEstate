@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.Interfaces.Repositories;
-using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
 using RoyalState.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.Improvements.Commands.CreateImprovement
 {
@@ -21,11 +15,15 @@ namespace RoyalState.Core.Application.Features.Improvements.Commands.CreateImpro
     {
         /// <example>Elevator</example>
         [SwaggerParameter(Description = "Name of the improvement")]
+
         public string Name { get; set; }
+
 
         /// <example>Moves people or goods between different levels of a building </example>
         [SwaggerParameter(Description = "Description of the improvement")]
+
         public string Description { get; set; }
+
     }
     public class CreateImprovementCommandHandler : IRequestHandler<CreateImprovementCommand, Response<int>>
     {

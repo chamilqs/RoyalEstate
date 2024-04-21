@@ -9,19 +9,27 @@ namespace RoyalState.Core.Application.ViewModels.Users
 
         [Required(ErrorMessage = "You must enter a name.")]
         [DataType(DataType.Text)]
+
         public string FirstName { get; set; }
+
 
         [Required(ErrorMessage = "You must enter a lastname.")]
         [DataType(DataType.Text)]
+
         public string LastName { get; set; }
+
 
         [Required(ErrorMessage = "You mus enter a Username.")]
         [DataType(DataType.Text)]
+
         public string UserName { get; set; }
+
 
         [Required(ErrorMessage = "You must enter an email.")]
         [DataType(DataType.EmailAddress)]
+
         public string Email { get; set; }
+
 
         [RegularExpression(@"^\d{3}\-\d{7}-\d{1}$", ErrorMessage = "Your Id must be with the following format: ###-#######-#.")]
         [DataType(DataType.Text)]

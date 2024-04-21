@@ -21,7 +21,9 @@ namespace RoyalState.Core.Application.Services
             _httpContextAccessor = httpContextAccessor;
             _clientPropertiesRepository = clientPropertiesRepository;
             _mapper = mapper;
+
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
         }
 
         #region GetByPropertyIdViewModel
@@ -33,9 +35,13 @@ namespace RoyalState.Core.Application.Services
         public async Task<ClientPropertiesViewModel> GetByPropertyIdViewModel(int propertyId)
         {
             var clientPropertiesList = await GetAllViewModel();
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             ClientPropertiesViewModel clientProperties = clientPropertiesList.FirstOrDefault(clientProperties => clientProperties.PropertyId == propertyId);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
 
             return clientProperties;
+
         }
         #endregion
 

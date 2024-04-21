@@ -9,10 +9,14 @@ namespace RoyalState.Presentation.WebApp.Controllers
     public class SaleTypeController : Controller
     {
         private readonly ISaleTypeService _saleTypeService;
+        private readonly IPropertyService _propertyService;
+        private readonly IFileService _fileService;
 
-        public SaleTypeController(ISaleTypeService saleTypeService)
+        public SaleTypeController(ISaleTypeService saleTypeService, IPropertyService propertyService, IFileService fileService)
         {
             _saleTypeService = saleTypeService;
+            _propertyService = propertyService;
+            _fileService = fileService;
         }
 
         public async Task<IActionResult> Index()
@@ -21,7 +25,7 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View("SaveSaleType", new SaveSaleTypeViewModel());
         }
@@ -68,6 +72,26 @@ namespace RoyalState.Presentation.WebApp.Controllers
         [ActionName("Delete")]
         public async Task<IActionResult> DeletePost(int id)
         {
+            try
+            {
+                var properties = await _propertyService.GetPropertiesBySaleType(id);
+
+                foreach (var property in properties)
+                {
+
+                    foreach (var propertyImage in property.PropertyImages)
+                    {
+                        await _fileService.DeleteFileAsync(propertyImage);
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error ocurred while trying to delete the images of the properties: {ex.Message}");
+            }
+
             await _saleTypeService.Delete(id);
 
             return RedirectToRoute(new { controller = "SaleType", action = "Index" });

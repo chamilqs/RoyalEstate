@@ -30,7 +30,9 @@ namespace RoyalState.Core.Application.Services
             _userService = userService;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+
             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
             _propertiesService = propertiesService;
         }
 
@@ -49,11 +51,13 @@ namespace RoyalState.Core.Application.Services
             {
                 var user = await _userService.GetByEmailAsync(vm.Email);
 
+
                 SaveClientViewModel saveClientViewModel = new()
                 {
                     UserId = user.Id,
                     ImageUrl = vm.ImageUrl,
                 };
+
 
                 await base.Add(saveClientViewModel);
 
@@ -102,9 +106,13 @@ namespace RoyalState.Core.Application.Services
         public async Task<ClientViewModel> GetByUserIdViewModel(string userId)
         {
             var clientList = await GetAllViewModel();
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             ClientViewModel client = clientList.FirstOrDefault(client => client.UserId == userId);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
 
             return client;
+
         }
         #endregion
 

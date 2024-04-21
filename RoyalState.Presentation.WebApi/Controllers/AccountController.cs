@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoyalState.Core.Application.DTOs.Account;
@@ -52,7 +51,9 @@ namespace RoyalState.WebApi.Controllers
             var origin = Request.Headers["origin"];
             var request = _mapper.Map<RegisterRequest>(dto);
             request.Role = (int)Roles.Developer;
+
             var results = await _developerService.Add(_mapper.Map<SaveUserViewModel>(request), origin);
+
             return Ok(results);
 
         }
@@ -70,7 +71,9 @@ namespace RoyalState.WebApi.Controllers
             var origin = Request.Headers["origin"];
             var request = _mapper.Map<RegisterRequest>(dto);
             request.Role = (int)Roles.Admin;
+
             var results = await _adminService.Add(_mapper.Map<SaveUserViewModel>(request), origin);
+
             return Ok(results);
         }
     }

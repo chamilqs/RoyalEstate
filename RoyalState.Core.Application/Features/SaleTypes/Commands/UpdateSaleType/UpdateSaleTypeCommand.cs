@@ -1,18 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
 using RoyalState.Core.Application.Exceptions;
-using RoyalState.Core.Application.Features.PropertyTypes.Commands.UpdatePropertyType;
 using RoyalState.Core.Application.Interfaces.Repositories;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Wrappers;
 using RoyalState.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoyalState.Core.Application.Features.SaleTypes.Commands.UpdateSaleType
 {
@@ -27,12 +21,16 @@ namespace RoyalState.Core.Application.Features.SaleTypes.Commands.UpdateSaleType
 
         /// <example>Rent</example>
         [SwaggerParameter(Description = "New name of the sale type")]
+
         public string Name { get; set; }
+
 
 
         /// <example>Temporary use or occupation of property</example>
         [SwaggerParameter(Description = "New description of the sale type")]
+
         public string Description { get; set; }
+
 
 
 

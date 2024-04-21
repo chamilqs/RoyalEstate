@@ -13,23 +13,25 @@ namespace RoyalState.Presentation.WebApp.Controllers
     {
         private readonly IAgentService _agentService;
         private readonly IPropertyService _propertyService;
+        private readonly IPropertyTypeService _propertyTypeService;
         private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationResponse authViewModel;
 
-        public AgentController(IAgentService agentService, IHttpContextAccessor httpContextAccessor, IFileService fileService, IPropertyService propertyService)
+        public AgentController(IAgentService agentService, IHttpContextAccessor httpContextAccessor, IFileService fileService, IPropertyService propertyService, IPropertyTypeService propertyTypeService)
         {
             _agentService = agentService;
             _httpContextAccessor = httpContextAccessor;
             authViewModel = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _fileService = fileService;
             _propertyService = propertyService;
+            _propertyTypeService = propertyTypeService;
         }
 
         #region Agent Index
         public async Task<IActionResult> Index(List<PropertyViewModel>? propertiesHome, bool? isEmpty)
         {
-            if (propertiesHome != null && propertiesHome.Count() != 0)
+            if (propertiesHome != null && propertiesHome.Count != 0)
             {
                 return View(propertiesHome);
             }
@@ -41,8 +43,33 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             var agent = await _agentService.GetByUserIdViewModel(authViewModel.Id);
             var properties = await _propertyService.GetAgentProperties(agent.Id);
+
+            ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
             return View(properties);
 
+        }
+        #endregion
+
+        #region SearchPropertyByFilters
+        [HttpPost]
+        public async Task<IActionResult> SearchPropertyByFilters(int? propertyTypeId, double? maxPrice, double? minPrice, int? roomsNumber, int? bathsNumber)
+        {
+            var propertyTypes = await _propertyTypeService.GetAllViewModel();
+            FilterPropertyViewModel filter = new()
+            {
+                PropertyTypeId = propertyTypeId,
+                MaxPrice = maxPrice,
+                MinPrice = minPrice,
+                Bedrooms = roomsNumber,
+                Bathrooms = bathsNumber
+            };
+
+            var properties = await _propertyService.GetAllViewModelWIthFilters(filter);
+            bool isEmpty = properties == null || properties.Count == 0;
+
+            ViewBag.IsEmpty = isEmpty;
+            ViewBag.PropertyTypes = propertyTypes;
+            return View("Index", properties ?? new List<PropertyViewModel>());
         }
         #endregion
 
@@ -64,7 +91,9 @@ namespace RoyalState.Presentation.WebApp.Controllers
 
             if (vm.File != null)
             {
+
                 vm.ImageUrl = await _fileService.UploadFileAsync(vm.File, authViewModel.Email, true, vm.ImageUrl);
+
             }
 
             UpdateUserResponse response = new();

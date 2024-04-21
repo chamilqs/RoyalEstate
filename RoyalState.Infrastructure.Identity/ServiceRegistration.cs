@@ -43,6 +43,7 @@ namespace RoyalState.Infrastructure.Identity
             {
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = false;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -54,6 +55,7 @@ namespace RoyalState.Infrastructure.Identity
                     ValidAudience = configuration["JWTSettings:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:Key"]))
                 };
+
                 options.Events = new JwtBearerEvents()
                 {
                     OnAuthenticationFailed = context =>
