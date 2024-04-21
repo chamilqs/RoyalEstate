@@ -8,8 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddSharedInfrastructure(builder.Configuration);
 builder.Services.AddSession();
 builder.Services.AddPersistenceInfrastructure(builder.Configuration);
 builder.Services.AddIdentityInfrastructureForWeb(builder.Configuration);
