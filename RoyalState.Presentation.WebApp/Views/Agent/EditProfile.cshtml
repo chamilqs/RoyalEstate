@@ -1,0 +1,171 @@
+﻿@using RoyalState.Core.Application.ViewModels.Users;
+@model SaveUserViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+}
+
+<style>
+    .button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+        .button-container > * {
+            margin-right: 0.5rem;
+        }
+
+            .button-container > *:last-child {
+                margin-right: 0;
+            }
+
+    .avatar-upload {
+        position: relative;
+        max-width: 205px;
+    }
+
+        .avatar-upload .avatar-edit {
+            position: absolute;
+            right: 12px;
+            z-index: 1;
+            top: 10px;
+        }
+
+            .avatar-upload .avatar-edit input {
+                display: none;
+            }
+
+                .avatar-upload .avatar-edit input + label {
+                    display: inline-block;
+                    width: 34px;
+                    height: 34px;
+                    margin-bottom: 0;
+                    border-radius: 100%;
+                    background: #ffffff;
+                    border: 1px solid transparent;
+                    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+                    cursor: pointer;
+                    font-weight: normal;
+                    transition: all 0.2s ease-in-out;
+                }
+
+                    .avatar-upload .avatar-edit input + label:hover {
+                        background: #f1f1f1;
+                        border-color: #d6d6d6;
+                    }
+
+                    .avatar-upload .avatar-edit input + label:after {
+                        content: "\f040";
+                        font-family: "FontAwesome";
+                        color: #757575;
+                        position: absolute;
+                        top: 6px;
+                        left: 0;
+                        right: 0;
+                        text-align: center;
+                        margin: auto;
+                    }
+
+        .avatar-upload .avatar-preview {
+            width: 192px;
+            height: 192px;
+            position: relative;
+            border-radius: 100%;
+            border: 6px solid #f8f8f8;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+            .avatar-upload .avatar-preview > div {
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+
+</style>
+<div class="row justify-content-center mt-3">
+    <div class="col-md-7">
+        @if (!String.IsNullOrWhiteSpace(ViewBag.Error))
+        {
+            <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                <p class="mb-0">@ViewBag.Error</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (!String.IsNullOrWhiteSpace(Html.ValidationSummary().ToString()))
+        {
+            <div class="alert alert-danger alert-dismissible fade show mb-3" id="validationSummary" style="display:none;">
+                <p class="mb-0 text-danger">
+                    @Html.ValidationSummary()
+                </p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+</div>
+
+<form method="post" asp-controller="Agent" asp-action="EditProfile" enctype="multipart/form-data">
+    <div class="container rounded bg-white" style="max-width: 960px; margin: 30px auto;">
+        <div class="row">
+            <div class="col-md-3 border-right">
+            </div>
+            <div class="col-md-5 border-right">
+                <div class="p-3 py-5">
+                    <div class="d-flex flex-column align-items-center text-center p-3 py-5" style="margin-top:-60px;">
+                        <div class="avatar-upload">
+                            <div class="avatar-edit">
+                            </div>
+                            <div class="avatar-preview mb-2">
+                                <div id="imagePreview" style="background-image: url(@Model.ImageUrl);"></div>
+                            </div>
+                            <span class="font-weight-bold">@Model.FirstName @Model.LastName</span><br>
+                            <span class="text-black-50">@Model.Email</span>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label asp-for="FirstName" class="labels">First Name</label>
+                            <input asp-for="FirstName" type="text" class="form-control" placeholder="First Name">
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LastName" class="labels">Last Name</label>
+                            <input asp-for="LastName" type="text" class="form-control" placeholder="Last Name">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label asp-for="Phone" class="labels">Phone Number</label>
+                            <input asp-for="Phone" type="text" class="form-control" placeholder="Phone number">
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label asp-for="File" class="labels">New profile picture</label><br>
+                            <span asp-validation-for="File" class="text-danger"></span>
+                            <input asp-for="File" id="imageUpload" accept=".png, .jpg, .jpeg" />
+                        </div>
+                    </div>
+
+
+                    <input asp-for="Id" type="hidden" />
+                    <input asp-for="ImageUrl" type="hidden" />
+                    <input asp-for="Email" type="hidden" />
+                    <input asp-for="UserName" type="hidden" />
+                    <input asp-for="Role" type="hidden" />
+
+
+                </div>
+                <div class="button-container">
+                    <a class="btn btn-outline-primary" asp-controller="Home" asp-action="Index">Go Back</a>
+                    <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

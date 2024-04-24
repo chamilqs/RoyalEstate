@@ -1,0 +1,97 @@
+﻿@using RoyalState.Core.Application.Enums
+@using RoyalState.Core.Application.ViewModels.Users;
+@model SaveUserViewModel;
+
+@{
+    ViewData["Title"] = "Create Developer";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+}
+
+<div class="container-fluid mt-3">
+
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+
+                    @if (Model.HasError != null && Model.HasError == true)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                            <p class="mb-0">@Model.Error</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <div class="">
+                        <h3 class="">@ViewData["Title"]</h3>
+                    </div>
+
+                    <form method="post" asp-controller="Developer" asp-action="Create">
+
+                        <div class="mb-4 mt-3">
+                            
+                            <input type="hidden" asp-for="Role" value="@((int)Roles.Developer)" />
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label asp-for="FirstName" class="form-label">FirstName:</label>
+                                    <input type="text" asp-for="FirstName" class="form-control" placeholder="FirstName" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-6">
+                                    <label asp-for="LastName" class="form-label">LastName:</label>
+                                    <input type="text" asp-for="LastName" class="form-control" placeholder="LastName" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label asp-for="Email" class="form-label">Email:</label>
+                                    <input type="email" asp-for="Email" class="form-control" placeholder="holamundo@email.com" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-6">
+                                    <label asp-for="Identification" class="form-label">Identification:</label>
+                                    <input type="text" asp-for="Identification" class="form-control" placeholder="###-#######-#" maxlength="13" required />
+                                    <span asp-validation-for="Identification" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="UserName" class="form-label">Username:</label>
+                                <input asp-for="UserName" class="form-control" placeholder="Username" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Password" class="form-label">Password:</label>
+                                <input asp-for="Password" class="form-control" placeholder="Password" required />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label">Confirm Password:</label>
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="ConfirmPassword" required />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <a class="btn btn-dark col-12 " asp-controller="Developer" asp-action="Index">Back</a>
+                            </div>
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary col-12">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

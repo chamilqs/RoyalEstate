@@ -1,0 +1,151 @@
+﻿@using RoyalState.Core.Application.ViewModels.Property;
+@model List<PropertyViewModel>
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+    bool? searchResult = ViewBag.isEmpty;
+}
+
+<style>
+    .property-item .property-content .specs {
+        font-size: 18px;
+    }
+
+        .property-item .property-content .specs .caption {
+            font-size: 13px;
+        }
+</style>
+
+<div class="row">
+    <form method="post" asp-controller="Property" asp-action="SearchPropertyByFilters" class="form-search col-md-12" style="margin-top: 20px;">
+        <div class="row align-items-end">
+            <div class="col-md-3">
+                <label for="list-types">Property Types</label>
+                <div class="select-wrap">
+                    <span class="icon icon-arrow_drop_down"></span>
+                    <select name="propertyTypeId" id="propertyType" asp-items="@(new SelectList(ViewBag.PropertyTypes,"Id","Name"))" class="form-control d-block rounded-0">
+                        <option>Select a sale type</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="min-price">Min Price</label>
+                <input type="number" id="min-price" name="minPrice" class="form-control d-block rounded-0" placeholder="Min Price">
+
+                <label class="mt-3" for="max-price">Max Price</label>
+                <input type="number" id="max-price" name="maxPrice" class="form-control d-block rounded-0" placeholder="Max Price">
+            </div>
+            <div class="col-md-3">
+                <label for="min-price">Rooms number</label>
+                <input type="number" id="rooms-number" name="roomsNumber" class="form-control d-block rounded-0" placeholder="Rooms number">
+
+                <label class="mt-3" for="max-price">Baths number</label>
+                <input type="number" id="baths-number" name="bathsNumber" class="form-control d-block rounded-0" placeholder="Baths number">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-success text-white btn-block rounded-0">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div>
+    <nav class="navbar navbar-light mt-4" style="margin-left:-30px;">
+        <div class="container-fluid">
+            <form method="post" asp-controller="Property" asp-action="SearchProperty" class="d-flex">
+                <input name="code" class="form-control me-2" type="search" placeholder="ej. 524484" aria-label="Search" required>
+                <button class="btn btn-outline-success" type="submit">Search by code</button>
+            </form>
+        </div>
+    </nav>
+</div>
+
+@if (searchResult == true)
+{
+    <div class="row justify-content-center mt-4 rounded-3">
+        <div class="col-md-7">
+            <div class="alert alert-info text-center" role="alert">
+                <p>No properties found with the search criteria.</p>
+                <a asp-controller="Property" asp-action="Maintenance" class="btn btn-primary">View all</a>
+            </div>
+        </div>
+    </div>
+}
+else if (Model == null || !Model.Any())
+{
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-7">
+            <div class="alert alert-info text-center" role="alert">
+                <p>No properties registered.</p>
+                <a asp-controller="Property" asp-action="NewProperty" class="btn btn-primary">Add New Property</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="site-section site-section-sm pb-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="view-options bg-white py-3 d-md-flex justify-content-end align-items-center" style="margin-left:-10px;">
+                        <div>
+                            <a class="btn btn-primary text-light fs-5" asp-controller="Property" asp-action="NewProperty">Add New Property</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="site-section site-section-sm bg-light">
+        <div class="container">
+
+            <div class="row mb-5">
+
+                @foreach (var property in Model)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="property-entry h-100">
+                            <a asp-controller="Home" asp-action="PropertyDetails" asp-route-id="@property.Id" class="property-thumbnail">
+                                <div class="offer-type-wrap">
+                                    <span class="offer-type bg-success">@property.SaleTypeName</span>
+                                </div>
+                                <img src="@property.PropertyImages.FirstOrDefault()" alt="Image" class="img-fluid">
+                            </a>
+                            <div class="p-4 property-body">
+                                <h2 class="property-title fs-5"><strong>Property Type: </strong>@property.PropertyTypeName</h2>
+                                <span class="property-location d-block fs-6"><strong>Code: </strong>@property.Code</span>
+                                <span class="property-location d-block mb-3 fs-6"><strong>Sale Type: </strong>@property.SaleTypeName</span>
+                                <strong class="property-price text-primary mb-3 d-block text-success">RD$@property.Price</strong>
+                                <div class="specs d-flex mb-4">
+                                    <span class="d-block d-flex align-items-center me-3">
+                                        <span class="icon-bed me-2"></span>
+                                        <span class="caption">@property.Bedrooms beds</span>
+                                    </span>
+                                    <span class="d-block d-flex align-items-center me-3">
+                                        <span class="icon-bath me-2"></span>
+                                        <span class="caption">@property.Bathrooms baths</span>
+                                    </span>
+                                    <span class="d-block d-flex align-items-center">
+                                        <span class="icon-home me-2"></span>
+                                        <span class="caption">@property.Meters MT<sup>2</sup></span>
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <div class="btn-group">
+                                        <a asp-controller="Property" asp-action="EditProperty" asp-route-id="@property.Id" class="btn btn-sm btn-primary fw-bold">Edit</a>
+                                        @* <a asp-controller="Home" asp-action="PropertyDetails" asp-route-id="@property.Id" class="btn btn-sm btn-warning fw-bold">Details</a> *@
+                                        <a asp-controller="Property" asp-action="DeleteProperty" asp-route-id="@property.Id" class="btn btn-sm btn-danger fw-bold">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+}

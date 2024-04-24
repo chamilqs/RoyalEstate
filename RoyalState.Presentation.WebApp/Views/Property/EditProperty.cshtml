@@ -1,0 +1,313 @@
+﻿@using RoyalState.Core.Application.ViewModels.Property;
+@model SavePropertyViewModel
+
+@{
+    ViewData["Title"] = "Edit property";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+}
+
+<link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.3/components/registrations/registration-9/assets/css/registration-9.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+    a {
+        text-decoration: none;
+    }
+
+    #file-container {
+        border: 1px solid #025bee;
+        background-color: #ffffff;
+        width: 90%;
+        max-width: 34.37em;
+        position: relative;
+        margin: 3.12em auto;
+        padding: 3.12em 1.25em;
+        border-radius: 0.43em;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+    }
+
+    #file-input[type="file"] {
+        display: none;
+    }
+
+    #label-input {
+        display: block;
+        position: relative;
+        background-color: #025bee;
+        color: #ffffff;
+        font-size: 1.12em;
+        font-weight: 500;
+        text-align: center;
+        width: 18.75em;
+        padding: 1.12em 0;
+        margin: auto;
+        border-radius: 0.31em;
+        cursor: pointer;
+    }
+
+    #num-of-files {
+        font-weight: 400;
+        text-align: center;
+        margin: 1.25em 0 1.87em 0;
+    }
+
+    #files-list {
+        list-style-type: none;
+    }
+
+    #file-list-item {
+        font-weight: 500;
+        background-color: #eff5ff;
+        color: #025bee;
+        margin-bottom: 1em;
+        padding: 1.1em 1em;
+        border-radius: 0.3em;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+</style>
+
+
+@if (ViewBag.Improvements == null || ViewBag.Improvements.Count == 0)
+{
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="alert alert-info text-center" role="alert">
+                    <p>Cannot create a property because the are no improvements registered in the system.</p>
+                    <a asp-controller="Property" asp-action="Maintenance" class="btn btn-primary">Go back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (ViewBag.PropertyTypes == null || ViewBag.PropertyTypes.Count == 0)
+{
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="alert alert-info text-center" role="alert">
+                    <p>Cannot create a property because the are no PropertyTypes registered in the system.</p>
+                    <a asp-controller="Property" asp-action="Maintenance" class="btn btn-primary">Go back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (ViewBag.SaleTypes == null || ViewBag.SaleTypes.Count == 0)
+{
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="alert alert-info text-center" role="alert">
+                    <p>Cannot create a property because the are no SaleTypes registered in the system.</p>
+                    <a asp-controller="Property" asp-action="Maintenance" class="btn btn-primary">Go back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-3">
+        <section class="py-3 py-md-5 py-xl-8" style="border-radius: 1rem; background-color:rgb(249, 249, 249);">
+            <div class="container" style="margin-left:160px;">
+                <!--Container to center-->
+                <div class="row gy-4 align-items-center">
+                    <div class="col-12 col-md-8 col-xl-9">
+                        <div class="card border-0 rounded-4 form-shadow">
+                            <div class="card-body p-3 p-md-4 p-xl-5">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="mb-5 text-center">
+                                            <h2 class="h3">Update property @Model.Code</h2>
+                                            <h3 class="fs-6 fw-normal text-secondary m-0">Fill all the details.</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (!String.IsNullOrWhiteSpace(ViewBag.Error))
+                                {
+                                    <div class="alert alert-danger alert-dismissible fade show mb-5" role="alert">
+                                        <p class="mb-0">@ViewBag.Error</p>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                }
+                                @if (!String.IsNullOrWhiteSpace(Html.ValidationSummary().ToString()))
+                                {
+                                    <div class="alert alert-danger alert-dismissible fade show mb-3" id="validationSummary" style="display:none;">
+                                        <p class="mb-0 text-danger">
+                                            @Html.ValidationSummary()
+                                        </p>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                }
+                                <form method="post" asp-controller="Property" asp-action="EditPropertyPost" enctype="multipart/form-data">
+
+                                    <input asp-for="Id" type="hidden" />
+                                    <input asp-for="Code" type="hidden" />
+                                    <input asp-for="AgentId" type="hidden" />
+
+
+                                    <div class="row gy-3 overflow-hidden">
+                                        <div class="row overflow-hidden">
+                                            <div class="col-12">
+                                                <div class="form-floating mb-3">
+                                                    <select asp-for="PropertyTypeId" asp-items="@(new SelectList(ViewBag.PropertyTypes,"Id","Name"))" class="form-select" id="property">
+                                                        <option value="0">Select a property type</option>
+                                                    </select>
+                                                    <label asp-for="PropertyTypeId" for="property" class="form-label">Property Type</label>
+                                                    <span asp-validation-for="PropertyTypeId" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-floating mb-3">
+                                                    <select asp-for="SaleTypeId" asp-items="@(new SelectList(ViewBag.SaleTypes,"Id","Name"))" class="form-select" id="sale">
+                                                        <option value="0">Select a sale type</option>
+                                                    </select>
+                                                    <label asp-for="SaleTypeId" for="sale" class="form-label">Sale Type</label>
+                                                    <span asp-validation-for="SaleTypeId" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-floating mb-3">
+                                                    <input asp-for="Price" class="form-control" id="price" placeholder="Price">
+                                                    <label asp-for="Price" for="price" class="form-label">Price</label>
+                                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-floating mb-3">
+                                                    <input asp-for="Meters" class="form-control" id="meters" placeholder="Meters">
+                                                    <label asp-for="Meters" for="meters" class="form-label">Meters</label>
+                                                    <span asp-validation-for="Meters" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-floating mb-3">
+                                                        <span>Number of bedrooms</span>
+                                                        <input asp-for="Bedrooms" class="form-control form-control-sm">
+                                                        <span asp-validation-for="Bedrooms" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-floating mb-3">
+                                                        <span>Number of bathrooms</span>
+                                                        <input asp-for="Bathrooms" class="form-control form-control-sm">
+                                                        <span asp-validation-for="Bathrooms" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <label asp-for="Description" class="form-label">Description: </label>
+                                                <textarea rows="6" cols="15" asp-for="Description" class="form-control"></textarea>
+                                                <span asp-validation-for="Description" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="mb-3 mt-3">
+                                                <label class="form-label">Select property improvements: </label>
+                                                <div>
+                                                    @for (int i = 0; i < ViewBag.Improvements.Count; i++)
+                                                    {
+                                                        var improvementId = ViewBag.Improvements[i].Id;
+                                                        var isChecked = Model.Improvements.Contains(improvementId);
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="Improvements" value="@improvementId" class="form-check-input" @(isChecked ? "checked" : "") />
+                                                            <label class="form-check-label">@ViewBag.Improvements[i].Name</label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <div class="row no-gutters mt-3 mb-2" style="margin-left:6px;">
+                                                <div class="col-12">
+                                                    <h2 class="h4 text-black mb-3">Property Images</h2>
+                                                </div>
+                                                @foreach (var item in Model.PropertyImages)
+                                                {
+                                                    <div class="col-sm-6 col-md-4 col-lg-3">
+                                                        <a href="@item" class="image-popup gal-item"><img src="@item" alt="Image" class="img-fluid"></a>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            <div class="mb-3 mt-3">
+                                                <label class="form-label">Modify or delete an image: </label>
+                                                @foreach (var image in Model.PropertyImages)
+                                                {
+                                                    <div class="col-12">
+                                                        <div class="form-floating mb-3">
+                                                            <input asp-for="PropertyImages" value="@image" class="form-control" id="image" placeholder="Image">
+                                                            <label asp-for="PropertyImages" for="image" class="form-label">Image</label>
+                                                            <span asp-validation-for="PropertyImages" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            <div class="mt-3">
+                                                <label class="form-label">Upload more pictures for the property: </label>
+                                                <div id="file-container">
+                                                    <input type="file" name="files" id="file-input" multiple />
+                                                    <label id="label-input" for="file-input">
+                                                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                                        Choose Files To Upload
+                                                    </label>
+                                                    <div id="num-of-files">No Files Choosen</div>
+
+                                                    <ul id="files-list">
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-12">
+                                                <div class="d-grid">
+                                                    <button class="btn btn-primary btn-lg" type="submit">Update</button>
+                                                    <button asp-controller="Property" asp-action="Maintenance" class="btn btn-warning text-dark btn-lg mt-2" type="submit">Go back</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+}
+
+
+
+<script>
+    let fileInput = document.getElementById("file-input");
+    let fileList = document.getElementById("files-list");
+    let numOfFiles = document.getElementById("num-of-files");
+
+    fileInput.addEventListener("change", () => {
+        fileList.innerHTML = "";
+        numOfFiles.textContent = `${fileInput.files.length} Files Selected`;
+
+        for (i of fileInput.files) {
+            let reader = new FileReader();
+            let listItem = document.createElement("li");
+            listItem.id = "file-list-item";
+            let fileName = i.name.substring(0, 25); // Limit the filename to the first 6 characters
+            let fileSize = (i.size / 1024).toFixed(1);
+            listItem.innerHTML = `<p>${fileName}</p><p>${fileSize}KB</p>`;
+            if (fileSize >= 1024) {
+                fileSize = (fileSize / 1024).toFixed(1);
+                listItem.innerHTML = `<p>${fileName}</p><p>${fileSize}MB</p>`;
+            }
+            fileList.appendChild(listItem);
+        }
+    });
+</script>
+

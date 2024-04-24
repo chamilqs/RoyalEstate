@@ -1,0 +1,17 @@
+﻿@using RoyalState.Core.Application.ViewModels.Users
+@model string
+
+@{
+    ViewData["Title"] = "Access Denied";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+}
+
+<div class="content text-center" style="margin-top:-100px;">
+    <img src="https://img.freepik.com/free-vector/locker_53876-25496.jpg" />
+    <div class="message" style="margin-top:-60px;">
+        <h1 class="">Access to this page is restricted</h1>
+        <p>Please check with the site admin if you believe this is a mistake.</p>
+        <a class="btn btn-lg btn-warning" asp-controller="Home" asp-action="Index"> Home</a>
+    </div>
+</div>
+

@@ -1,0 +1,108 @@
+﻿@using RoyalState.Core.Application.ViewModels.Property;
+@model List<PropertyViewModel>
+@{
+    ViewData["Title"] = "Agent Home";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+}
+
+<style>
+    .row {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .site-section {
+        flex: 0 0 70%; 
+    }
+
+    .col-lg-4 {
+        flex: 0 0 25%;
+    }
+</style>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="row justify-content-center mt-4 rounded-3">
+        <div class="col-md-7">
+            <div class="alert alert-info text-center" role="alert">
+                <p>This agent has no properties yet.</p>
+                <a asp-controller="Home" asp-action="AllAgents" class="btn btn-primary">Go back</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="site-section site-section-sm bg-light mt-3">
+            <div class="container">
+                <div class="row mb-5" style="margin-top:-50px;">
+                    @foreach (var property in Model)
+                    {
+                        <div class="col-md-6 col-lg-6 mb-4">
+                            <div class="property-entry h-100">
+                                <a asp-controller="Home" asp-action="PropertyDetails" asp-route-id="@property.Id" class="property-thumbnail">
+                                    <div class="offer-type-wrap">
+                                        <span class="offer-type bg-success">@property.SaleTypeName</span>
+                                    </div>
+                                    <img src="@property.PropertyImages.FirstOrDefault()" alt="Image" class="img-fluid">
+                                </a>
+                                <div class="p-4 property-body">
+                                    <h2 class="property-title fs-5"><a href="property-details.html"><strong>Property Type: </strong>@property.PropertyTypeName</a></h2>
+                                    <span class="property-location d-block"><strong>Code: </strong>@property.Code</span>
+                                    <span class="property-location d-block mb-3"><strong>Sale Type: </strong>@property.SaleTypeName</span>
+                                    <strong class="property-price text-primary mb-3 d-block text-success">RD$@property.Price</strong>
+                                    <div class="specs d-flex mb-4">
+                                        <span class="d-block d-flex align-items-center me-3">
+                                            <span class="icon-bed me-2"></span>
+                                            <span class="caption">@property.Bedrooms beds</span>
+                                        </span>
+                                        <span class="d-block d-flex align-items-center me-3">
+                                            <span class="icon-bath me-2"></span>
+                                            <span class="caption">@property.Bathrooms baths</span>
+                                        </span>
+                                        <span class="d-block d-flex align-items-center">
+                                            <span class="icon-home me-2"></span>
+                                            <span class="caption">@property.Meters MT<sup>2</sup></span>
+                                        </span>
+                                    </div>
+
+                                    <a asp-controller="Home" asp-action="PropertyDetails" asp-route-id="@property.Id" class="btn btn-sm btn-warning fw-bold">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mt-3">
+            <div class="bg-white widget border rounded p-4">
+                <div class="circle-image mb-3">
+                    <img src="@ViewBag.Agent.ImageUrl" alt="Image" class="card-img-top rounded-circle">
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-1 text-black">@ViewBag.Agent.FirstName @ViewBag.Agent.LastName</h5>
+                    <p class="card-text text-muted">Agent in charge of these properties.</p>
+                </div>
+                <p class="fs-5 text-black text-center mb-3">Contact information</p>
+                <div class="card-text">
+                    <p class="fs-6 mb-1">
+                        <i class="bi bi-telephone-fill text-primary me-2"></i>
+                        <a href="tel:@ViewBag.Agent.Phone">@ViewBag.Agent.Phone</a>
+                    </p>
+                    <p class="fs-6">
+                        <i class="bi bi-envelope-fill text-primary me-2"></i>
+                        <a href="mailto:@ViewBag.Agent.Email">@ViewBag.Agent.Email</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+}
+

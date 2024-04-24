@@ -19,7 +19,7 @@ namespace RoyalState.Infrastructure.Persistence
             }
             else
             {
-                var connectionString = config.GetConnectionString("Default");
+                var connectionString = config.GetConnectionString("DefaultConnection");
                 services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString, migration => migration.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
             }
 
@@ -27,6 +27,17 @@ namespace RoyalState.Infrastructure.Persistence
 
             #region "Repositories"
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddTransient<IAgentRepository, AgentRepository>();
+            services.AddTransient<IClientRepository, ClientRepository>();
+            services.AddTransient<IClientPropertiesRepository, ClientPropertiesRepository>();
+            services.AddTransient<IPropertyRepository, PropertyRepository>();
+            services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
+            services.AddTransient<ISaleTypeRepository, SaleTypeRepository>();
+            services.AddTransient<IPropertyTypeRepository, PropertyTypeRepository>();
+            services.AddTransient<IImprovementRepository, ImprovementRepository>();
+            services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddTransient<IDeveloperRepository, DeveloperRepository>();
+            services.AddTransient<IPropertyImprovementRepository, PropertyImprovementRepository>();
             #endregion
         }
     }

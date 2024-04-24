@@ -20,14 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\v1\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\RoyalState.Core.Application\RoyalState.Core.Application.csproj" />
     <ProjectReference Include="..\RoyalState.Core.Domain\RoyalState.Core.Domain.csproj" />
     <ProjectReference Include="..\RoyalState.Infrastructure.Identity\RoyalState.Infrastructure.Identity.csproj" />
     <ProjectReference Include="..\RoyalState.Infrastructure.Persistence\RoyalState.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\RoyalState.Infrastructure.Shared\RoyalState.Infrastructure.Shared.csproj" />
   </ItemGroup>
 
 </Project>

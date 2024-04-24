@@ -1,0 +1,82 @@
+﻿@using RoyalState.Core.Application.ViewModels.Agent;
+@model List<AgentViewModel>
+@{
+    ViewData["Title"] = "Agents List";
+    Layout = "~/Views/Shared/_LayoutSmall.cshtml";
+}
+
+<div class="row mt-4">
+
+    <div class="d-flex justify-content-between mb-1">
+        <h1 class="h2 mb-3">@ViewData["Title"]</h1>
+    </div>
+
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th class="text-center">Property Quantity</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var agent in Model)
+                    {
+                        <tr>
+                            <td>@agent.Id</td>
+                            <td>@($"{agent.FirstName} {agent.LastName}")</td>
+                            <td>@agent.Email</td>
+                            <td class="text-center">@agent.PropertyQuantity</td>
+                            <td class="text-center">
+                                <a class="btn btn-@(agent.EmailConfirmed ? "danger" : "success" )" href="#" data-bs-toggle="modal" data-bs-target="#modal-update-user-status-@agent.UserName" title="@(agent.EmailConfirmed ? " Unactive" : "Active")">
+                                    <i class="bi bi-person-@(agent.EmailConfirmed ? "dash-fill" : "check-fill")"></i>
+                                </a>
+
+                                <!-- Modal Update-User-Status -->
+                                <div class="modal fade" id="modal-update-user-status-@agent.UserName" tabindex="-1" aria-labelledby="modal-update-user-status-@agent.UserName-label" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">@(agent.EmailConfirmed ? "Unactive" : "Active") User: @agent.UserName</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+
+                                            <form method="post" asp-controller="Admin" asp-action="UpdateUserStatus">
+                                                <div class="modal-body">
+
+                                                    <input type="hidden" name="username" value="@agent.UserName" />
+                                                    <input type="hidden" name="action" value="AgentList" />
+
+                                                    <div class="mb-3 text-start">
+                                                        <p class="text-center">Are you sure you want to <span class="fw-bolder">@(agent.EmailConfirmed ? "unactive" : "active")</span> this user?</p>
+                                                        <p><span class="fw-bolder">Name: </span>@agent.FirstName</p>
+                                                        <p><span class="fw-bolder">LastName: </span>@agent.LastName</p>
+                                                        <p><span class="fw-bolder">Username: </span>@agent.UserName</p>
+                                                        <p><span class="fw-bolder">Email: </span>@agent.Email</p>
+                                                        <p><span class="fw-bolder">Properties Quantity: </span>@agent.PropertyQuantity</p>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
+                                                    <button type="submit" class="btn btn-primary">Yes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <a asp-controller="Admin" asp-action="DeleteAgent" asp-route-id="@agent.Id" class="btn btn-danger" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

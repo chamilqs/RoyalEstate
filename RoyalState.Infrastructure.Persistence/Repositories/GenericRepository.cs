@@ -16,18 +16,14 @@ namespace RoyalState.Infrastructure.Persistence.Repositories
         public virtual async Task<Entity> AddAsync(Entity entity)
         {
             await _dbContext.Set<Entity>().AddAsync(entity);
-
             await _dbContext.SaveChangesAsync();
-
             return entity;
         }
 
         public virtual async Task UpdateAsync(Entity entity, int id)
         {
-            Entity entry = await _dbContext.Set<Entity>().FindAsync(id);
-
-            _dbContext.Entry(entry).CurrentValues.SetValues(entity);
-
+            Entity? entry = await _dbContext.Set<Entity>().FindAsync(id);
+            _dbContext.Entry(entry ?? throw new Exception("Entity not found")).CurrentValues.SetValues(entity);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -50,13 +46,13 @@ namespace RoyalState.Infrastructure.Persistence.Repositories
 
         public virtual async Task<Entity> GetByIdAsync(int id)
         {
-            return await _dbContext.Set<Entity>().FindAsync(id);
+            var entity = await _dbContext.Set<Entity>().FindAsync(id);
+            return entity ?? throw new Exception($"Entity with id {id} not found");
         }
 
         public virtual async Task DeleteAsync(Entity entity)
         {
             _dbContext.Set<Entity>().Remove(entity);
-
             await _dbContext.SaveChangesAsync();
         }
     }

@@ -2,8 +2,10 @@
 {
     public enum Roles
     {
-        SuperAdmin,
-        Admin,
-        Basic
+        SuperAdmin = 1,
+        Admin = 2,
+        Agent = 3,
+        Client = 4,
+        Developer = 5
     }
 }

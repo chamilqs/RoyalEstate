@@ -1,37 +1,58 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace RoyalState.Core.Application.ViewModels.Users
 {
     public class SaveUserViewModel
     {
-        [Required(ErrorMessage = "Debe colocar un nombre")]
-        [DataType(DataType.Text)] 
+        public string? Id { get; set; }
+
+        [Required(ErrorMessage = "You must enter a name.")]
+        [DataType(DataType.Text)]
+
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Debe colocar un apellido")]
-        [DataType(DataType.Text)] 
+
+        [Required(ErrorMessage = "You must enter a lastname.")]
+        [DataType(DataType.Text)]
+
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Debe colocar el nombre de usuario")]
+
+        [Required(ErrorMessage = "You mus enter a Username.")]
         [DataType(DataType.Text)]
+
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Debe colocar una contraseña")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
 
-        [Compare(nameof(Password), ErrorMessage = "Las contraseñas deben de coincidir")]
-        [Required(ErrorMessage = "Debe colocar una contraseña")]
-        [DataType(DataType.Password)]
-        public string ConfirmPassword { get; set; }
+        [Required(ErrorMessage = "You must enter an email.")]
+        [DataType(DataType.EmailAddress)]
 
-        [Required(ErrorMessage = "Debe colocar un correo")]
-        [DataType(DataType.Text)]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Debe colocar un teléfono")]
+
+        [RegularExpression(@"^\d{3}\-\d{7}-\d{1}$", ErrorMessage = "Your Id must be with the following format: ###-#######-#.")]
         [DataType(DataType.Text)]
-        public string Phone { get; set; }
+        public string? Identification { get; set; }
+
+        [DataType(DataType.Password)]
+        public string? Password { get; set; }
+
+        [Compare(nameof(Password), ErrorMessage = "The password must match")]
+        [DataType(DataType.Password)]
+        public string? ConfirmPassword { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a role.")]
+        public int Role { get; set; }
+
+        [DataType(DataType.Url)]
+        public string? ImageUrl { get; set; }
+
+        [DataType(DataType.Upload)]
+        public IFormFile? File { get; set; }
+
+        [DataType(DataType.Text)]
+        public string? Phone { get; set; }
 
         public bool HasError { get; set; }
         public string? Error { get; set; }

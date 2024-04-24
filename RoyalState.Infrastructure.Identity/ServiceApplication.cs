@@ -11,7 +11,7 @@ namespace RoyalState.Infrastructure.Identity
         public static async Task AddIdentitySeeds(this IServiceProvider services)
         {
             #region "Identity Seeds"
-            using(var scope = services.CreateScope())
+            using (var scope = services.CreateScope())
             {
                 var serviceScope = scope.ServiceProvider;
 
@@ -21,10 +21,20 @@ namespace RoyalState.Infrastructure.Identity
                     var roleManager = serviceScope.GetRequiredService<RoleManager<IdentityRole>>();
 
                     await DefaultRoles.SeedAsync(roleManager);
-                    //await DefaulBasicUser.SeedAsync(userManager);
-                    //await DefaulSuperAdminUser.SeedAsync(userManager);
+                    // await DefaulSuperAdminUser.SeedAsync(userManager);
+                    await DefaulDeveloperUser.SeedAsync(userManager);
+                    await DefaulAdminUser.SeedAsync(userManager);
+                    await DefaulAgentUser.SeedAsync(userManager);
+                    await DefaulClientUser.SeedAsync(userManager);
+
                 }
-                catch (Exception ex) { }
+                catch (Exception ex)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ex.Message.ToString());
+                    Console.ResetColor();
+
+                }
             }
             #endregion
         }

@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.Services;
@@ -16,6 +16,18 @@ namespace RoyalState.Core.Application
 
             #region "Service"
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IAgentService, AgentService>();
+            services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<IClientPropertiesService, ClientPropertiesService>();
+            services.AddTransient<IPropertyService, PropertyService>();
+            services.AddTransient<IPropertyImageService, PropertyImageService>();
+            services.AddTransient<ISaleTypeService, SaleTypeService>();
+            services.AddTransient<IPropertyTypeService, PropertyTypeService>();
+            services.AddTransient<IPropertyImprovementService, PropertyImprovementService>();
+            services.AddTransient<IImprovementService, ImprovementService>();
+            services.AddTransient<IAdminService, AdminService>();
+            services.AddTransient<IDeveloperService, DeveloperService>();
+            services.AddTransient<IFileService, FileService>();
             #endregion
         }
     }
