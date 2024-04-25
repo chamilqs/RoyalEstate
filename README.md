@@ -1,7 +1,7 @@
-# RoyalState
+# Royal State
 
 ## Descripción breve
-Royal Estate es una aplicación web diseñada para la gestión de propiedades inmobiliarias. Permite a los usuarios buscar propiedades, marcar sus favoritas y contactar con agentes. Los agentes pueden gestionar sus propiedades y los administradores tienen control total sobre los usuarios y las propiedades del sistema.
+Royal State es una aplicación web diseñada para la gestión de propiedades inmobiliarias. Permite a los usuarios buscar propiedades, marcar sus favoritas y contactar con agentes. Los agentes pueden gestionar sus propiedades y los administradores tienen control total sobre los usuarios y las propiedades del sistema.
 
 <a href="https://youtu.be/0tOXxuLcaog" target="_blank">
     <img src="https://img.youtube.com/vi/0tOXxuLcaog/maxresdefault.jpg" width="100%">
