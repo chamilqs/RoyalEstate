@@ -7,6 +7,8 @@ Royal Estate es una aplicación web diseñada para la gestión de propiedades in
     <img src="https://img.youtube.com/vi/fPpkIvz85UQ/maxresdefault.jpg" width="100%">
 </a>
 
+[![Watch the video](https://img.youtube.com/vi/fPpkIvz85UQ/maxresdefault.jpg)](https://youtu.be/fPpkIvz85UQ?target=_blank)
+
 ## Funcionalidades
 - **Búsqueda de Propiedades**: Los usuarios pueden buscar propiedades por código, tipo, rango de precio, cantidad de habitaciones y baños.
 - **Detalles de Propiedad**: Al seleccionar una propiedad, se muestra un detalle completo incluyendo imágenes, descripción y mejoras.
