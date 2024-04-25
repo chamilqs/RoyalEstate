@@ -5,6 +5,7 @@ using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.ClientProperties;
 using RoyalState.Core.Application.ViewModels.Property;
+using System.Text.Json;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
@@ -33,23 +34,39 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Client Index
-        public async Task<IActionResult> Index(string? error, List<PropertyViewModel>? propertiesHome, bool? isEmpty, bool? favorite)
+        public async Task<IActionResult> Index(string? error, bool? favorite)
         {
             if (error != null)
             {
                 ViewBag.Error = error;
             }
-            if (propertiesHome != null && propertiesHome.Count != 0)
-            {
-                return View(propertiesHome);
-            }
-            if (isEmpty != null)
-            {
-                ViewBag.isEmpty = isEmpty;
-            }
             if (favorite != null)
             {
                 ViewBag.NewFavorite = favorite;
+            }
+
+            var propertyViewModel = new PropertyViewModel();
+
+            if (TempData["PropertyViewModel"] != null)
+            {
+                var json = TempData["PropertyViewModel"].ToString();
+                propertyViewModel = JsonSerializer.Deserialize<PropertyViewModel>(json);
+            }
+
+            bool? isEmpty = TempData.Peek("IsEmpty") as bool?;
+
+            TempData.Remove("PropertyViewModel");
+            TempData.Remove("IsEmpty");
+
+            if (isEmpty != null)
+            {
+                ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
+                ViewBag.isEmpty = isEmpty;
+                if (propertyViewModel != null)
+                {
+                    var propertiesHome = new List<PropertyViewModel> { propertyViewModel };
+                    return View(propertiesHome);
+                }
             }
 
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
@@ -117,49 +134,5 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
         #endregion
 
-        #region Search
-
-        #region SearchPropertyByFilters
-        [HttpPost]
-        public async Task<IActionResult> SearchFavoritesByFilters(int? propertyTypeId, double? maxPrice, double? minPrice, int? roomsNumber, int? bathsNumber)
-        {
-            var propertyTypes = await _propertyTypeService.GetAllViewModel();
-            FilterPropertyViewModel filter = new()
-            {
-                PropertyTypeId = propertyTypeId,
-                MaxPrice = maxPrice,
-                MinPrice = minPrice,
-                Bedrooms = roomsNumber,
-                Bathrooms = bathsNumber
-            };
-
-            var properties = await _propertyService.GetAllViewModelWIthFilters(filter);
-            bool isEmpty = properties == null || properties.Count == 0;
-
-            ViewBag.IsEmpty = isEmpty;
-            ViewBag.PropertyTypes = propertyTypes;
-            return View("MyFavorites", properties ?? new List<PropertyViewModel>());
-        }
-        #endregion
-
-        #region SearchPropertyByCode
-        public async Task<IActionResult> SearchProperty(string code)
-        {
-            var propertyTypes = await _propertyTypeService.GetAllViewModel();
-            var property = await _propertyService.GetPropertyByCode(code);
-
-            ViewBag.PropertyTypes = propertyTypes;
-
-            bool isEmpty = property == null;
-            ViewBag.IsEmpty = isEmpty;
-
-            List<PropertyViewModel> properties = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
-
-
-            return View("MyFavorites", properties);
-        }
-        #endregion
-
-        #endregion
     }
 }
