@@ -28,22 +28,11 @@
         #region Agent details
         // Agent details
         public int AgentId { get; set; }
-
         public string AgentFirstName { get; set; }
-
-
         public string AgentLastName { get; set; }
-
-        public string AgentFullName => $"{AgentFirstName} {AgentLastName}";
-
         public string AgentPhone { get; set; }
-
-
         public string AgentEmail { get; set; }
-
-
         public string AgentImage { get; set; }
-
         #endregion
 
         #endregion

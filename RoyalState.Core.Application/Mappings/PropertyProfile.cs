@@ -31,7 +31,6 @@ namespace RoyalState.Core.Application.Mappings
             CreateMap<Property, PropertyViewModel>()
                 .ForMember(x => x.AgentFirstName, opt => opt.Ignore())
                 .ForMember(x => x.AgentLastName, opt => opt.Ignore())
-                .ForMember(x => x.AgentFullName, opt => opt.Ignore())
                 .ForMember(x => x.AgentPhone, opt => opt.Ignore())
                 .ForMember(x => x.AgentEmail, opt => opt.Ignore())
                 .ForMember(x => x.AgentImage, opt => opt.Ignore())

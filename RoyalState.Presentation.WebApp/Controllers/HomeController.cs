@@ -5,6 +5,7 @@ using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.Agent;
 using RoyalState.Core.Application.ViewModels.Property;
+using System.Text.Json;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
@@ -28,20 +29,37 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Index
-        public async Task<IActionResult> Index(List<PropertyViewModel>? propertiesHome, bool? isEmpty)
+        public async Task<IActionResult> Index()
         {
             var properties = await _propertyService.GetAllViewModel();
             var propertyTypes = await _propertyTypeService.GetAllViewModel();
+
             ViewBag.PropertyTypes = propertyTypes;
 
-            if (propertiesHome != null && propertiesHome.Count > 0)
+            var propertyViewModel = new PropertyViewModel();
+
+            if (TempData["PropertyViewModel"] != null)
             {
-                return View(propertiesHome);
+                var json = TempData["PropertyViewModel"].ToString();
+                propertyViewModel = JsonSerializer.Deserialize<PropertyViewModel>(json);
             }
+
+            bool? isEmpty = TempData.Peek("IsEmpty") as bool?;
+
+            TempData.Remove("PropertyViewModel");
+            TempData.Remove("IsEmpty");
 
             if (isEmpty != null)
             {
                 ViewBag.isEmpty = isEmpty;
+                if (propertyViewModel != null)
+                {
+                    return View(new List<PropertyViewModel> { propertyViewModel });
+                }
+                else
+                {
+                    return View(new List<PropertyViewModel>());
+                }
             }
 
             if (authViewModel != null)
@@ -61,12 +79,8 @@ namespace RoyalState.Presentation.WebApp.Controllers
                 }
             }
 
-
             return View(properties);
         }
-
-
-
         #endregion
 
         #region Search
@@ -75,22 +89,28 @@ namespace RoyalState.Presentation.WebApp.Controllers
         public async Task<IActionResult> SearchProperty(string code)
         {
             var property = await _propertyService.GetPropertyByCode(code);
-
             bool isEmpty = property == null;
 
             List<PropertyViewModel> propertiesHome = isEmpty ? new List<PropertyViewModel>() : new List<PropertyViewModel> { property };
 
+            if (!isEmpty)
+            {
+                var json = JsonSerializer.Serialize(property);
+                TempData["PropertyViewModel"] = json;
+            }
+
+            TempData["IsEmpty"] = isEmpty;
 
             if (authViewModel != null)
             {
                 string role = authViewModel.Roles.FirstOrDefault()?.ToString();
                 if (!string.IsNullOrEmpty(role))
                 {
-                    return RedirectToRoute(new { controller = role, action = "Index", propertiesHome, isEmpty });
+                    return RedirectToRoute(new { controller = role, action = "Index" });
                 }
             }
 
-            return RedirectToAction("Index", new { propertiesHome = propertiesHome, isEmpty = isEmpty });
+            return RedirectToAction("Index");
         }
         #endregion
 

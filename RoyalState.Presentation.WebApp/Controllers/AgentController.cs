@@ -5,6 +5,7 @@ using RoyalState.Core.Application.Helpers;
 using RoyalState.Core.Application.Interfaces.Services;
 using RoyalState.Core.Application.ViewModels.Property;
 using RoyalState.Core.Application.ViewModels.Users;
+using System.Text.Json;
 
 namespace RoyalState.Presentation.WebApp.Controllers
 {
@@ -29,16 +30,30 @@ namespace RoyalState.Presentation.WebApp.Controllers
         }
 
         #region Agent Index
-        public async Task<IActionResult> Index(List<PropertyViewModel>? propertiesHome, bool? isEmpty)
+        public async Task<IActionResult> Index()
         {
-            if (propertiesHome != null && propertiesHome.Count != 0)
+            var propertyViewModel = new PropertyViewModel();
+
+            if (TempData["PropertyViewModel"] != null)
             {
-                return View(propertiesHome);
+                var json = TempData["PropertyViewModel"].ToString();
+                propertyViewModel = JsonSerializer.Deserialize<PropertyViewModel>(json);
             }
+
+            bool? isEmpty = TempData.Peek("IsEmpty") as bool?;
+
+            TempData.Remove("PropertyViewModel");
+            TempData.Remove("IsEmpty");
 
             if (isEmpty != null)
             {
+                ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
                 ViewBag.isEmpty = isEmpty;
+                if (propertyViewModel != null)
+                {
+                    var propertiesHome = new List<PropertyViewModel> { propertyViewModel };
+                    return View(propertiesHome);
+                }
             }
 
             var agent = await _agentService.GetByUserIdViewModel(authViewModel.Id);
