@@ -3,12 +3,6 @@
 ## Descripción breve
 Royal State es una aplicación web diseñada para la gestión de propiedades inmobiliarias. Permite a los usuarios buscar propiedades, marcar sus favoritas y contactar con agentes. Los agentes pueden gestionar sus propiedades y los administradores tienen control total sobre los usuarios y las propiedades del sistema.
 
-**Haga clic en la imagen para ver un video que presenta las funcionalidades de Royal State**
-
-<a href="https://youtu.be/nrMzQidy9rk" target="_blank">
-    <img src="https://img.youtube.com/vi/nrMzQidy9rk/maxresdefault.jpg" width="100%">
-</a>
-
 ## Funcionalidades
 - **Búsqueda de Propiedades**: Los usuarios pueden buscar propiedades por código, tipo, rango de precio, cantidad de habitaciones y baños.
 - **Detalles de Propiedad**: Al seleccionar una propiedad, se muestra un detalle completo incluyendo imágenes, descripción y mejoras.
@@ -16,6 +10,12 @@ Royal State es una aplicación web diseñada para la gestión de propiedades inm
 - **Autenticación de Usuarios**: Inicio de sesión con validación de credenciales y manejo de roles (cliente, agente, administrador).
 - **Gestión de Propiedades**: Los agentes pueden crear, editar y eliminar propiedades, incluyendo imágenes y mejoras.
 - **Panel de Administrador**: Los administradores pueden gestionar agentes, desarrolladores, tipos de propiedades, tipos de ventas y mejoras.
+
+<h2>**HAGA CLICK EN LA IMAGEN DE ABAJO PARA VER LAS FUNCIONALIDADES**</h2>
+
+<a href="https://youtu.be/nrMzQidy9rk" target="_blank">
+    <img src="https://img.youtube.com/vi/nrMzQidy9rk/maxresdefault.jpg" width="100%">
+</a>
 
 ## Herramientas y Tecnologías
 - **ASP.NET MVC 7**: Para la construcción de la aplicación web.
