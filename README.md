@@ -1,7 +1,7 @@
 # RoyalState
 
 ## Descripción
-RealEstateApp es una aplicación web diseñada para la gestión de propiedades inmobiliarias. Permite a los usuarios buscar propiedades, marcar sus favoritas y contactar con agentes. Los agentes pueden gestionar sus propiedades y los administradores tienen control total sobre los usuarios y las propiedades del sistema.
+Royal Estate es una aplicación web diseñada para la gestión de propiedades inmobiliarias. Permite a los usuarios buscar propiedades, marcar sus favoritas y contactar con agentes. Los agentes pueden gestionar sus propiedades y los administradores tienen control total sobre los usuarios y las propiedades del sistema.
 
 ## Funcionalidades
 - **Búsqueda de Propiedades**: Los usuarios pueden buscar propiedades por código, tipo, rango de precio, cantidad de habitaciones y baños.
