@@ -11,6 +11,7 @@ Royal State es una aplicación web diseñada para la gestión de propiedades inm
 - **Gestión de Propiedades**: Los agentes pueden crear, editar y eliminar propiedades, incluyendo imágenes y mejoras.
 - **Panel de Administrador**: Los administradores pueden gestionar agentes, desarrolladores, tipos de propiedades, tipos de ventas y mejoras.
 
+
 <h2>Haz CLICK en la imagen de abajo para ver un video de las funcionalidades de Royal State</h2>
 
 <a href="https://youtu.be/nrMzQidy9rk" target="_blank">
