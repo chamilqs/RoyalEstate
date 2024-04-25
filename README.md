@@ -3,6 +3,8 @@
 ## Descripción breve
 Royal State es una aplicación web diseñada para la gestión de propiedades inmobiliarias. Permite a los usuarios buscar propiedades, marcar sus favoritas y contactar con agentes. Los agentes pueden gestionar sus propiedades y los administradores tienen control total sobre los usuarios y las propiedades del sistema.
 
+**Haga clic en la imagen para ver un video que presenta las funcionalidades de Royal State**
+
 <a href="https://youtu.be/nrMzQidy9rk" target="_blank">
     <img src="https://img.youtube.com/vi/nrMzQidy9rk/maxresdefault.jpg" width="100%">
 </a>
