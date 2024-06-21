@@ -1,3 +1,5 @@
+coderush/wwwroot/* linguist-vendored
+*.cshtml linguist-language=C#
 ###############################################################################
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
@@ -43,6 +45,7 @@
 #*.jpg   binary
 #*.png   binary
 #*.gif   binary
+#*.jpeg  binary
 
 ###############################################################################
 # diff behavior for common document formats
